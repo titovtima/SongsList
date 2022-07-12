@@ -7,3 +7,9 @@
 .list_of_contents {
     margin: 20px 40px;
 }
+
+.song_search {
+    margin: 20px 40px 0 40px;
+    font-size: 40px;
+    padding: 5px;
+}
