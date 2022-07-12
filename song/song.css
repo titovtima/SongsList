@@ -1,0 +1,43 @@
+#song_name {
+    font-size: 60px;
+    text-align: center;
+    padding: 20px 0;
+    box-sizing: border-box;
+}
+
+.song_text {
+    font-size: 30px;
+}
+
+.song_chords {
+    font-size: 30px;
+}
+
+.home_button {
+    background-image: url("/assets/home.png");
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 70px;
+    height: 70px;
+    background-size: contain;
+}
+
+#text_column, #chords_column {
+    width: 50%;
+    float: left;
+    height: 100%;
+}
+
+.main_content {
+    padding-bottom: 30px;
+    box-sizing: border-box;
+}
+
+.column_background {
+    margin: 0 20px;
+    border-radius: 20px;
+    background-color: rgba(0, 255, 255, 0.4);
+    /*opacity: 0.6;*/
+    padding: 20px;
+}
