@@ -23,8 +23,11 @@ app.get('/song', (req, res) => {
 });
 
 app.get("/", (req, res) => {
-    res.sendFile(__dirname + '/main.html');
+    res.redirect(301, '/songs');
 });
+// app.get("/", (req, res) => {
+//     res.sendFile(__dirname + '/main.html');
+// });
 
 const http_app = express();
 
