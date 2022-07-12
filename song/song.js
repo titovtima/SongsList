@@ -18,16 +18,20 @@ function load_song(song_data) {
     title.append(song_data.name);
 
     for (let part of song_data.text) {
-        let part_header = document.createElement('b');
-        part_header.append(part.name);
-        textColumn.append(part_header, '\n');
+        if (part.name) {
+            let part_header = document.createElement('b');
+            part_header.append(part.name);
+            textColumn.append(part_header, '\n');
+        }
         textColumn.append(part.text, '\n\n');
     }
 
     for (let part of song_data.chords) {
-        let part_header = document.createElement('b');
-        part_header.append(part.name);
-        chordsColumn.append(part_header, '\n');
+        if (part.name) {
+            let part_header = document.createElement('b');
+            part_header.append(part.name);
+            chordsColumn.append(part_header, '\n');
+        }
         chordsColumn.append(part.chords, '\n\n');
     }
 }
