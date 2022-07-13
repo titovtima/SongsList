@@ -5,15 +5,23 @@
 }
 
 .list_of_contents {
-    margin: 20px 40px;
+    margin: 20px 40px 0 40px;
+    overflow-y: auto;
 }
 
 .song_search {
-    margin: 20px 40px 0 40px;
+    margin: 20px 40px 10px 40px;
     font-size: 40px;
     padding: 5px;
 }
 
 a {
-    color: #0066cc;
+    color: #06c;
+    text-decoration: none;
+    text-underline: none;
+}
+
+#add_song {
+    font-size: 70px;
+    margin: 0 40px 10px 40px;
 }

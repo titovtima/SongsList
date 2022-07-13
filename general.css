@@ -16,3 +16,7 @@
     height: 100%;
     overflow: auto;
 }
+
+.pointer_over:hover {
+    cursor: pointer;
+}

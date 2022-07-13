@@ -1,26 +1,33 @@
 const songs_data_path = '/songs_data/';
 
 let html_list = document.querySelector('#songs_list');
+let add_song = document.querySelector('#add_song');
+let main_scroll = document.querySelector('#main_scroll');
+main_scroll.style.maxHeight = window.innerHeight - 100 + 'px';
 
 fetch(songs_data_path + 'songs_list.json')
     .then(response => response.json())
     .then(response => load_songs_list(response));
 
 let songs_list = [];
+let max_id = 0;
 function load_songs_list(list) {
     songs_list = [];
-    for (let song of list.songs) {
+    for (let id in list) {
+        max_id = Math.max(max_id, Number(id));
         let ref = document.createElement('a');
-        ref.append(song.name);
-        ref.href = '/song?id=' + song.id;
+        ref.append(list[id].name);
+        ref.href = '/song?id=' + id;
         ref.className = 'ref_to_song_in_table';
         let div = document.createElement('div');
         div.append(ref);
-        songs_list.push({name: song.name, element: div});
+        songs_list.push({name: list[id].name, element: div});
     }
     songs_list.sort(sort_songs);
     for (let song of songs_list)
         html_list.append(song.element);
+
+    add_song.href = `/song?id=${max_id+1}&edit=true`;
 }
 
 function sort_songs(a, b) {

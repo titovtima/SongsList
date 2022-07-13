@@ -9,18 +9,42 @@
     <title></title>
 </head>
 <body class="background">
-<div class="scroll">
-    <h1 id="song_name" class="text"></h1>
-    <section class="main_content">
-        <div id="text_column" class=""><div class="column_background scroll">
-            <pre class="song_text text"></pre>
+<div class="scroll" id="main_scroll">
+    <h1 id="song_name" class="text song_name"></h1>
+    <form id="input_song_name_form">
+        <input type="text" id="input_song_name" class="text song_name input">
+    </form>
+    <div class="main_content">
+        <div class="page_split"><div class="column_background scroll" id="text_column">
+            <div id="song_text_display"></div>
+            <form id="add_text">
+                <input type="text" class="song_text text input" id="input_text_label">
+                <textarea class="song_text text input" id="input_text"></textarea>
+                <input type="submit" value="Добавить новую часть" class="input">
+            </form>
         </div></div>
-        <div id="chords_column" class=""><div class="column_background scroll">
-            <pre class="song_chords text"></pre>
+        <div class="page_split"><div class="column_background scroll" id="chords_column">
+            <div id="song_chords_display"></div>
+            <form id="add_chords">
+                <input type="text" class="text song_chords input" id="input_chords_label">
+                <textarea class="song_chords text input" id="input_chords"></textarea>
+                <input type="submit" value="Добавить новую часть" class="input">
+            </form>
         </div></div>
-    </section>
+    </div>
+    <form id="send_song"><div class="center">
+        <button type="submit" class="input" id="send_song_button">Сохранить песню</button>
+    </div></form>
 </div>
-<a href="/songs" class="home_button"></a>
+<a href="/songs" id="home_button"></a>
+<a id="edit_button"></a>
+<div id="overlay"></div>
+<div id="password_window" class="window">
+    <form id="send_password">
+        <label for="password_input">Введите пароль администратора</label>
+        <input type="password" id="password_input">
+    </form>
+</div>
 
 <script src="song.js"></script>
 </body>
