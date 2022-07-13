@@ -293,6 +293,12 @@ function show_admin_confirm(aim, data = null) {
     document.addEventListener('click', handler);
 }
 
+function fit_textarea_height(elem) {
+    elem.style.height = '0';
+    elem.style.height = elem.scrollHeight + 2 + 'px';
+    update_main_content_height();
+}
+
 function switch_to_edit_mode() {
     edit_mode = true;
     let inputElements = document.querySelectorAll('.input:not(#input_song_name)');
@@ -307,15 +313,11 @@ function switch_to_edit_mode() {
     let add_chords_form = document.querySelector('#add_chords');
 
     add_text.oninput = () => {
-        add_text.style.height = '0';
-        add_text.style.height = add_text.scrollHeight + 2 + 'px';
-        update_main_content_height();
+        fit_textarea_height(add_text);
     }
 
     add_chords.oninput = () => {
-        add_chords.style.height = '0';
-        add_chords.style.height = add_text.scrollHeight + 1 + 'px';
-        update_main_content_height();
+        fit_textarea_height(add_chords);
     }
 
     add_text_form.onsubmit = event => {

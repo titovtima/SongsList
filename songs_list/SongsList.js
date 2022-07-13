@@ -37,8 +37,8 @@ function sort_songs(a, b) {
 }
 
 function search_songs_by_name(name) {
-    let new_list = songs_list.filter(
-        (value, index, array) => value.name.toLowerCase().includes(name.trim().toLowerCase()));
+    let words = name.trim().toLowerCase().split(' ');
+    let new_list = songs_list.filter(song => words.every(word => song.name.toLowerCase().includes(word)));
     html_list.innerHTML = "";
     for (let song of new_list)
         html_list.append(song.element);
