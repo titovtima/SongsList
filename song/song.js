@@ -203,6 +203,12 @@ function add_textarea_for_song_part(wrap_div, type) {
     }
     wrap_div.edit_form = edit_form;
     wrap_div.append(edit_form);
+
+    if (edit_mode) {
+        wrap_div.addEventListener('click', event => {
+            if (check_click_coords_not_button(event)) edit_song_part(wrap_div);
+        });
+    }
 }
 
 function edit_song_part(part) {
@@ -405,6 +411,11 @@ function fit_textarea_height(elem) {
     update_main_content_height();
 }
 
+function check_click_coords_not_button(event) {
+    let t = event.target;
+    return !t.className.includes('song_part_button');
+}
+
 function switch_to_edit_mode() {
     edit_mode = true;
     let inputElements = document.querySelectorAll('.input:not(#input_song_name)');
@@ -483,17 +494,13 @@ function switch_to_edit_mode() {
             update_song_name();
     });
 
-    function check_click_coords(event, elem) {
-        let t = event.target;
-        return !t.className.includes('song_part_button');
-    }
     for (let part of text_parts)
         part.addEventListener('click', event => {
-            if (check_click_coords(event, part)) edit_song_part(part);
+            if (check_click_coords_not_button(event)) edit_song_part(part);
         });
     for (let part of chords_parts)
         part.addEventListener('click', event => {
-            if (check_click_coords(event, part)) edit_song_part(part);
+            if (check_click_coords_not_button(event)) edit_song_part(part);
         });
 
     let send_song_form = document.querySelector('#send_song');
