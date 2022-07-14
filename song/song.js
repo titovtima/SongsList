@@ -154,6 +154,7 @@ function add_edit_buttons_to_song_part(wrap_div) {
 function add_textarea_for_song_part(wrap_div, type) {
     let edit_form = document.createElement('form');
     edit_form.style.display = 'none';
+    edit_form.style.width = Math.max(text_column.clientWidth, chords_column.clientWidth) - 40 + 'px';
     let header_input = document.createElement('input');
     header_input.type = 'text';
     header_input.className = `edit_song_part song_${type} part_header`;
@@ -252,10 +253,16 @@ function add_delete_cross(parent) {
     delete_cross.onclick = () => {
         parent.button_clicked = true;
         parent.remove();
-        if (parent.is_text)
+        if (parent.is_text) {
             text_parts.splice(parent.part_num, 1);
-        if (parent.is_chords)
+            for (let part of text_parts)
+                update_inner_buttons_positions(part);
+        }
+        if (parent.is_chords) {
             chords_parts.splice(parent.part_num, 1);
+            for (let part of chords_parts)
+                update_inner_buttons_positions(part);
+        }
         update_main_content_height();
     }
     if (edit_mode)
@@ -326,9 +333,13 @@ function add_move_down_arrow(parent) {
 function update_inner_buttons_positions(parent) {
     let parentPos = parent.getBoundingClientRect();
     let count = 0;
+    let right = window.innerWidth;
+    if (parent.is_text)
+        right /= 2;
+    right -= 40;
     for (let but of parent.innerButtons) {
-        but.style.top = parentPos.top + 5 + main_scroll.scrollTop + 'px';
-        but.style.left = parentPos.right - 10 - 20 * count + 'px';
+        but.style.top = parentPos.top + main_scroll.scrollTop + 'px';
+        but.style.left = right - 20 - 20 * count + 'px';
         count++;
     }
 }
@@ -393,13 +404,6 @@ function show_admin_confirm(aim, data = null) {
         let t = event.target;
         if (t !== password_window && !password_window.contains(t))
             exit_password_window();
-        // if (password_window.style.display === 'block') {
-        //     let pwinPos = password_window.getBoundingClientRect();
-        //     if (event.clientX > pwinPos.right + 5 || event.clientX < pwinPos.left - 5
-        //         || event.clientY < pwinPos.top - 5 || event.clientY > pwinPos.bottom + 5) {
-        //         exit_password_window();
-        //     }
-        // }
     }
 
     document.addEventListener('click', handler);
@@ -422,47 +426,25 @@ function switch_to_edit_mode() {
     inputElements.forEach(value => value.style.display = 'block');
     update_main_content_height();
 
-    let add_text_label = document.querySelector('#input_text_label');
-    let add_text = document.querySelector('#input_text');
-    let add_chords_label = document.querySelector('#input_chords_label');
-    let add_chords = document.querySelector('#input_chords');
-    let add_text_form = document.querySelector('#add_text');
-    let add_chords_form = document.querySelector('#add_chords');
+    let add_text = document.querySelector('#add_text');
+    let add_chords = document.querySelector('#add_chords');
 
-    add_text.oninput = () => {
-        fit_textarea_height(add_text);
-    }
-
-    add_chords.oninput = () => {
-        fit_textarea_height(add_chords);
-    }
-
-    add_text_form.onsubmit = event => {
-        if(event)
-            event.preventDefault();
+    add_text.onclick = () => {
         let new_part = {
-            "name": add_text_label.value.trim(),
-            "text": add_text.value
+            "name": '',
+            "text": ''
         }
-        console.log('submit new text', new_part);
-        add_text_label.value = "";
-        add_text.value = "";
-        add_text.style.height = '0';
         add_text_part(new_part);
+        edit_song_part(text_parts[text_parts.length - 1]);
     }
 
-    add_chords_form.onsubmit = event => {
-        if (event)
-            event.preventDefault();
+    add_chords.onclick = () => {
         let new_part = {
-            "name": add_chords_label.value.trim(),
-            "chords": add_chords.value
+            "name": '',
+            "chords": ''
         }
-        console.log('submit new chords', new_part);
-        add_chords_label.value = "";
-        add_chords.value = "";
-        add_chords.style.height = '0';
         add_chords_part(new_part);
+        edit_song_part(chords_parts[chords_parts.length - 1]);
     }
 
     let input_song_name_form = document.querySelector('#input_song_name_form');
@@ -510,8 +492,7 @@ function switch_to_edit_mode() {
 
         let forms = document.querySelectorAll('form:not(#send_song):not(#send_password)')
         forms.forEach(value => {
-            if (!value.className.includes('add_part'))
-                value.onsubmit();
+            value.onsubmit();
         })
 
         let song_data = {
