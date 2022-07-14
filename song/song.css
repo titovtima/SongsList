@@ -164,3 +164,8 @@ textarea {
     height: 80px;
     min-height: 80px;
 }
+
+.edit_song_part {
+    display: block;
+    width: 100%;
+}

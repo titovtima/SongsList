@@ -75,59 +75,146 @@ let chords_parts = [];
 function add_text_part(part) {
     let wrap_div = document.createElement('div');
     wrap_div.className = 'wrap_song_part_div';
-    let part_text = document.createElement('pre');
-    part_text.className = "song_text text display";
-    part_text.style.marginBottom = '20px';
-    if (part.name && part.name !== "") {
-        let part_header = document.createElement('b');
-        part_header.append(part.name);
-        part_text.append(part_header, '\n');
-    }
-    part_text.append(part.text);
-    wrap_div.append(part_text);
-    wrap_div.song_data = {
-        "name": part.name,
-        "text": part.text
-    }
+    add_text_data_to_wrap_div(wrap_div, part);
 
     wrap_div.is_text = true;
-    wrap_div.innerButtons = [];
     wrap_div.part_num = text_parts.length;
+    wrap_div.innerButtons = [];
     text_parts.push(wrap_div);
     text_display.append(wrap_div);
-    add_delete_cross(wrap_div);
-    add_move_up_arrow(wrap_div);
-    add_move_down_arrow(wrap_div);
-    update_main_content_height();
+    add_edit_buttons_to_song_part(wrap_div);
+    add_textarea_for_song_part(wrap_div, 'text');
+}
+
+function add_text_data_to_wrap_div(wrap_div, text_data) {
+    let part_text = wrap_div.display_part;
+    if (!part_text) {
+        part_text = document.createElement('pre');
+        part_text.className = "song_text text display_song_part";
+        part_text.style.marginBottom = '20px';
+        wrap_div.display_part = part_text;
+        wrap_div.append(part_text);
+    }
+    part_text.innerHTML = "";
+    if (text_data.name && text_data.name !== "") {
+        let part_header = document.createElement('b');
+        part_header.append(text_data.name);
+        part_text.append(part_header, '\n');
+    }
+    part_text.append(text_data.text);
+    wrap_div.song_data = {
+        "name": text_data.name,
+        "text": text_data.text
+    }
 }
 
 function add_chords_part(part) {
     let wrap_div = document.createElement('div');
     wrap_div.className = 'wrap_song_part_div';
-    let part_chords = document.createElement('pre');
-    part_chords.className = "song_chords text display";
-    part_chords.style.marginBottom = '20px';
-    if (part.name && part.name !== "") {
-        let part_header = document.createElement('b');
-        part_header.append(part.name);
-        part_chords.append(part_header, '\n');
-    }
-    part_chords.append(part.chords);
-    wrap_div.append(part_chords);
-    wrap_div.song_data = {
-        "name": part.name,
-        "chords": part.chords
-    }
+    add_chords_data_to_wrap_div(wrap_div, part);
 
     wrap_div.is_chords = true;
     wrap_div.innerButtons = [];
     wrap_div.part_num = chords_parts.length;
     chords_parts.push(wrap_div);
     chords_display.append(wrap_div);
+    add_edit_buttons_to_song_part(wrap_div);
+    add_textarea_for_song_part(wrap_div, 'chords');
+}
+
+function add_chords_data_to_wrap_div(wrap_div, chords_data) {
+    let part_chords = wrap_div.display_part;
+    if (!part_chords) {
+        part_chords = document.createElement('pre');
+        part_chords.className = "song_chords text display_song_part";
+        part_chords.style.marginBottom = '20px';
+        wrap_div.display_part = part_chords;
+        wrap_div.append(part_chords);
+    }
+    part_chords.innerHTML = "";
+    if (chords_data.name && chords_data.name !== "") {
+        let part_header = document.createElement('b');
+        part_header.append(chords_data.name);
+        part_chords.append(part_header, '\n');
+    }
+    part_chords.append(chords_data.chords);
+    wrap_div.song_data = {
+        "name": chords_data.name,
+        "chords": chords_data.chords
+    }
+}
+
+function add_edit_buttons_to_song_part(wrap_div) {
     add_delete_cross(wrap_div);
     add_move_up_arrow(wrap_div);
     add_move_down_arrow(wrap_div);
     update_main_content_height();
+}
+
+function add_textarea_for_song_part(wrap_div, type) {
+    let edit_form = document.createElement('form');
+    edit_form.style.display = 'none';
+    let header_input = document.createElement('input');
+    header_input.type = 'text';
+    header_input.className = `edit_song_part song_${type} part_header`;
+    let part_input = document.createElement('textarea');
+    part_input.className = `edit_song_part song_${type}`;
+
+    part_input.oninput = () => {
+        fit_textarea_height(part_input);
+    }
+
+    let submit_button = document.createElement('input');
+    submit_button.type = 'submit';
+    submit_button.value = 'Сохранить';
+    submit_button.className = 'edit_song_part';
+    edit_form.header_input = header_input;
+    edit_form.part_input = part_input;
+    edit_form.append(header_input);
+    edit_form.append(part_input);
+    edit_form.append(submit_button);
+
+    edit_form.onsubmit = event => {
+        event.preventDefault();
+        wrap_div.button_clicked = true;
+
+        let part_data = {
+            "name": header_input.value.trim()
+        }
+        if (wrap_div.is_text) {
+            part_data.text = part_input.value;
+            add_text_data_to_wrap_div(wrap_div, part_data);
+        }
+        if (wrap_div.is_chords) {
+            part_data.chords = part_input.value;
+            add_chords_data_to_wrap_div(wrap_div, part_data);
+        }
+        wrap_div.display_part.style.display = 'block';
+        wrap_div.edit_form.style.display = 'none';
+        wrap_div.edited = false;
+        if (wrap_div.is_text)
+            text_parts.forEach(value => update_inner_buttons_positions(value));
+        if (wrap_div.is_chords)
+            chords_parts.forEach(value => update_inner_buttons_positions(value));
+    }
+    wrap_div.edit_form = edit_form;
+    wrap_div.append(edit_form);
+}
+
+function edit_song_part(part) {
+    part.edited = true;
+    part.edit_form.header_input.value = part.song_data.name;
+    if (part.is_text)
+        part.edit_form.part_input.value = part.song_data.text;
+    if (part.is_chords)
+        part.edit_form.part_input.value = part.song_data.chords;
+    part.display_part.style.display = 'none';
+    part.edit_form.style.display = 'block';
+    fit_textarea_height(part.edit_form.part_input);
+    if (part.is_text)
+        text_parts.forEach(value => update_inner_buttons_positions(value));
+    if (part.is_chords)
+        chords_parts.forEach(value => update_inner_buttons_positions(value));
 }
 
 function redraw_song_text() {
@@ -152,6 +239,7 @@ function add_delete_cross(parent) {
     let delete_cross = document.createElement('a');
     delete_cross.className = 'delete_song_part input pointer_over';
     delete_cross.onclick = () => {
+        parent.button_clicked = true;
         parent.remove();
         if (parent.is_text)
             text_parts.splice(parent.part_num, 1);
@@ -170,6 +258,7 @@ function add_move_up_arrow(parent) {
     let arrow_up = document.createElement('a');
     arrow_up.className = 'move_song_part_up input pointer_over';
     arrow_up.onclick = () => {
+        parent.button_clicked = true;
         if (parent.part_num > 0) {
             let n = parent.part_num;
             parent.part_num = n-1;
@@ -196,6 +285,7 @@ function add_move_down_arrow(parent) {
     let arrow_down = document.createElement('a');
     arrow_down.className = 'move_song_part_down input pointer_over';
     arrow_down.onclick = () => {
+        parent.button_clicked = true;
         if (parent.is_text) {
             if (parent.part_num < text_parts.length - 1) {
                 let n = parent.part_num;
@@ -225,12 +315,21 @@ function add_move_down_arrow(parent) {
 function update_inner_buttons_positions(parent) {
     let parentPos = parent.getBoundingClientRect();
     let count = 0;
+    console.log('update inner buttons');
+    console.log('parent', parent);
     for (let but of parent.innerButtons) {
         but.style.top = parentPos.top + 5 + main_scroll.scrollTop + 'px';
         but.style.left = parentPos.right - 10 - 20 * count + 'px';
         count++;
     }
 }
+
+// text_column.addEventListener('scroll', () => {
+//     text_parts.forEach(value => update_inner_buttons_positions(value, text_column.scrollLeft));
+// });
+// chords_column.addEventListener('scroll', () => {
+//     chords_parts.forEach(value => update_inner_buttons_positions(value, chords_column.scrollLeft));
+// });
 
 function update_main_content_height() {
     let main_content = document.querySelector('.main_content');
@@ -369,6 +468,25 @@ function switch_to_edit_mode() {
         if (input_song_name.style.display === 'block' && event.clientY > 120)
             update_song_name();
     });
+
+    function check_click_coords(event, elem) {
+        // let elPos = elem.getBoundingClientRect();
+        // return event.clientX < elPos.right - 70 || event.clientY > elPos.top + 30;
+        setTimeout(() => {
+            if (!elem.button_clicked && !elem.edited) edit_song_part(elem);
+            else elem.button_clicked = false;
+        }, 50);
+    }
+    for (let part of text_parts)
+        part.addEventListener('click', event => {
+            check_click_coords(event, part);
+            // if (check_click_coords(event, part)) edit_song_part(part);
+        });
+    for (let part of chords_parts)
+        part.addEventListener('click', event => {
+            check_click_coords(event, part);
+            // if (check_click_coords(event, part)) edit_song_part(part);
+        });
 
     let send_song_form = document.querySelector('#send_song');
     send_song_form.onsubmit = event => {

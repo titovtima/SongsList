@@ -28,8 +28,6 @@ app.get('/song', (req, res) => {
 });
 
 app.post('/song', (req, res) => {
-    console.log('post: ', req.body);
-    console.log('url: ', req.url);
     let song_data = req.body;
     let url = new URL(req.url, 'https://' + host);
     if (!url.searchParams.has('id'))
