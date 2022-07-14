@@ -10,15 +10,17 @@
 </head>
 <body class="background">
 <div class="scroll" id="main_scroll">
-    <h1 id="song_name" class="text song_name"></h1>
-    <form id="input_song_name_form">
-        <input type="text" id="input_song_name" class="text song_name input">
-    </form>
+    <header>
+        <h1 id="song_name" class="text song_name"></h1>
+        <form id="input_song_name_form">
+            <input type="text" id="input_song_name" class="text song_name input">
+        </form>
+    </header>
     <div class="main_content">
         <div class="page_split"><div class="column_background scroll" id="text_column">
             <h3 class="column_header">Текст</h3>
             <div id="song_text_display"></div>
-            <form id="add_text">
+            <form id="add_text" class="add_part">
                 <input type="text" class="song_text text input" id="input_text_label">
                 <textarea class="song_text text input" id="input_text"></textarea>
                 <input type="submit" value="Добавить новую часть" class="input">
@@ -27,7 +29,7 @@
         <div class="page_split"><div class="column_background scroll" id="chords_column">
             <h3 class="column_header">Аккорды</h3>
             <div id="song_chords_display"></div>
-            <form id="add_chords">
+            <form id="add_chords" class="add_part">
                 <input type="text" class="text song_chords input" id="input_chords_label">
                 <textarea class="song_chords text input" id="input_chords"></textarea>
                 <input type="submit" value="Добавить новую часть" class="input">
