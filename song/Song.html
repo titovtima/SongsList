@@ -17,15 +17,24 @@
         </form>
     </header>
     <div class="main_content">
-        <div class="page_split"><div class="column_background scroll" id="text_column">
-            <h3 class="column_header">Текст</h3>
-            <div id="song_text_display" class="display_column"></div>
-            <button id="add_text" class="input add_song_part">Добавить новую часть</button>
+        <div class="page_split" id="both_page_split" style="display: none">
+            <div class="column_background" id="both_column">
+                <h3 class="column_header" id="both_column_header">Текст и аккорды</h3>
+            </div>
+        </div>
+        <div class="page_split" id="text_page_split"><div class="column_background" id="text_column">
+            <h3 class="column_header" id="text_column_header">Текст</h3>
+            <div id="no_header_text_column" class="no_header_column">
+                <div class="scroll_display_column"><div id="song_text_display" class="display_column"></div></div>
+                <button id="add_text" class="input add_song_part">Добавить новую часть</button>
+            </div>
         </div></div>
-        <div class="page_split"><div class="column_background scroll" id="chords_column">
-            <h3 class="column_header">Аккорды</h3>
-            <div id="song_chords_display" class="display_column"></div>
-            <button id="add_chords" class="input add_song_part">Добавить новую часть</button>
+        <div class="page_split" id="chords_page_split"><div class="column_background" id="chords_column">
+            <h3 class="column_header" id="chords_column_header">Аккорды</h3>
+            <div id="no_header_chords_column" class="no_header_column">
+                <div class="scroll_display_column"><div id="song_chords_display" class="display_column"></div></div>
+                <button id="add_chords" class="input add_song_part">Добавить новую часть</button>
+            </div>
         </div></div>
     </div>
     <form id="send_song"><div class="center">

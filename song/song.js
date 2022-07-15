@@ -4,6 +4,7 @@ const urlParams = new URLSearchParams(window.location.search);
 const songNumber = urlParams.get('id');
 
 let edit_mode = false;
+let show_blocks = 'both';
 if (urlParams.get('edit')) {
     show_admin_confirm('edit');
 }
@@ -198,9 +199,9 @@ function add_textarea_for_song_part(wrap_div, type) {
         wrap_div.edit_form.style.display = 'none';
         wrap_div.edited = false;
         if (wrap_div.is_text)
-            text_parts.forEach(value => update_inner_buttons_positions(value));
+            update_text_inner_buttons();
         if (wrap_div.is_chords)
-            chords_parts.forEach(value => update_inner_buttons_positions(value));
+            update_chords_inner_buttons();
     }
     wrap_div.edit_form = edit_form;
     wrap_div.append(edit_form);
@@ -224,9 +225,9 @@ function edit_song_part(part) {
     part.edit_form.style.display = 'block';
     fit_textarea_height(part.edit_form.part_input);
     if (part.is_text)
-        text_parts.forEach(value => update_inner_buttons_positions(value));
+        update_text_inner_buttons();
     if (part.is_chords)
-        chords_parts.forEach(value => update_inner_buttons_positions(value));
+        update_chords_inner_buttons();
 }
 
 function redraw_song_text() {
@@ -255,13 +256,11 @@ function add_delete_cross(parent) {
         parent.remove();
         if (parent.is_text) {
             text_parts.splice(parent.part_num, 1);
-            for (let part of text_parts)
-                update_inner_buttons_positions(part);
+            update_text_inner_buttons();
         }
         if (parent.is_chords) {
             chords_parts.splice(parent.part_num, 1);
-            for (let part of chords_parts)
-                update_inner_buttons_positions(part);
+            update_chords_inner_buttons();
         }
         update_main_content_height();
     }
@@ -335,13 +334,23 @@ function update_inner_buttons_positions(parent) {
     let count = 0;
     let right = window.innerWidth;
     if (parent.is_text)
-        right /= 2;
+        right = text_column.getBoundingClientRect().right;
+    if (parent.is_chords)
+        right = chords_column.getBoundingClientRect().right;
     right -= 40;
     for (let but of parent.innerButtons) {
         but.style.top = parentPos.top + main_scroll.scrollTop + 'px';
-        but.style.left = right - 20 - 20 * count + 'px';
+        but.style.left = right - 20 * count + 'px';
         count++;
     }
+}
+
+function update_text_inner_buttons() {
+    text_parts.forEach(value => update_inner_buttons_positions(value));
+}
+
+function update_chords_inner_buttons() {
+    chords_parts.forEach(value => update_inner_buttons_positions(value));
 }
 
 // text_column.addEventListener('scroll', () => {
@@ -357,7 +366,17 @@ function update_main_content_height() {
     let chords_column = document.querySelector('#chords_column');
     text_column.style.height = '0';
     chords_column.style.height = '0';
-    main_content.style.height = Math.max(text_column.scrollHeight, chords_column.scrollHeight) + 'px';
+    switch (show_blocks) {
+        case 'both':
+            main_content.style.height = Math.max(text_column.scrollHeight, chords_column.scrollHeight) + 'px';
+            break;
+        case 'text':
+            main_content.style.height = text_column.scrollHeight + chords_column.clientHeight + 60 + 'px';
+            break;
+        case 'chords':
+            main_content.style.height = chords_column.scrollHeight + text_column.clientHeight + 60 + 'px';
+            break;
+    }
     text_column.style.height = '100%';
     chords_column.style.height = '100%';
 }
@@ -542,3 +561,79 @@ function set_edit_button_url() {
 }
 
 set_edit_button_url();
+
+function changing_page_split() {
+    let text_part = document.querySelector('#text_page_split');
+    let text_header = document.querySelector('#text_column_header');
+    let chords_part = document.querySelector('#chords_page_split');
+    let chords_header = document.querySelector('#chords_column_header');
+    let both_part = document.querySelector('#both_page_split');
+    let both_header = document.querySelector('#both_column_header');
+
+    let text_content = document.querySelector('#no_header_text_column');
+    let chords_content = document.querySelector('#no_header_chords_column');
+    let main_content = document.querySelector('.main_content');
+
+    text_header.addEventListener('click', () => {
+        show_blocks = 'text';
+        main_content.innerHTML = '';
+        main_content.append(both_part);
+        main_content.append(chords_part);
+        main_content.append(text_part);
+        chords_content.style.display = 'none';
+        chords_part.style.height = chords_header.clientHeight + 20 + 'px';
+        chords_part.style.width = '50%';
+        both_part.style.height = both_header.clientHeight + 20 + 'px';
+        both_part.style.display = 'block';
+        text_content.style.display = 'block';
+        text_part.style.width = '100%';
+        text_part.style.height = 'max-content';
+        update_text_inner_buttons();
+        update_chords_inner_buttons();
+        update_main_content_height();
+    });
+
+    chords_header.addEventListener('click', () => {
+        show_blocks = 'chords';
+        main_content.innerHTML = '';
+        main_content.append(both_part);
+        main_content.append(text_part);
+        main_content.append(chords_part);
+        text_part.style.height = text_header.clientHeight + 20 + 'px';
+        text_part.style.width = '50%';
+        text_content.style.display = 'none';
+        both_part.style.height = both_header.clientHeight + 20 + 'px';
+        both_part.style.display = 'block';
+        chords_content.style.display = 'block';
+        chords_part.style.width = '100%';
+        chords_part.style.height = 'max-content';
+        update_text_inner_buttons();
+        update_chords_inner_buttons();
+        update_main_content_height();
+    });
+
+    both_header.addEventListener('click', () => {
+        show_blocks = 'both';
+        main_content.innerHTML = '';
+        main_content.append(both_part);
+        main_content.append(text_part);
+        main_content.append(chords_part);
+        both_part.style.display = 'none';
+        text_content.style.display = 'block';
+        text_part.style.width = '50%';
+        text_part.style.height = '100%';
+        chords_content.style.display = 'block';
+        chords_part.style.width = '50%';
+        chords_part.style.height = '100%';
+        update_text_inner_buttons();
+        update_chords_inner_buttons();
+        update_main_content_height();
+    });
+}
+
+changing_page_split();
+
+window.addEventListener('resize', () => {
+    update_chords_inner_buttons();
+    update_text_inner_buttons();
+})
