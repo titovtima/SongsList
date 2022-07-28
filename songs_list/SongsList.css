@@ -19,6 +19,7 @@ a {
     color: #06c;
     text-decoration: none;
     text-underline: none;
+    white-space: nowrap;
 }
 
 #add_song {
