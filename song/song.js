@@ -409,6 +409,8 @@ function show_admin_confirm(aim, data = null) {
         overlay.style.display = 'none';
         password_window.style.display = 'none';
         if (password_input.value.toLowerCase() === 'jesus') {
+            let jsonString = '{"correct_password_entered": true}';
+            ym(88797016, 'params', JSON.parse(jsonString));
             if (aim === 'edit')
                 switch_to_edit_mode();
             if (aim === 'send')

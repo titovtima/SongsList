@@ -23,6 +23,7 @@ a {
 }
 
 #add_song {
-    font-size: 70px;
+    font-size: 50px;
     margin: 0 40px 10px 40px;
+    color: #0aa;
 }
