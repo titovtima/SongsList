@@ -27,12 +27,67 @@ app.get('/song', (req, res) => {
     res.sendFile(__dirname + '/song/Song.html');
 });
 
+app.use('/auth', (req, res) => {
+    console.log(req.body);
+
+    let user = req.body.user;
+    let password = req.body.password;
+    if (checkAuth(password, user))
+        res.sendStatus(200);
+    else
+        res.sendStatus(403);
+});
+
+function checkAuth(password, user=null) {
+    const n = 2472942968189431706898462913067925658209124041544162680908145890301107704237n;
+    const e = 5281668766765633818307894358032591567n;
+
+    let lower_case_password = password.toLowerCase();
+    let encoded_password = encodeRSA(password);
+    let encoded_lower_case_password = encodeRSA(lower_case_password);
+    if (encoded_lower_case_password === 256936898532198594958756561132414261138151402058674183683957539453558674134n)
+        return true;
+
+    return false;
+
+    function quickPow(a, p, mod) {
+        if (p === 0n) return 1n;
+        if (p === 1n) return a % mod;
+
+        let a2 = quickPow(a % mod, p/2n, mod);
+        if (p % 2n === 0n) {
+            return a2*a2 % mod;
+        } else {
+            return (a2*a2 % mod) * a % mod;
+        }
+    }
+
+    function encodeRSA(string) {
+        let num = 0n;
+        string.split('').forEach((value, index) => {
+            num += BigInt(value.charCodeAt(0) + index * 256);
+            num %= n;
+        });
+
+        return quickPow(num, e, n);
+    }
+}
+
 app.post('/song', (req, res) => {
-    let song_data = req.body;
     let url = new URL(req.url, 'https://' + host);
-    if (!url.searchParams.has('id'))
+    if (!url.searchParams.has('edit')) {
+        res.sendStatus(403);
+        return;
+    }
+    if (!url.searchParams.has('id')) {
         res.sendStatus(400);
+        return;
+    }
     let song_id = url.searchParams.get('id');
+
+    let song_data = req.body;
+    console.log('Get song from IP: ', req.ip);
+    console.log('Song data: ', song_data);
 
     fs.writeFile(songs_data_path + song_id + '.json', JSON.stringify(song_data),  err => {
         if (err) res.sendStatus(500);

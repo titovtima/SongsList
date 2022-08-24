@@ -5,12 +5,24 @@ const songNumber = urlParams.get('id');
 
 let edit_mode = false;
 let show_blocks = 'both';
-if (urlParams.get('edit')) {
-    show_admin_confirm('edit');
-}
 
 let header = document.querySelector('#song_name');
 let input_song_name = document.querySelector('#input_song_name');
+
+let title = document.querySelector('title');
+
+let chords_display = document.querySelector('#song_chords_display');
+let text_display = document.querySelector('#song_text_display');
+
+let chords_column = document.querySelector('#chords_column');
+let text_column = document.querySelector('#text_column');
+
+let text_parts = [];
+let chords_parts = [];
+
+if (urlParams.get('edit')) {
+    show_admin_confirm('edit');
+}
 
 function fit_header_font_size(start_size = 60, min_size = 30) {
     let header_font_size = start_size;
@@ -30,14 +42,6 @@ function fit_header_font_size(start_size = 60, min_size = 30) {
 
 header.style.maxWidth = window.innerWidth - 200 + 'px';
 input_song_name.style.maxWidth = window.innerWidth - 200 + 'px';
-
-let title = document.querySelector('title');
-
-let chords_display = document.querySelector('#song_chords_display');
-let text_display = document.querySelector('#song_text_display');
-
-let chords_column = document.querySelector('#chords_column');
-let text_column = document.querySelector('#text_column');
 
 fetch(songs_data_path + songNumber + '.json')
     .then(response => {
@@ -69,9 +73,6 @@ function load_song(data) {
 
     fit_header_font_size();
 }
-
-let text_parts = [];
-let chords_parts = [];
 
 function add_text_part(part) {
     let wrap_div = document.createElement('div');
@@ -381,18 +382,60 @@ function update_main_content_height() {
     chords_column.style.height = '100%';
 }
 
-function show_admin_confirm(aim, data = null) {
+function find_cookies() {
+    let cookies = {};
+    document.cookie.split(';').forEach(value => {
+        let pair = value.split('=');
+        cookies[pair[0]] = pair[1];
+    });
+    return cookies;
+}
+
+async function checkPassword(password, user = null) {
+    let p = fetch('/auth', {
+        "method": "POST",
+        "headers": {
+            "Content-Type": "application/json"
+        },
+        "body": JSON.stringify({
+            "password": password,
+            "user": user
+        })
+    });
+    let response = await p;
+    return response.ok;
+}
+
+async function show_admin_confirm(aim, data = null) {
     let overlay = document.querySelector('#overlay');
     let password_window = document.querySelector('#password_window');
 
-    function exit_password_window() {
+    let pwd = find_cookies().password;
+    if (pwd && await checkPassword(pwd)) {
+        exit_password_window(true);
+        return;
+    }
+
+    async function exit_password_window(authorized = false) {
         if (!password_window) return;
-        overlay.style.display = 'none';
-        password_window.style.display = 'none';
-        if (password_window.aim === 'edit') {
-            let url_no_edit = new URL(document.location.href);
-            url_no_edit.searchParams.delete('edit')
-            document.location.href = url_no_edit;
+        if (authorized || await checkPassword(password_input.value)) {
+            overlay.style.display = 'none';
+            password_window.style.display = 'none';
+            let jsonString = '{"correct_password_entered": true}';
+            ym(88797016, 'params', JSON.parse(jsonString));
+            if (aim === 'edit')
+                switch_to_edit_mode();
+            if (aim === 'send')
+                send_song_to_server(data);
+        } else {
+            overlay.style.display = 'none';
+            password_window.style.display = 'none';
+            alert('Введён неверный пароль');
+            if (password_window.aim === 'edit') {
+                let url_no_edit = new URL(document.location.href);
+                url_no_edit.searchParams.delete('edit')
+                document.location.href = url_no_edit;
+            }
         }
     }
 
@@ -406,19 +449,7 @@ function show_admin_confirm(aim, data = null) {
             event.preventDefault();
         document.removeEventListener('click', handler);
 
-        overlay.style.display = 'none';
-        password_window.style.display = 'none';
-        if (password_input.value.toLowerCase() === 'jesus') {
-            let jsonString = '{"correct_password_entered": true}';
-            ym(88797016, 'params', JSON.parse(jsonString));
-            if (aim === 'edit')
-                switch_to_edit_mode();
-            if (aim === 'send')
-                send_song_to_server(data);
-        } else {
-            alert('Введён неверный пароль');
-            exit_password_window();
-        }
+        exit_password_window();
     }
 
     let handler = event => {
@@ -536,7 +567,7 @@ function switch_to_edit_mode() {
 
 function send_song_to_server(song_data) {
     let req = new XMLHttpRequest();
-    req.open('POST', document.URL, true, null, 'jesus');
+    req.open('POST', document.URL, true);
     req.setRequestHeader('Content-type', 'application/json; charset=utf-8');
     console.log('song_data posted: ', song_data);
     req.send(JSON.stringify(song_data));
