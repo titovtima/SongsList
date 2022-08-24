@@ -405,8 +405,8 @@ async function checkPassword(password, user = null) {
     });
     let response = await p;
     if (response.ok) {
-        document.cookie = `user=${user}`;
-        document.cookie = `password=${password}`;
+        document.cookie = `user=${user}; max-age=2500000; path=/; samesite=lax`;
+        document.cookie = `password=${password}; max-age=2500000; path=/; samesite=lax`;
         return true;
     }
     return false;
