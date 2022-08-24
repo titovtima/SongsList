@@ -480,6 +480,10 @@ function check_click_coords_not_button(event) {
 
 function switch_to_edit_mode() {
     edit_mode = true;
+
+    let edit_button = document.querySelector('#edit_button');
+    edit_button.style.backgroundImage = "url('/assets/edit_on.png')";
+
     let inputElements = document.querySelectorAll('.input:not(#input_song_name)');
     inputElements.forEach(value => value.style.display = 'block');
     update_main_content_height();
