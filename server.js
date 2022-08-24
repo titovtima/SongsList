@@ -89,6 +89,10 @@ app.post('/song', (req, res) => {
     console.log('Get song from IP: ', req.ip);
     console.log('Song data: ', song_data);
 
+    fs.appendFile('songs_changes.txt', 'Get song from IP: ' + req.ip + '\n' +
+        'Song id: ' + song_id + '\n' +
+        'Song data:\n' + JSON.stringify(song_data) + '\n\n', err => {});
+
     fs.writeFile(songs_data_path + song_id + '.json', JSON.stringify(song_data),  err => {
         if (err) res.sendStatus(500);
         fs.readFile(songs_data_path + 'songs_list.json','utf-8', (err1, data) => {
