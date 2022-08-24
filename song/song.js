@@ -33,6 +33,7 @@ function fit_header_font_size(start_size = 60, min_size = 30) {
         header_font_size -= 1;
         header.style.fontSize = header_font_size + 'px';
     }
+    input_song_name.value = header.innerHTML;
     input_song_name.style.fontSize = header_font_size;
     header.style.whiteSpace = 'nowrap';
     input_song_name.style.whiteSpace = 'nowrap';
@@ -384,7 +385,7 @@ function update_main_content_height() {
 
 function find_cookies() {
     let cookies = {};
-    document.cookie.split(';').forEach(value => {
+    document.cookie.split('; ').forEach(value => {
         let pair = value.split('=');
         cookies[pair[0]] = pair[1];
     });
@@ -403,7 +404,12 @@ async function checkPassword(password, user = null) {
         })
     });
     let response = await p;
-    return response.ok;
+    if (response.ok) {
+        document.cookie = `user=${user}`;
+        document.cookie = `password=${password}`;
+        return true;
+    }
+    return false;
 }
 
 async function show_admin_confirm(aim, data = null) {
