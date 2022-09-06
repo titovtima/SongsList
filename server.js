@@ -73,6 +73,14 @@ function checkAuth(password, user=null) {
     }
 }
 
+let songs_list;
+let max_song_id = 1;
+fs.readFile(songs_data_path + 'songs_list.json','utf-8', (err1, data) => {
+    if (err1) throw err1;
+    songs_list = JSON.parse(data);
+    while (songs_list[max_song_id]) max_song_id++;
+});
+
 app.post('/song', (req, res) => {
     let url = new URL(req.url, 'https://' + host);
     if (!url.searchParams.has('edit')) {
@@ -86,6 +94,11 @@ app.post('/song', (req, res) => {
     let song_id = url.searchParams.get('id');
 
     let song_data = req.body;
+
+    if (song_id === 'new') {
+        song_id = max_song_id;
+        max_song_id++;
+    }
     console.log('Get song from IP: ', req.ip);
     console.log('Song data: ', song_data);
 
@@ -101,7 +114,7 @@ app.post('/song', (req, res) => {
             fs.writeFile(songs_data_path + 'songs_list.json', JSON.stringify(songs_list),  err2 => {
                 if (err2)
                     res.sendStatus(500);
-                res.sendStatus(200);
+                res.end(String(song_id));
             });
         });
     });

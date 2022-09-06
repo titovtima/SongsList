@@ -582,14 +582,12 @@ function send_song_to_server(song_data) {
     console.log('song_data posted: ', song_data);
     req.send(JSON.stringify(song_data));
 
+    req.onerror = () => {
+        alert('Не удалось сохранить песню');
+    }
+
     req.onload = () => {
-        if (req.status == 200){
-            let url = new URL(document.URL);
-            url.searchParams.delete('edit');
-            document.location.href = url.toString();
-        } else {
-            alert('Не удалось сохранить песню');
-        }
+        document.location.href = `/song/?id=${req.response}`;
     }
 }
 

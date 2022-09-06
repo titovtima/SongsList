@@ -27,7 +27,7 @@ function load_songs_list(list) {
     for (let song of songs_list)
         html_list.append(song.element);
 
-    add_song.href = `/song?id=${max_id+1}&edit=true`;
+    add_song.href = `/song?id=new&edit=true`;
 
     load_songs_texts();
 }
