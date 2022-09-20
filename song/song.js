@@ -4,7 +4,6 @@ const urlParams = new URLSearchParams(window.location.search);
 const songNumber = urlParams.get('id');
 
 let edit_mode = false;
-let show_blocks = 'both';
 
 let header = document.querySelector('#song_name');
 let input_song_name = document.querySelector('#input_song_name');
@@ -375,17 +374,10 @@ function update_main_content_height() {
     let chords_column = document.querySelector('#chords_column');
     text_column.style.height = '0';
     chords_column.style.height = '0';
-    switch (show_blocks) {
-        case 'both':
-            main_content.style.height = Math.max(text_column.scrollHeight, chords_column.scrollHeight) + 'px';
-            break;
-        case 'text':
-            main_content.style.height = text_column.scrollHeight + chords_column.clientHeight + 60 + 'px';
-            break;
-        case 'chords':
-            main_content.style.height = chords_column.scrollHeight + text_column.clientHeight + 60 + 'px';
-            break;
-    }
+    let main_height = 0;
+    main_height = Math.max(main_height, text_column.scrollHeight);
+    main_height = Math.max(main_height, chords_column.scrollHeight);
+    main_content.style.height = main_height + 'px';
     text_column.style.height = '100%';
     chords_column.style.height = '100%';
 }
