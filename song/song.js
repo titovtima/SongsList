@@ -3,6 +3,15 @@ const songs_data_path = '/songs_data/';
 const urlParams = new URLSearchParams(window.location.search);
 const songNumber = urlParams.get('id');
 
+if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+    let mobile_css_link = document.createElement("link");
+    mobile_css_link.rel = "stylesheet";
+    mobile_css_link.type = "text/css";
+    mobile_css_link.href = "song-mobile.css";
+    let head = document.querySelector('head');
+    head.append(mobile_css_link);
+}
+
 let edit_mode = false;
 
 let header = document.querySelector('#song_name');

@@ -1,0 +1,15 @@
+.view_button {
+    width: 49%;
+    height: 100px;
+    box-sizing: border-box;
+}
+
+#chords_view_button {
+    width: 49%;
+    float: right;
+}
+
+#text_view_button {
+    width: 49%;
+    float: left;
+}
