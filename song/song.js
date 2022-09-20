@@ -17,8 +17,10 @@ let text_display = document.querySelector('#song_text_display');
 let chords_column = document.querySelector('#chords_column');
 let text_column = document.querySelector('#text_column');
 
-let text_parts = [];
-let chords_parts = [];
+let song_parts = {
+    "text_parts": [],
+    "chords_parts": []
+}
 
 if (urlParams.get('edit')) {
     show_admin_confirm('edit');
@@ -72,6 +74,7 @@ function load_song(data) {
         add_chords_part(part)
     }
 
+    set_view();
     fit_header_font_size();
 }
 
@@ -81,9 +84,9 @@ function add_text_part(part) {
     add_text_data_to_wrap_div(wrap_div, part);
 
     wrap_div.is_text = true;
-    wrap_div.part_num = text_parts.length;
+    wrap_div.part_num = song_parts.text_parts.length;
     wrap_div.innerButtons = [];
-    text_parts.push(wrap_div);
+    song_parts.text_parts.push(wrap_div);
     text_display.append(wrap_div);
     add_edit_buttons_to_song_part(wrap_div);
     add_textarea_for_song_part(wrap_div, 'text');
@@ -118,8 +121,8 @@ function add_chords_part(part) {
 
     wrap_div.is_chords = true;
     wrap_div.innerButtons = [];
-    wrap_div.part_num = chords_parts.length;
-    chords_parts.push(wrap_div);
+    wrap_div.part_num = song_parts.chords_parts.length;
+    song_parts.chords_parts.push(wrap_div);
     chords_display.append(wrap_div);
     add_edit_buttons_to_song_part(wrap_div);
     add_textarea_for_song_part(wrap_div, 'chords');
@@ -234,7 +237,7 @@ function edit_song_part(part) {
 
 function redraw_song_text() {
     text_display.innerHTML = "";
-    for (let part of text_parts) {
+    for (let part of song_parts.text_parts) {
         text_display.append(part);
         update_inner_buttons_positions(part);
     }
@@ -243,7 +246,7 @@ function redraw_song_text() {
 
 function redraw_song_chords() {
     chords_display.innerHTML = "";
-    for (let part of chords_parts) {
+    for (let part of song_parts.chords_parts) {
         chords_display.append(part);
         update_inner_buttons_positions(part);
     }
@@ -257,11 +260,11 @@ function add_delete_cross(parent) {
         parent.button_clicked = true;
         parent.remove();
         if (parent.is_text) {
-            text_parts.splice(parent.part_num, 1);
+            song_parts.text_parts.splice(parent.part_num, 1);
             update_text_inner_buttons();
         }
         if (parent.is_chords) {
-            chords_parts.splice(parent.part_num, 1);
+            song_parts.chords_parts.splice(parent.part_num, 1);
             update_chords_inner_buttons();
         }
         update_main_content_height();
@@ -282,13 +285,15 @@ function add_move_up_arrow(parent) {
             let n = parent.part_num;
             parent.part_num = n-1;
             if (parent.is_text) {
-                text_parts.splice(n - 1, 2, text_parts[n], text_parts[n - 1]);
-                text_parts[n].part_num = n;
+                song_parts.text_parts.splice(n - 1, 2,
+                    song_parts.text_parts[n], song_parts.text_parts[n - 1]);
+                song_parts.text_parts[n].part_num = n;
                 redraw_song_text();
             }
             if (parent.is_chords) {
-                chords_parts.splice(n - 1, 2, chords_parts[n], chords_parts[n - 1]);
-                chords_parts[n].part_num = n;
+                song_parts.chords_parts.splice(n - 1, 2,
+                    song_parts.chords_parts[n], song_parts.chords_parts[n - 1]);
+                song_parts.chords_parts[n].part_num = n;
                 redraw_song_chords();
             }
         }
@@ -306,20 +311,22 @@ function add_move_down_arrow(parent) {
     arrow_down.onclick = () => {
         parent.button_clicked = true;
         if (parent.is_text) {
-            if (parent.part_num < text_parts.length - 1) {
+            if (parent.part_num < song_parts.text_parts.length - 1) {
                 let n = parent.part_num;
                 parent.part_num = n + 1;
-                text_parts.splice(n, 2, text_parts[n+1], text_parts[n]);
-                text_parts[n].part_num = n;
+                song_parts.text_parts.splice(n, 2,
+                    song_parts.text_parts[n+1], song_parts.text_parts[n]);
+                song_parts.text_parts[n].part_num = n;
                 redraw_song_text();
             }
         }
         if (parent.is_chords) {
-            if (parent.part_num < chords_parts.length - 1) {
+            if (parent.part_num < song_parts.chords_parts.length - 1) {
                 let n = parent.part_num;
                 parent.part_num = n + 1;
-                chords_parts.splice(n, 2, chords_parts[n+1], chords_parts[n]);
-                chords_parts[n].part_num = n;
+                song_parts.chords_parts.splice(n, 2,
+                    song_parts.chords_parts[n+1], song_parts.chords_parts[n]);
+                song_parts.chords_parts[n].part_num = n;
                 redraw_song_chords();
             }
         }
@@ -348,18 +355,18 @@ function update_inner_buttons_positions(parent) {
 }
 
 function update_text_inner_buttons() {
-    text_parts.forEach(value => update_inner_buttons_positions(value));
+    song_parts.text_parts.forEach(value => update_inner_buttons_positions(value));
 }
 
 function update_chords_inner_buttons() {
-    chords_parts.forEach(value => update_inner_buttons_positions(value));
+    song_parts.chords_parts.forEach(value => update_inner_buttons_positions(value));
 }
 
 // text_column.addEventListener('scroll', () => {
-//     text_parts.forEach(value => update_inner_buttons_positions(value, text_column.scrollLeft));
+//     song_parts.text_parts.forEach(value => update_inner_buttons_positions(value, text_column.scrollLeft));
 // });
 // chords_column.addEventListener('scroll', () => {
-//     chords_parts.forEach(value => update_inner_buttons_positions(value, chords_column.scrollLeft));
+//     song_parts.chords_parts.forEach(value => update_inner_buttons_positions(value, chords_column.scrollLeft));
 // });
 
 function update_main_content_height() {
@@ -497,7 +504,7 @@ function switch_to_edit_mode() {
             "text": ''
         }
         add_text_part(new_part);
-        edit_song_part(text_parts[text_parts.length - 1]);
+        edit_song_part(song_parts.text_parts[song_parts.text_parts.length - 1]);
     }
 
     add_chords.onclick = () => {
@@ -506,7 +513,7 @@ function switch_to_edit_mode() {
             "chords": ''
         }
         add_chords_part(new_part);
-        edit_song_part(chords_parts[chords_parts.length - 1]);
+        edit_song_part(song_parts.chords_parts[song_parts.chords_parts.length - 1]);
     }
 
     let input_song_name_form = document.querySelector('#input_song_name_form');
@@ -538,11 +545,11 @@ function switch_to_edit_mode() {
             update_song_name();
     });
 
-    for (let part of text_parts)
+    for (let part of song_parts.text_parts)
         part.addEventListener('click', event => {
             if (check_click_coords_not_button(event)) edit_song_part(part);
         });
-    for (let part of chords_parts)
+    for (let part of song_parts.chords_parts)
         part.addEventListener('click', event => {
             if (check_click_coords_not_button(event)) edit_song_part(part);
         });
@@ -603,76 +610,98 @@ function set_edit_button_url() {
 
 set_edit_button_url();
 
-function changing_page_split() {
-    let text_part = document.querySelector('#text_page_split');
-    let text_header = document.querySelector('#text_column_header');
-    let chords_part = document.querySelector('#chords_page_split');
-    let chords_header = document.querySelector('#chords_column_header');
-    let both_part = document.querySelector('#both_page_split');
-    let both_header = document.querySelector('#both_column_header');
+function set_view() {
+    let text_view_button = document.querySelector('#text_view_button');
+    let chords_view_button = document.querySelector('#chords_view_button');
 
-    let text_content = document.querySelector('#no_header_text_column');
-    let chords_content = document.querySelector('#no_header_chords_column');
-    let main_content = document.querySelector('.main_content');
+    // document.cookie = 'songs_view=1; max-age=-1';
+    let cookie = find_cookies().songs_view;
+    console.log(cookie);
+    if (!cookie)
+        cookie = 'text|chords';
 
-    text_header.addEventListener('click', () => {
-        show_blocks = 'text';
-        main_content.innerHTML = '';
-        main_content.append(both_part);
-        main_content.append(chords_part);
-        main_content.append(text_part);
-        chords_content.style.display = 'none';
-        chords_part.style.height = chords_header.clientHeight + 20 + 'px';
-        chords_part.style.width = '50%';
-        both_part.style.height = both_header.clientHeight + 20 + 'px';
-        both_part.style.display = 'block';
-        text_content.style.display = 'block';
-        text_part.style.width = '100%';
-        text_part.style.height = 'max-content';
+    cookie = cookie.split('|');
+
+    if (!edit_mode && song_parts) {
+        if (!song_parts.text_parts || song_parts.text_parts.length === 0) {
+            text_view_button.style.display = 'none';
+            cookie = cookie.filter(value => value !== 'text');
+        }
+        if (!song_parts.chords_parts || song_parts.chords_parts.length === 0) {
+            chords_view_button.style.display = 'none';
+            cookie = cookie.filter(value => value !== 'chords');
+        }
+    }
+
+    if (cookie.includes('text'))
+        text_view_button.style.fontWeight = 'bold';
+    if (cookie.includes('chords'))
+        chords_view_button.style.fontWeight = 'bold';
+
+    function change_page_split() {
+        let text_part = document.querySelector('#text_page_split');
+        let chords_part = document.querySelector('#chords_page_split');
+
+        let split_part = 100 / Math.max(cookie.length, 1) + '%';
+
+        if (cookie.includes('text')) {
+            text_part.style.display = 'block';
+            text_part.style.width = split_part;
+            text_view_button.style.fontWeight = 'bold';
+            text_view_button.style.border = '2px solid black';
+            text_view_button.style.margin = '0';
+        } else {
+            text_part.style.display = 'none';
+            text_view_button.style.fontWeight = 'normal';
+            text_view_button.style.border = 'none';
+            text_view_button.style.margin = '2px';
+        }
+
+
+        if (cookie.includes('chords')) {
+            chords_part.style.display = 'block';
+            chords_part.style.width = split_part;
+            chords_view_button.style.fontWeight = 'bold';
+            chords_view_button.style.border = '2px solid black';
+            chords_view_button.style.margin = '0';
+        } else {
+            chords_part.style.display = 'none';
+            chords_view_button.style.fontWeight = 'normal';
+            chords_view_button.style.border = 'none';
+            chords_view_button.style.margin = '2px';
+        }
+
+        update_main_content_height();
         update_text_inner_buttons();
         update_chords_inner_buttons();
-        update_main_content_height();
-    });
+    }
 
-    chords_header.addEventListener('click', () => {
-        show_blocks = 'chords';
-        main_content.innerHTML = '';
-        main_content.append(both_part);
-        main_content.append(text_part);
-        main_content.append(chords_part);
-        text_part.style.height = text_header.clientHeight + 20 + 'px';
-        text_part.style.width = '50%';
-        text_content.style.display = 'none';
-        both_part.style.height = both_header.clientHeight + 20 + 'px';
-        both_part.style.display = 'block';
-        chords_content.style.display = 'block';
-        chords_part.style.width = '100%';
-        chords_part.style.height = 'max-content';
-        update_text_inner_buttons();
-        update_chords_inner_buttons();
-        update_main_content_height();
-    });
+    text_view_button.onclick = () => {
+        if (cookie.includes('text')) {
+            cookie = cookie.filter(value => value !== 'text')
+        } else {
+            cookie.push('text');
+        }
 
-    both_header.addEventListener('click', () => {
-        show_blocks = 'both';
-        main_content.innerHTML = '';
-        main_content.append(both_part);
-        main_content.append(text_part);
-        main_content.append(chords_part);
-        both_part.style.display = 'none';
-        text_content.style.display = 'block';
-        text_part.style.width = '50%';
-        text_part.style.height = '100%';
-        chords_content.style.display = 'block';
-        chords_part.style.width = '50%';
-        chords_part.style.height = '100%';
-        update_text_inner_buttons();
-        update_chords_inner_buttons();
-        update_main_content_height();
-    });
+        console.log('change view cookie to', cookie.join('|'));
+        document.cookie = `songs_view=${cookie.join('|')}`
+        change_page_split();
+    }
+
+    chords_view_button.onclick = () => {
+        if (cookie.includes('chords')) {
+            cookie = cookie.filter(value => value !== 'chords')
+        } else {
+            cookie.push('chords');
+        }
+
+        console.log('change view cookie to', cookie.join('|'));
+        document.cookie = `songs_view=${cookie.join('|')}`
+        change_page_split();
+    }
+
+    change_page_split();
 }
-
-changing_page_split();
 
 window.addEventListener('resize', () => {
     update_chords_inner_buttons();

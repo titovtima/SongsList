@@ -195,3 +195,34 @@ textarea {
     width: 100%;
     padding: 0 5px;
 }
+
+#view_buttons_line {
+    padding: 0 20px;
+    width: 100%;
+    overflow-x: scroll;
+    height: min-content;
+    white-space: nowrap;
+}
+
+.view_button {
+    padding: 10px 20px;
+    background-color: #0ff;
+    border-radius: 10px;
+    border: none;
+    display: inline-block;
+    text-align: center;
+    vertical-align: center;
+    font-size: 30px;
+    color: #06c;
+    font-weight: bold;
+    margin: 2px;
+    box-sizing: content-box;
+}
+
+#text_view_button {
+    width: 90px;
+}
+
+#chords_view_button {
+    width: 145px;
+}
