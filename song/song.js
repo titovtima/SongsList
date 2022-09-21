@@ -182,7 +182,7 @@ function add_textarea_for_song_part(wrap_div, type) {
     let submit_button = document.createElement('input');
     submit_button.type = 'submit';
     submit_button.value = 'Сохранить';
-    submit_button.className = 'edit_song_part';
+    submit_button.className = 'edit_song_part button';
     edit_form.header_input = header_input;
     edit_form.part_input = part_input;
     edit_form.append(header_input);
