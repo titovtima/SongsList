@@ -168,6 +168,7 @@ function add_edit_buttons_to_song_part(wrap_div) {
 function add_textarea_for_song_part(wrap_div, type) {
     let edit_form = document.createElement('form');
     edit_form.style.display = 'none';
+    edit_form.className += ' edit_song_form';
     edit_form.style.width = Math.max(text_column.clientWidth, chords_column.clientWidth) - 40 + 'px';
     let header_input = document.createElement('input');
     header_input.type = 'text';
@@ -675,6 +676,7 @@ function set_view() {
         update_main_content_height();
         update_text_inner_buttons();
         update_chords_inner_buttons();
+        update_textarea_width();
     }
 
     text_view_button.onclick = () => {
@@ -702,6 +704,14 @@ function set_view() {
     }
 
     change_page_split();
+}
+
+function update_textarea_width() {
+    let elements = document.querySelectorAll('textarea');
+    elements.forEach(value => {
+        value.parentNode.style.width = value.parentNode.parentNode.parentNode.parentNode.clientWidth - 20 + 'px';
+        fit_textarea_height(value);
+    });
 }
 
 window.addEventListener('resize', () => {
