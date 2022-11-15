@@ -70,7 +70,9 @@ fetch(songs_data_path + songNumber + '.json')
     })
     .then(response => load_song(response));
 
+let song_data = undefined;
 function load_song(data) {
+    song_data = data;
     header.append(data.name);
     title.append(data.name);
 
@@ -82,8 +84,10 @@ function load_song(data) {
         add_chords_part(part)
     }
 
+    addKeyChooseLine();
     set_view();
     fit_header_font_size();
+    update_main_content_height();
 }
 
 function add_text_part(part) {
@@ -136,7 +140,7 @@ function add_chords_part(part) {
     add_textarea_for_song_part(wrap_div, 'chords');
 }
 
-function add_chords_data_to_wrap_div(wrap_div, chords_data) {
+function add_chords_data_to_wrap_div(wrap_div, chords_data, update_chords_data = true) {
     let part_chords = wrap_div.display_part;
     if (!part_chords) {
         part_chords = document.createElement('pre');
@@ -152,10 +156,11 @@ function add_chords_data_to_wrap_div(wrap_div, chords_data) {
         part_chords.append(part_header, '\n');
     }
     part_chords.append(chords_data.chords);
-    wrap_div.song_data = {
-        "name": chords_data.name,
-        "chords": chords_data.chords
-    }
+    if (update_chords_data)
+        wrap_div.song_data = {
+            "name": chords_data.name,
+            "chords": chords_data.chords
+        }
 }
 
 function add_edit_buttons_to_song_part(wrap_div) {
@@ -712,6 +717,77 @@ function update_textarea_width() {
         value.parentNode.style.width = value.parentNode.parentNode.parentNode.parentNode.clientWidth - 20 + 'px';
         fit_textarea_height(value);
     });
+}
+
+function addKeyChooseLine() {
+    let container = document.querySelector('#key_choose_container');
+    if (song_data.key === undefined) {
+        container.style.display = 'none';
+        return;
+    }
+    container.style.display = 'block';
+
+    let origin_key = MusicTheory.keyFromName(song_data.key);
+    if (origin_key === null) {
+        container.style.display = 'none';
+        return;
+    }
+    let keys = [];
+
+    if (origin_key.mode === '') {
+        keys = ['C', 'D♭', 'D', 'E♭', 'E', 'F', 'F♯', 'G', 'A♭', 'A', 'B♭', 'B'];
+    } else if (origin_key.mode === 'm') {
+        keys = ['Am', 'B♭m', 'Bm', 'Cm', 'C♯m', 'Dm', 'D♯m', 'Em', 'Fm', 'F♯m', 'Gm', 'G♯m'];
+    } else {
+        container.style.display = 'none';
+        return;
+    }
+
+    let keys_buttons_images = {}
+    keys.forEach((key, ind) => {
+        let button = document.createElement('div');
+        button.style.display = 'inline-block';
+        button.style.position = 'relative';
+        let img = document.createElement('img');
+        img.src = '/assets/key_background.png';
+        img.style.height = '40px';
+        // img.style.position = 'absolute';
+        keys_buttons_images[key] = img;
+        button.append(img);
+        let text = document.createElement('h4');
+        text.innerHTML = key;
+        text.style.fontFamily = '"JBMusic", serif';
+        text.style.position = 'absolute';
+        text.style.zIndex = '1';
+        text.style.top = '0';
+        text.style.left = '0';
+        text.style.textAlign = 'center';
+        text.style.lineHeight = '40px';
+        text.style.fontSize = '25px';
+        button.append(text);
+        text.style.width = '100%';
+        text.style.height = '100%';
+        container.append(button);
+
+        button.onclick = () => {
+            song_parts.chords_parts.forEach(part => {
+                add_chords_data_to_wrap_div(part, {
+                    "name": part.song_data.name,
+                    "chords": MusicTheory.transposeChordsText(
+                        MusicTheory.chordsTextFromPlainText(part.song_data.chords), origin_key,
+                        MusicTheory.keyFromName(key))
+                }, false);
+            });
+            for (let k in keys_buttons_images) {
+                keys_buttons_images[k].src = '/assets/key_background.png'
+            }
+            img.src = '/assets/key_background_on.png';
+        };
+
+        if (key === origin_key.name)
+            img.src = '/assets/key_background_on.png';
+    });
+    update_main_content_height();
 }
 
 window.addEventListener('resize', () => {
