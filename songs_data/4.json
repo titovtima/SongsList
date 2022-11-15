@@ -18,19 +18,20 @@
     },
     {
       "name": "Иисус...",
-      "chords": "С | F | C | G"
+      "chords": "C | F | C | G"
     },
     {
       "name": "Да придет...",
-      "chords": "C | Em | F | G"
+      "chords": "C | C/E | F | G"
     },
     {
       "name": "Поклоняюсь",
-      "chords": "С | Dm | Am | G"
+      "chords": "C | Dm | Am | G"
     },
     {
       "name": "Присутствие Божье...",
-      "chords": "С | Am | F | G"
+      "chords": "C | Am | F | G"
     }
-  ]
+  ],
+  "key": "C"
 }

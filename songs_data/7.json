@@ -14,15 +14,16 @@
   "chords": [
     {
       "name": "Пусть несёт...",
-      "chords": "F#m | A | E | Bm |\nD | E | F#m | F#m |"
+      "chords": "F♯m | A | E | Bm |\nD | E | F♯m | F♯m |"
     },
     {
       "name": "О-о-о жажду больше...",
-      "chords": "F#m | F#m | A | A |\nD | E | F#m | F#m |"
+      "chords": "F♯m | F♯m | A | A |\nD | E | F♯m | F♯m |"
     },
     {
       "name": "Хочу напиться я",
-      "chords": "F#m | F#m | D E | F#m |\nF#m | F#m | D E | Bm |"
+      "chords": "F♯m | F♯m | D E | F♯m |\nF♯m | F♯m | D E | Bm |"
     }
-  ]
+  ],
+  "key": "F♯m"
 }

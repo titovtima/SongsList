@@ -21,7 +21,7 @@
   "chords": [
     {
       "name": "Куплет",
-      "chords": "G | A | G | A |\nG | A D/F# | G A | D |"
+      "chords": "G | A | G | A |\nG | A D/F♯ | G A | D |"
     },
     {
       "name": "Припев",
@@ -29,7 +29,8 @@
     },
     {
       "name": "Мост",
-      "chords": "D | F#m | Bm | G |\nD/A | A | Em | G |"
+      "chords": "D | F♯m | Bm | G |\nD/A | A | Em | G |"
     }
-  ]
+  ],
+  "key": "D"
 }

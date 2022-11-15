@@ -24,15 +24,16 @@
   "chords": [
     {
       "name": "Куплет и припев",
-      "chords": "D F#m | E A/С# |\nD F#m | E |"
+      "chords": "D F♯m | E A/C♯ |\nD F♯m | E |"
     },
     {
       "name": "Предприпев",
-      "chords": "F#m | E | D | A/C# |\nF#m | E | D | D |"
+      "chords": "F♯m | E | D | A/C♯ |\nF♯m | E | D | D |"
     },
     {
       "name": "Мост",
       "chords": "D | D | E | E |"
     }
-  ]
+  ],
+  "key": "A"
 }

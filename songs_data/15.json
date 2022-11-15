@@ -17,11 +17,12 @@
   "chords": [
     {
       "name": "Это новое время",
-      "chords": "G | A | D | D |\nG | A | D | D |\nG | F#m | Bm | Bm/A |\nEm | A | D | D |"
+      "chords": "G | A | D | D |\nG | A | D | D |\nG | F♯m | Bm | Bm/A |\nEm | A | D | D |"
     },
     {
       "name": "Ты призвал меня из тьмы + Аллилуйя",
-      "chords": "G | A | F#m | Bm |\nG | A | D | D |\nG | A | F#m | Bm |\nG | A | D | D |"
+      "chords": "G | A | F♯m | Bm |\nG | A | D | D |\nG | A | F♯m | Bm |\nG | A | D | D |"
     }
-  ]
+  ],
+  "key": "D"
 }

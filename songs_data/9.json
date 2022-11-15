@@ -21,19 +21,20 @@
   "chords": [
     {
       "name": "Куплет 1",
-      "chords": "E | E | A/C# | A/C# |\nF#m | E/G# | A | A |\nE | E | A/C# | A/C# |\nF#m | E/G# | A | A |"
+      "chords": "E | E | A/C♯ | A/C♯ |\nF♯m | E/G♯ | A | A |\nE | E | A/C♯ | A/C♯ |\nF♯m | E/G♯ | A | A |"
     },
     {
       "name": "Припев",
-      "chords": "E | E | B | B |\nF#m | C#m | A | B |"
+      "chords": "E | E | B | B |\nF♯m | C♯m | A | B |"
     },
     {
       "name": "Куплет 2",
-      "chords": "E | E | A/C# | A/C# |\nF#m | E/G# | A | B |"
+      "chords": "E | E | A/C♯ | A/C♯ |\nF♯m | E/G♯ | A | B |"
     },
     {
       "name": "Мост",
-      "chords": "E/G# | A | C#m | B |"
+      "chords": "E/G♯ | A | C♯m | B |"
     }
-  ]
+  ],
+  "key": "E"
 }

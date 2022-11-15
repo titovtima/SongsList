@@ -21,15 +21,16 @@
   "chords": [
     {
       "name": "Куплет и припев",
-      "chords": "Dm | Bb | F | C |"
+      "chords": "Dm | B♭ | F | C |"
     },
     {
       "name": "Мост",
-      "chords": "Bb | Gm | F | C |"
+      "chords": "B♭ | Gm | F | C |"
     },
     {
       "name": "Проигрыш после моста",
-      "chords": "Bb | Gm | F | Am |\nBb | Gm | F | A |"
+      "chords": "B♭ | Gm | F | Am |\nB♭ | Gm | F | A |"
     }
-  ]
+  ],
+  "key": "Dm"
 }

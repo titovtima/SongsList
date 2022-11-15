@@ -25,16 +25,16 @@
   "chords": [
     {
       "name": "Припев",
-      "chords": "A | A | F#m D | A\nA | A | F#m D | A\nF#m D | A |"
+      "chords": "A | A | F♯m D | A\nA | A | F♯m D | A\nF♯m D | A |"
     },
     {
       "name": "Куплет",
-      "chords": "F#m D | A | A | - 3р\nF#m | D A | F#m | D A |\nD | D |"
+      "chords": "F♯m D | A | A | - 3р\nF♯m | D A | F♯m | D A |\nD | D |"
     },
     {
       "name": "Мост",
       "chords": "A | A | A | A |\nD | D | D | D | - 2р"
     }
-  ]
+  ],
+  "key": "A"
 }
-

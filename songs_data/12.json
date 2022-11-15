@@ -17,7 +17,8 @@
   "chords": [
     {
       "name": "",
-      "chords": "A | F#m | C#m | B |"
+      "chords": "A | F♯m | C♯m | B |"
     }
-  ]
+  ],
+  "key": "C♯m"
 }

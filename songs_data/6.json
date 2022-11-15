@@ -13,11 +13,12 @@
   "chords": [
     {
       "name": "Куплет",
-      "chords": "F | G | C | Am |\nF | G | C | С |"
+      "chords": "Dm | G | C | Am |\nDm | G | C | С |"
     },
     {
       "name": "Припев",
       "chords": "C | G | F G | C"
     }
-  ]
+  ],
+  "key": "C"
 }
