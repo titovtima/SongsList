@@ -227,3 +227,25 @@ textarea {
 #chords_view_button {
     width: 145px;
 }
+
+.key_choose_button {
+    display: inline-block;
+    position: relative;
+}
+
+.key_choose_image {
+    height: 40px;
+}
+
+.key_choose_text {
+    font-family: JBMusic, serif;
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    text-align: center;
+    line-height: 40px;
+    font-size: 20px;
+    width: 100%;
+    height: 100%;
+}

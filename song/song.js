@@ -756,27 +756,16 @@ function addKeyChooseLine() {
     let keys_buttons_images = {}
     keys.forEach((key, ind) => {
         let button = document.createElement('div');
-        button.style.display = 'inline-block';
-        button.style.position = 'relative';
+        button.className += ' key_choose_button';
         let img = document.createElement('img');
         img.src = '/assets/key_background.png';
-        img.style.height = '40px';
-        // img.style.position = 'absolute';
+        img.className += ' key_choose_image';
         keys_buttons_images[key] = img;
         button.append(img);
         let text = document.createElement('h4');
         text.innerHTML = key;
-        text.style.fontFamily = '"JBMusic", serif';
-        text.style.position = 'absolute';
-        text.style.zIndex = '1';
-        text.style.top = '0';
-        text.style.left = '0';
-        text.style.textAlign = 'center';
-        text.style.lineHeight = '40px';
-        text.style.fontSize = '20px';
+        text.className += ' key_choose_text';
         button.append(text);
-        text.style.width = '100%';
-        text.style.height = '100%';
         container.append(button);
 
         button.onclick = () => {

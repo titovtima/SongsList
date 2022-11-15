@@ -36,7 +36,11 @@ textarea {
     min-height: 125px;
 }
 
-/*.song_part_button {*/
-/*    height: 30px;*/
-/*    width: 30px;*/
-/*}*/
+.key_choose_image {
+    height: 75px;
+}
+
+.key_choose_text {
+    line-height: 75px;
+    font-size: 40px;
+}
