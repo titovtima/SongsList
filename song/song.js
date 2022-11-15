@@ -141,6 +141,7 @@ function add_chords_part(part) {
 }
 
 function add_chords_data_to_wrap_div(wrap_div, chords_data, update_chords_data = true) {
+    console.log('chords_data:', chords_data);
     let part_chords = wrap_div.display_part;
     if (!part_chords) {
         part_chords = document.createElement('pre');
@@ -582,11 +583,14 @@ function switch_to_edit_mode() {
         for (let elem of chords_display.children) {
             song_data.chords.push(elem.song_data);
         }
+        if (current_key !== null)
+            song_data.key = current_key.name;
 
         show_admin_confirm('send', song_data);
     }
 
     set_edit_button_url();
+    // addKeyChooseLine();
 }
 
 function send_song_to_server(song_data) {
@@ -719,28 +723,34 @@ function update_textarea_width() {
     });
 }
 
+let current_key = null;
 function addKeyChooseLine() {
+    if (!song_data) return;
     let container = document.querySelector('#key_choose_container');
-    if (song_data.key === undefined) {
-        container.style.display = 'none';
-        return;
+
+    let origin_key = null;
+    if (!song_data.key) {
+        if (!edit_mode) {
+            container.style.display = 'none';
+            return;
+        }
+    } else {
+        origin_key = MusicTheory.keyFromName(song_data.key);
     }
     container.style.display = 'block';
 
-    let origin_key = MusicTheory.keyFromName(song_data.key);
-    if (origin_key === null) {
+    if (!origin_key && !edit_mode) {
         container.style.display = 'none';
         return;
     }
+    current_key = origin_key;
     let keys = [];
 
-    if (origin_key.mode === '') {
-        keys = ['C', 'D♭', 'D', 'E♭', 'E', 'F', 'F♯', 'G', 'A♭', 'A', 'B♭', 'B'];
-    } else if (origin_key.mode === 'm') {
-        keys = ['Am', 'B♭m', 'Bm', 'Cm', 'C♯m', 'Dm', 'D♯m', 'Em', 'Fm', 'F♯m', 'Gm', 'G♯m'];
-    } else {
-        container.style.display = 'none';
-        return;
+    if (edit_mode || origin_key.mode === '') {
+        keys.push('C', 'D♭', 'D', 'E♭', 'E', 'F', 'F♯', 'G', 'A♭', 'A', 'B♭', 'B');
+    }
+    if (edit_mode || origin_key.mode === 'm') {
+        keys.push('Am', 'B♭m', 'Bm', 'Cm', 'C♯m', 'Dm', 'D♯m', 'Em', 'Fm', 'F♯m', 'Gm', 'G♯m');
     }
 
     let keys_buttons_images = {}
@@ -763,31 +773,47 @@ function addKeyChooseLine() {
         text.style.left = '0';
         text.style.textAlign = 'center';
         text.style.lineHeight = '40px';
-        text.style.fontSize = '25px';
+        text.style.fontSize = '20px';
         button.append(text);
         text.style.width = '100%';
         text.style.height = '100%';
         container.append(button);
 
         button.onclick = () => {
-            song_parts.chords_parts.forEach(part => {
-                add_chords_data_to_wrap_div(part, {
-                    "name": part.song_data.name,
-                    "chords": MusicTheory.transposeChordsText(
-                        MusicTheory.chordsTextFromPlainText(part.song_data.chords), origin_key,
-                        MusicTheory.keyFromName(key))
-                }, false);
-            });
-            for (let k in keys_buttons_images) {
-                keys_buttons_images[k].src = '/assets/key_background.png'
+            current_key = MusicTheory.keyFromName(key)
+            if (!origin_key) {
+                origin_key = current_key;
+                img.src = '/assets/key_background_on.png';
+            } else if (origin_key.name === key && edit_mode) {
+                origin_key = null;
+                current_key = null;
+                img.src = '/assets/key_background.png';
+            } else {
+                song_parts.chords_parts.forEach(part => {
+                    let chords_text = MusicTheory.chordsTextFromPlainText(part.song_data.chords);
+                    try {
+                        let new_chords = MusicTheory
+                            .transposeChordsText(chords_text, origin_key, current_key).toString();
+                        add_chords_data_to_wrap_div(part, {
+                            "name": part.song_data.name,
+                            "chords": new_chords
+                        }, edit_mode);
+                    } catch (e) {}
+                });
+                for (let k in keys_buttons_images) {
+                    keys_buttons_images[k].src = '/assets/key_background.png'
+                }
+                img.src = '/assets/key_background_on.png';
+                if (edit_mode)
+                    origin_key = current_key;
             }
-            img.src = '/assets/key_background_on.png';
         };
 
-        if (key === origin_key.name)
+        if (origin_key && key === origin_key.name)
             img.src = '/assets/key_background_on.png';
     });
     update_main_content_height();
+    update_chords_inner_buttons();
 }
 
 window.addEventListener('resize', () => {
