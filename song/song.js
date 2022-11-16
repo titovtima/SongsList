@@ -26,7 +26,7 @@ let chords_column = document.querySelector('#chords_column');
 let text_column = document.querySelector('#text_column');
 
 if (urlParams.get('edit')) {
-    show_admin_confirm('edit');
+    showAdminConfirm('edit');
 }
 
 fetch(songs_data_path + songNumber + '.json')
@@ -43,28 +43,26 @@ fetch(songs_data_path + songNumber + '.json')
                 "chords": []
         })
     })
-    .then(response => load_song(response));
+    .then(response => loadSong(response));
 
 let song_data = undefined;
-function load_song(data) {
+function loadSong(data) {
     song_data = data;
     header.append(data.name);
     title.append(data.name);
 
     for (let part of data.text) {
-        // add_text_part(part);
         new SongPart('text', part);
     }
 
     for (let part of data.chords) {
-        // add_chords_part(part);
         new SongPart('chords', part);
     }
 
     addKeyChooseLine();
-    set_view();
-    fit_header_font_size();
-    update_main_content_height();
+    setView();
+    fitHeaderFontSize();
+    updateMainContentHeight();
 }
 
 let song_parts = {
@@ -114,7 +112,7 @@ class SongPart {
         this.addDeleteCross();
         this.addMoveUpArrow();
         this.addMoveDownArrow();
-        update_main_content_height();
+        updateMainContentHeight();
     }
 
     addDeleteCross() {
@@ -125,13 +123,13 @@ class SongPart {
             this.wrap_div.remove();
             if (this.type === 'text') {
                 song_parts.text_parts.splice(this.part_num, 1);
-                update_text_inner_buttons();
+                updateTextInnerButtons();
             }
             if (this.type === 'chords') {
                 song_parts.chords_parts.splice(this.part_num, 1);
-                update_chords_inner_buttons();
+                updateChordsInnerButtons();
             }
-            update_main_content_height();
+            updateMainContentHeight();
         }
         if (edit_mode)
             delete_cross.style.display = 'block';
@@ -152,13 +150,13 @@ class SongPart {
                     song_parts.text_parts.splice(n - 1, 2,
                         song_parts.text_parts[n], song_parts.text_parts[n - 1]);
                     song_parts.text_parts[n].part_num = n;
-                    redraw_song_text();
+                    redrawSongText();
                 }
                 if (this.type === 'chords') {
                     song_parts.chords_parts.splice(n - 1, 2,
                         song_parts.chords_parts[n], song_parts.chords_parts[n - 1]);
                     song_parts.chords_parts[n].part_num = n;
-                    redraw_song_chords();
+                    redrawSongChords();
                 }
             }
         }
@@ -181,7 +179,7 @@ class SongPart {
                     song_parts.text_parts.splice(n, 2,
                         song_parts.text_parts[n+1], song_parts.text_parts[n]);
                     song_parts.text_parts[n].part_num = n;
-                    redraw_song_text();
+                    redrawSongText();
                 }
             }
             if (this.type === 'chords') {
@@ -191,7 +189,7 @@ class SongPart {
                     song_parts.chords_parts.splice(n, 2,
                         song_parts.chords_parts[n+1], song_parts.chords_parts[n]);
                     song_parts.chords_parts[n].part_num = n;
-                    redraw_song_chords();
+                    redrawSongChords();
                 }
             }
         }
@@ -214,7 +212,7 @@ class SongPart {
         part_input.className = `edit_song_part song_${this.type}`;
 
         part_input.oninput = () => {
-            fit_textarea_height(part_input);
+            fitTextareaHeight(part_input);
         }
 
         let submit_button = document.createElement('input');
@@ -250,16 +248,16 @@ class SongPart {
             this.edit_form.style.display = 'none';
             this.edited = false;
             if (this.type === 'text')
-                update_text_inner_buttons();
+                updateTextInnerButtons();
             if (this.type === 'chords')
-                update_chords_inner_buttons();
+                updateChordsInnerButtons();
         }
         this.edit_form = edit_form;
         this.wrap_div.append(edit_form);
 
         if (edit_mode) {
             this.wrap_div.addEventListener('click', event => {
-                if (check_click_coords_not_button(event)) this.edit();
+                if (checkClickCoordsNotButton(event)) this.edit();
             });
         }
     }
@@ -274,11 +272,11 @@ class SongPart {
             this.edit_form.part_input.value = this.data.chords;
         this.wrap_div.display_part.style.display = 'none';
         this.edit_form.style.display = 'block';
-        fit_textarea_height(this.edit_form.part_input);
+        fitTextareaHeight(this.edit_form.part_input);
         if (this.type === 'text')
-            update_text_inner_buttons();
+            updateTextInnerButtons();
         if (this.type === 'chords')
-            update_chords_inner_buttons();
+            updateChordsInnerButtons();
     }
 
     updateInnerButtonsPositions() {
@@ -298,40 +296,33 @@ class SongPart {
     }
 }
 
-function redraw_song_text() {
+function redrawSongText() {
     text_display.innerHTML = "";
     for (let part of song_parts.text_parts) {
         text_display.append(part.wrap_div);
         part.updateInnerButtonsPositions();
     }
-    update_main_content_height();
+    updateMainContentHeight();
 }
 
-function redraw_song_chords() {
+function redrawSongChords() {
     chords_display.innerHTML = "";
     for (let part of song_parts.chords_parts) {
         chords_display.append(part.wrap_div);
         part.updateInnerButtonsPositions();
     }
-    update_main_content_height();
+    updateMainContentHeight();
 }
 
-function update_text_inner_buttons() {
+function updateTextInnerButtons() {
     song_parts.text_parts.forEach(value => value.updateInnerButtonsPositions());
 }
 
-function update_chords_inner_buttons() {
+function updateChordsInnerButtons() {
     song_parts.chords_parts.forEach(value => value.updateInnerButtonsPositions());
 }
 
-// text_column.addEventListener('scroll', () => {
-//     song_parts.text_parts.forEach(value => update_inner_buttons_positions(value, text_column.scrollLeft));
-// });
-// chords_column.addEventListener('scroll', () => {
-//     song_parts.chords_parts.forEach(value => update_inner_buttons_positions(value, chords_column.scrollLeft));
-// });
-
-function fit_header_font_size(start_size = 60, min_size = 30) {
+function fitHeaderFontSize(start_size = 60, min_size = 30) {
     let header_font_size = start_size;
     header.style.fontSize = header_font_size + 'px';
     header.style.whiteSpace = 'normal';
@@ -351,7 +342,7 @@ function fit_header_font_size(start_size = 60, min_size = 30) {
 header.style.maxWidth = window.innerWidth - 200 + 'px';
 input_song_name.style.maxWidth = window.innerWidth - 200 + 'px';
 
-function update_main_content_height() {
+function updateMainContentHeight() {
     let main_content = document.querySelector('.main_content');
     let text_column = document.querySelector('#text_column');
     let chords_column = document.querySelector('#chords_column');
@@ -365,7 +356,7 @@ function update_main_content_height() {
     chords_column.style.height = '100%';
 }
 
-function find_cookies() {
+function findCookies() {
     let cookies = {};
     document.cookie.split('; ').forEach(value => {
         let pair = value.split('=');
@@ -394,17 +385,17 @@ async function checkPassword(password, user = null) {
     return false;
 }
 
-async function show_admin_confirm(aim, data = null) {
+async function showAdminConfirm(aim, data = null) {
     let overlay = document.querySelector('#overlay');
     let password_window = document.querySelector('#password_window');
 
-    let pwd = find_cookies().password;
+    let pwd = findCookies().password;
     if (pwd && await checkPassword(pwd)) {
-        exit_password_window(true);
+        exitPasswordWindow(true);
         return;
     }
 
-    async function exit_password_window(authorized = false) {
+    async function exitPasswordWindow(authorized = false) {
         if (!password_window) return;
         if (authorized || await checkPassword(password_input.value)) {
             overlay.style.display = 'none';
@@ -412,9 +403,9 @@ async function show_admin_confirm(aim, data = null) {
             let jsonString = '{"correct_password_entered": true}';
             ym(88797016, 'params', JSON.parse(jsonString));
             if (aim === 'edit')
-                switch_to_edit_mode();
+                switchToEditMode();
             if (aim === 'send')
-                send_song_to_server(data);
+                sendSongToServer(data);
         } else {
             overlay.style.display = 'none';
             password_window.style.display = 'none';
@@ -437,30 +428,30 @@ async function show_admin_confirm(aim, data = null) {
             event.preventDefault();
         document.removeEventListener('click', handler);
 
-        exit_password_window();
+        exitPasswordWindow();
     }
 
     let handler = event => {
         let t = event.target;
         if (t !== password_window && !password_window.contains(t))
-            exit_password_window();
+            exitPasswordWindow();
     }
 
     document.addEventListener('click', handler);
 }
 
-function fit_textarea_height(elem) {
+function fitTextareaHeight(elem) {
     elem.style.height = '0';
     elem.style.height = elem.scrollHeight + 2 + 'px';
-    update_main_content_height();
+    updateMainContentHeight();
 }
 
-function check_click_coords_not_button(event) {
+function checkClickCoordsNotButton(event) {
     let t = event.target;
     return !t.className.includes('song_part_button');
 }
 
-function switch_to_edit_mode() {
+function switchToEditMode() {
     edit_mode = true;
 
     let edit_button = document.querySelector('#edit_button');
@@ -468,7 +459,7 @@ function switch_to_edit_mode() {
 
     let inputElements = document.querySelectorAll('.input:not(#input_song_name)');
     inputElements.forEach(value => value.style.display = 'block');
-    update_main_content_height();
+    updateMainContentHeight();
 
     let add_text = document.querySelector('#add_text');
     let add_chords = document.querySelector('#add_chords');
@@ -499,17 +490,17 @@ function switch_to_edit_mode() {
         input_song_name.style.display = 'block';
     }
 
-    function update_song_name() {
+    function updateSongName() {
         header.innerHTML = input_song_name.value.trim();
         header.style.display = 'block';
         input_song_name.style.display = 'none';
-        fit_header_font_size();
+        fitHeaderFontSize();
     }
 
     input_song_name_form.onsubmit = event => {
         if (event)
             event.preventDefault();
-        update_song_name();
+        updateSongName();
     }
 
     document.addEventListener('click', event => {
@@ -517,16 +508,16 @@ function switch_to_edit_mode() {
         let t = event.target;
         let on_header = t === h || h.contains(t);
         if (input_song_name.style.display === 'block' && !on_header)
-            update_song_name();
+            updateSongName();
     });
 
     for (let part of song_parts.text_parts)
         part.addEventListener('click', event => {
-            if (check_click_coords_not_button(event)) edit_song_part(part);
+            if (checkClickCoordsNotButton(event)) edit_song_part(part);
         });
     for (let part of song_parts.chords_parts)
         part.addEventListener('click', event => {
-            if (check_click_coords_not_button(event)) edit_song_part(part);
+            if (checkClickCoordsNotButton(event)) edit_song_part(part);
         });
 
     let send_song_form = document.querySelector('#send_song');
@@ -553,14 +544,14 @@ function switch_to_edit_mode() {
         if (current_key !== null)
             song_data.key = current_key.name;
 
-        show_admin_confirm('send', song_data);
+        showAdminConfirm('send', song_data);
     }
 
-    set_edit_button_url();
+    setEditButtonUrl();
     // addKeyChooseLine();
 }
 
-function send_song_to_server(song_data) {
+function sendSongToServer(song_data) {
     let req = new XMLHttpRequest();
     req.open('POST', document.URL, true);
     req.setRequestHeader('Content-type', 'application/json; charset=utf-8');
@@ -576,7 +567,7 @@ function send_song_to_server(song_data) {
     }
 }
 
-function set_edit_button_url() {
+function setEditButtonUrl() {
     let url = new URL(document.URL);
     if (edit_mode)
         url.searchParams.delete('edit');
@@ -586,21 +577,20 @@ function set_edit_button_url() {
     edit_button.href = url;
 }
 
-set_edit_button_url();
+setEditButtonUrl();
 
-function set_view() {
+function setView() {
     let text_view_button = document.querySelector('#text_view_button');
     let chords_view_button = document.querySelector('#chords_view_button');
 
     // document.cookie = 'songs_view=1; max-age=-1';
-    let cookie = find_cookies().songs_view;
-    console.log(cookie);
+    let cookie = findCookies().songs_view;
+    console.log('view cookie: ', cookie);
     if (!cookie)
         cookie = 'text|chords';
 
     cookie = cookie.split('|');
 
-    console.log('song_parts', song_parts);
     if (!edit_mode && song_parts) {
         if (!song_parts.text_parts || song_parts.text_parts.length === 0) {
             text_view_button.style.display = 'none';
@@ -617,7 +607,7 @@ function set_view() {
     if (cookie.includes('chords'))
         chords_view_button.style.fontWeight = 'bold';
 
-    function change_page_split() {
+    function changePageSplit() {
         let text_part = document.querySelector('#text_page_split');
         let chords_part = document.querySelector('#chords_page_split');
 
@@ -650,10 +640,10 @@ function set_view() {
             chords_view_button.style.margin = '2px';
         }
 
-        update_main_content_height();
-        update_text_inner_buttons();
-        update_chords_inner_buttons();
-        update_textarea_width();
+        updateMainContentHeight();
+        updateTextInnerButtons();
+        updateChordsInnerButtons();
+        updateTextareaWidth();
     }
 
     text_view_button.onclick = () => {
@@ -665,7 +655,7 @@ function set_view() {
 
         console.log('change view cookie to', cookie.join('|'));
         document.cookie = `songs_view=${cookie.join('|')}`
-        change_page_split();
+        changePageSplit();
     }
 
     chords_view_button.onclick = () => {
@@ -677,17 +667,17 @@ function set_view() {
 
         console.log('change view cookie to', cookie.join('|'));
         document.cookie = `songs_view=${cookie.join('|')}`
-        change_page_split();
+        changePageSplit();
     }
 
-    change_page_split();
+    changePageSplit();
 }
 
-function update_textarea_width() {
+function updateTextareaWidth() {
     let elements = document.querySelectorAll('textarea');
     elements.forEach(value => {
         value.parentNode.style.width = value.parentNode.parentNode.parentNode.parentNode.clientWidth - 20 + 'px';
-        fit_textarea_height(value);
+        fitTextareaHeight(value);
     });
 }
 
@@ -714,15 +704,15 @@ function addKeyChooseLine() {
     current_key = origin_key;
     let keys = [];
 
-    if (edit_mode || origin_key.mode === '') {
+    if (edit_mode || !origin_key || origin_key.mode === '') {
         keys.push('C', 'D♭', 'D', 'E♭', 'E', 'F', 'F♯', 'G', 'A♭', 'A', 'B♭', 'B');
     }
-    if (edit_mode || origin_key.mode === 'm') {
+    if (edit_mode || !origin_key || origin_key.mode === 'm') {
         keys.push('Am', 'B♭m', 'Bm', 'Cm', 'C♯m', 'Dm', 'D♯m', 'Em', 'Fm', 'F♯m', 'Gm', 'G♯m');
     }
 
     let keys_buttons_images = {}
-    keys.forEach((key, ind) => {
+    keys.forEach(key => {
         let button = document.createElement('div');
         button.className += ' key_choose_button';
         let img = document.createElement('img');
@@ -769,11 +759,11 @@ function addKeyChooseLine() {
         if (origin_key && key === origin_key.name)
             img.src = '/assets/key_background_on.png';
     });
-    update_main_content_height();
-    update_chords_inner_buttons();
+    updateMainContentHeight();
+    updateChordsInnerButtons();
 }
 
 window.addEventListener('resize', () => {
-    update_chords_inner_buttons();
-    update_text_inner_buttons();
+    updateChordsInnerButtons();
+    updateTextInnerButtons();
 })
