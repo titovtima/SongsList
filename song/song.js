@@ -84,8 +84,10 @@ class SongPart {
             text_display.append(wrap_div);
         if (this.type === 'chords')
             chords_display.append(wrap_div);
-        this.addEditButtons();
-        this.addTextarea();
+        if (edit_mode) {
+            this.addEditButtons();
+            this.addTextarea();
+        }
     }
 
     addData(data, update_song_data = true) {
@@ -119,7 +121,7 @@ class SongPart {
         let delete_cross = document.createElement('a');
         delete_cross.className = 'delete_song_part input pointer_over song_part_button';
         delete_cross.onclick = () => {
-            this.button_clicked = true;
+            // this.button_clicked = true;
             this.wrap_div.remove();
             if (this.type === 'text') {
                 song_parts.text_parts.splice(this.part_num, 1);
@@ -142,7 +144,7 @@ class SongPart {
         let arrow_up = document.createElement('a');
         arrow_up.className = 'move_song_part_up input pointer_over song_part_button';
         arrow_up.onclick = () => {
-            this.button_clicked = true;
+            // this.button_clicked = true;
             if (this.part_num > 0) {
                 let n = this.part_num;
                 this.part_num = n-1;
@@ -171,7 +173,7 @@ class SongPart {
         let arrow_down = document.createElement('a');
         arrow_down.className = 'move_song_part_down input pointer_over song_part_button';
         arrow_down.onclick = () => {
-            this.button_clicked = true;
+            // this.button_clicked = true;
             if (this.type === 'text') {
                 if (parent.part_num < song_parts.text_parts.length - 1) {
                     let n = this.part_num;
@@ -226,7 +228,7 @@ class SongPart {
         edit_form.append(submit_button);
 
         submit_button.onclick = () => {
-            this.button_clicked = true;
+            // this.button_clicked = true;
         }
         edit_form.onsubmit = event => {
             if (event)
@@ -280,17 +282,10 @@ class SongPart {
     }
 
     updateInnerButtonsPositions() {
-        let parentPos = this.wrap_div.getBoundingClientRect();
         let count = 0;
-        let right = window.innerWidth;
-        if (this.type === 'text')
-            right = text_column.getBoundingClientRect().right;
-        if (this.type === 'chords')
-            right = chords_column.getBoundingClientRect().right;
-        right -= 40;
         for (let but of this.innerButtons) {
-            but.style.top = parentPos.top + main_scroll.scrollTop + 'px';
-            but.style.left = right - 20 * count + 'px';
+            but.style.right = 5 + 20 * count + 'px';
+            but.style.top = this.wrap_div.offsetTop + 'px';
             count++;
         }
     }
@@ -641,8 +636,8 @@ function setView() {
         }
 
         updateMainContentHeight();
-        updateTextInnerButtons();
-        updateChordsInnerButtons();
+        // updateTextInnerButtons();
+        // updateChordsInnerButtons();
         updateTextareaWidth();
     }
 
@@ -763,7 +758,7 @@ function addKeyChooseLine() {
     updateChordsInnerButtons();
 }
 
-window.addEventListener('resize', () => {
-    updateChordsInnerButtons();
-    updateTextInnerButtons();
-})
+// window.addEventListener('resize', () => {
+    // updateChordsInnerButtons();
+    // updateTextInnerButtons();
+// })

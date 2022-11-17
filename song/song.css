@@ -154,28 +154,30 @@ label {
     display: block;
 }
 
-.delete_song_part {
-    background-image: url("/assets/close_cross.png");
+.above_scroll_display_column {
+    position: relative;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+.song_part_button {
     background-size: contain;
     width: 15px;
     height: 15px;
     position: absolute;
+    top: 0;
+}
+
+.delete_song_part {
+    background-image: url("/assets/close_cross.png");
 }
 
 .move_song_part_up {
     background-image: url("/assets/arrow_up.png");
-    background-size: contain;
-    width: 15px;
-    height: 15px;
-    position: absolute;
 }
 
 .move_song_part_down {
     background-image: url("/assets/arrow_down.png");
-    background-size: contain;
-    width: 15px;
-    height: 15px;
-    position: absolute;
 }
 
 textarea {
