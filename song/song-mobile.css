@@ -4,14 +4,19 @@
     box-sizing: border-box;
 }
 
-#chords_view_button {
-    width: 49%;
-    float: right;
+#text_view_button {
+    width: 32%;
+    float: left;
 }
 
-#text_view_button {
-    width: 49%;
+#chords_view_button {
+    width: 32%;
     float: left;
+}
+
+#text_chords_view_button {
+    width: 33%;
+    float: right;
 }
 
 .song_text {
@@ -34,6 +39,11 @@ button {
 
 textarea {
     min-height: 125px;
+}
+
+.key_choose_button {
+    width: 75px;
+    height: 75px;
 }
 
 .key_choose_image {

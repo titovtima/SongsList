@@ -35,6 +35,7 @@
     <div id="view_buttons_line">
         <button id="text_view_button" class="view_button">Текст</button>
         <button id="chords_view_button" class="view_button">Аккорды</button>
+        <button id="text_chords_view_button" class="view_button">Аккорды в тексте</button>
     </div>
     <div class="main_content">
         <div class="page_split" id="text_page_split"><div class="column_background" id="text_column">
@@ -49,11 +50,21 @@
         <div class="page_split" id="chords_page_split"><div class="column_background" id="chords_column">
             <h3 class="column_header" id="chords_column_header">Аккорды</h3>
             <div id="no_header_chords_column" class="no_header_column">
-                <div id="key_choose_container"></div>
+                <div class="key_choose_container"></div>
                 <div class="above_scroll_display_column"><div class="scroll_display_column">
                     <div id="song_chords_display" class="display_column"></div>
                 </div></div>
                 <button id="add_chords" class="input add_song_part">Добавить новую часть</button>
+            </div>
+        </div></div>
+        <div class="page_split" id="text_chords_page_split"><div class="column_background" id="text_chords_column">
+            <h3 class="column_header" id="text_chords_column_header">Аккорды в тексте</h3>
+            <div id="no_header_text_chords_column" class="no_header_column">
+                <div class="key_choose_container"></div>
+                <div class="above_scroll_display_column"><div class="scroll_display_column">
+                    <div id="song_text_chords_display" class="display_column"></div>
+                </div></div>
+                <button id="add_text_chords" class="input add_song_part">Добавить новую часть</button>
             </div>
         </div></div>
     </div>

@@ -18,6 +18,11 @@
     font-family: "JBMusic", serif;
 }
 
+.song_text_chords {
+    font-size: 30px;
+    font-family: "JBMusic", serif;
+}
+
 #home_button {
     background-image: url("/assets/home.png");
     position: absolute;
@@ -60,6 +65,7 @@
     background-color: rgba(0, 255, 255, 0.4);
     /*opacity: 0.6;*/
     padding: 10px 10px;
+    min-height: max-content;
     overflow-y: hidden;
     overflow-x: auto;
 }
@@ -230,9 +236,16 @@ textarea {
     width: 145px;
 }
 
+#text_chords_view_button {
+    width: 300px;
+    float: right;
+}
+
 .key_choose_button {
     display: inline-block;
     position: relative;
+    height: 40px;
+    width: 40px;
 }
 
 .key_choose_image {

@@ -3,14 +3,11 @@ if (typeof kotlin === 'undefined') {
 }
 var MusicTheory = function (_, Kotlin) {
   'use strict';
-  var Kind_INTERFACE = Kotlin.Kind.INTERFACE;
-  var Map = Kotlin.kotlin.collections.Map;
-  var toMutableSet = Kotlin.kotlin.collections.toMutableSet_7wnvza$;
-  var HashMap_init = Kotlin.kotlin.collections.HashMap_init_73mtqc$;
   var emptyMap = Kotlin.kotlin.collections.emptyMap_q3lmfv$;
   var toMutableMap = Kotlin.kotlin.collections.toMutableMap_abgq59$;
+  var toMap = Kotlin.kotlin.collections.toMap_abgq59$;
   var Kind_CLASS = Kotlin.Kind.CLASS;
-  var HashMap = Kotlin.kotlin.collections.HashMap;
+  var Map = Kotlin.kotlin.collections.Map;
   var to = Kotlin.kotlin.to_ujzrz7$;
   var reversed = Kotlin.kotlin.collections.reversed_7wnvza$;
   var equals = Kotlin.equals;
@@ -19,6 +16,7 @@ var MusicTheory = function (_, Kotlin) {
   var sortedWith = Kotlin.kotlin.collections.sortedWith_eknfly$;
   var wrapFunction = Kotlin.wrapFunction;
   var Comparator = Kotlin.kotlin.Comparator;
+  var drop = Kotlin.kotlin.text.drop_6ic1pp$;
   var plus = Kotlin.kotlin.collections.plus_qloxvw$;
   var last = Kotlin.kotlin.collections.last_2p1efm$;
   var dropLast = Kotlin.kotlin.collections.dropLast_yzln2o$;
@@ -26,6 +24,7 @@ var MusicTheory = function (_, Kotlin) {
   var collectionSizeOrDefault = Kotlin.kotlin.collections.collectionSizeOrDefault_ba2ldo$;
   var ArrayList_init = Kotlin.kotlin.collections.ArrayList_init_ww73n8$;
   var UnsupportedOperationException_init = Kotlin.kotlin.UnsupportedOperationException_init_pdl1vj$;
+  var copyToArray = Kotlin.kotlin.collections.copyToArray;
   var emptyList = Kotlin.kotlin.collections.emptyList_287e2$;
   var toString = Kotlin.toString;
   var Exception_init = Kotlin.kotlin.Exception_init_pdl1vj$;
@@ -34,8 +33,6 @@ var MusicTheory = function (_, Kotlin) {
   var mapOf = Kotlin.kotlin.collections.mapOf_qfcya0$;
   var joinToString = Kotlin.kotlin.collections.joinToString_fmv235$;
   var iterator = Kotlin.kotlin.text.iterator_gw00vp$;
-  BiHashMap.prototype = Object.create(HashMap.prototype);
-  BiHashMap.prototype.constructor = BiHashMap;
   Either$Left.prototype = Object.create(Either.prototype);
   Either$Left.prototype.constructor = Either$Left;
   Either$Right.prototype = Object.create(Either.prototype);
@@ -46,15 +43,7 @@ var MusicTheory = function (_, Kotlin) {
   ChordException.prototype.constructor = ChordException;
   KeyException.prototype = Object.create(Exception.prototype);
   KeyException.prototype.constructor = KeyException;
-  function BiMap() {
-  }
-  BiMap.$metadata$ = {
-    kind: Kind_INTERFACE,
-    simpleName: 'BiMap',
-    interfaces: [Map]
-  };
-  function BiHashMap(direct) {
-    HashMap_init(direct, this);
+  function BiMap(direct) {
     this.direct_0 = direct;
     var tmp$;
     var res = toMutableMap(emptyMap());
@@ -65,24 +54,48 @@ var MusicTheory = function (_, Kotlin) {
       var value = pair.key;
       res.put_xwzc9p$(key, value);
     }
-    this.reverse_0 = res;
+    this.reverse = toMap(res);
   }
-  Object.defineProperty(BiHashMap.prototype, 'values', {
+  Object.defineProperty(BiMap.prototype, 'entries', {
     configurable: true,
     get: function () {
-      return toMutableSet(this.direct_0.values);
+      return this.direct_0.entries;
     }
   });
-  Object.defineProperty(BiHashMap.prototype, 'inverse', {
+  Object.defineProperty(BiMap.prototype, 'keys', {
     configurable: true,
     get: function () {
-      return new BiHashMap(this.reverse_0);
+      return this.direct_0.keys;
     }
   });
-  BiHashMap.$metadata$ = {
+  Object.defineProperty(BiMap.prototype, 'size', {
+    configurable: true,
+    get: function () {
+      return this.direct_0.size;
+    }
+  });
+  Object.defineProperty(BiMap.prototype, 'values', {
+    configurable: true,
+    get: function () {
+      return this.direct_0.values;
+    }
+  });
+  BiMap.prototype.isEmpty = function () {
+    return this.direct_0.isEmpty();
+  };
+  BiMap.prototype.get_11rb$ = function (key) {
+    return this.direct_0.get_11rb$(key);
+  };
+  BiMap.prototype.containsValue_11rc$ = function (value) {
+    return this.direct_0.containsValue_11rc$(value);
+  };
+  BiMap.prototype.containsKey_11rb$ = function (key) {
+    return this.direct_0.containsKey_11rb$(key);
+  };
+  BiMap.$metadata$ = {
     kind: Kind_CLASS,
-    simpleName: 'BiHashMap',
-    interfaces: [BiMap, HashMap]
+    simpleName: 'BiMap',
+    interfaces: [Map]
   };
   var compareBy$lambda = wrapFunction(function () {
     var compareValues = Kotlin.kotlin.comparisons.compareValues_s00gnj$;
@@ -235,6 +248,48 @@ var MusicTheory = function (_, Kotlin) {
         transform$result = Kotlin.noWhenBranchMatched();
       }
       tmp$_0.call(destination, transform$result);
+    }
+    return new ChordsText(destination);
+  };
+  ChordsText.prototype.transposeReducingSpaces_gyj958$ = function (origin, target) {
+    var array = copyToArray(this.list);
+    var destination = ArrayList_init(array.length);
+    var tmp$, tmp$_0;
+    var index = 0;
+    for (tmp$ = 0; tmp$ !== array.length; ++tmp$) {
+      var item = array[tmp$];
+      var tmp$_1 = destination.add_11rb$;
+      var index_0 = (tmp$_0 = index, index = tmp$_0 + 1 | 0, tmp$_0);
+      var transform$result;
+      if (Kotlin.isType(item, Either$Left)) {
+        var newChord = item.value.transpose_gyj958$(origin, target);
+        switch (newChord.name.length - item.value.name.length | 0) {
+          case 1:
+            if ((index_0 + 1 | 0) < array.length) {
+              var nextElement = array[index_0 + 1 | 0];
+              if (Kotlin.isType(nextElement, Either$Right) && nextElement.value.charCodeAt(0) === 32)
+                array[index_0 + 1 | 0] = eitherRight(drop(nextElement.value, 1));
+            }
+
+            break;
+          case -1:
+            if ((index_0 + 1 | 0) < array.length) {
+              var nextElement_0 = array[index_0 + 1 | 0];
+              if (Kotlin.isType(nextElement_0, Either$Right)) {
+                var other = nextElement_0.value;
+                array[index_0 + 1 | 0] = eitherRight(String.fromCharCode(32) + other);
+              }
+            }
+
+            break;
+        }
+        transform$result = eitherLeft(newChord);
+      } else if (Kotlin.isType(item, Either$Right)) {
+        transform$result = item;
+      } else {
+        transform$result = Kotlin.noWhenBranchMatched();
+      }
+      tmp$_1.call(destination, transform$result);
     }
     return new ChordsText(destination);
   };
@@ -494,8 +549,8 @@ var MusicTheory = function (_, Kotlin) {
     this.flat = toBoxedChar(9837);
     this.doubleSharp = '\uD834\uDD2A';
     this.doubleFlat = '\uD834\uDD2B';
-    this.naturalToId = new BiHashMap(mapOf([to(0, 0), to(1, 2), to(2, 4), to(3, 5), to(4, 7), to(5, 9), to(6, 11)]));
-    this.naturalToName = new BiHashMap(mapOf([to(0, toBoxedChar(67)), to(1, toBoxedChar(68)), to(2, toBoxedChar(69)), to(3, toBoxedChar(70)), to(4, toBoxedChar(71)), to(5, toBoxedChar(65)), to(6, toBoxedChar(66))]));
+    this.naturalToId = new BiMap(mapOf([to(0, 0), to(1, 2), to(2, 4), to(3, 5), to(4, 7), to(5, 9), to(6, 11)]));
+    this.naturalToName = new BiMap(mapOf([to(0, toBoxedChar(67)), to(1, toBoxedChar(68)), to(2, toBoxedChar(69)), to(3, toBoxedChar(70)), to(4, toBoxedChar(71)), to(5, toBoxedChar(65)), to(6, toBoxedChar(66))]));
   }
   Note$Companion.prototype.nameFromId_vux9f0$ = function (noteId, natural) {
     var tmp$, tmp$_0, tmp$_1;
@@ -536,7 +591,7 @@ var MusicTheory = function (_, Kotlin) {
     if (name.length === 0)
       return to(null, name);
     var naturalChar = name.charCodeAt(0);
-    tmp$ = this.naturalToName.inverse.get_11rb$(toBoxedChar(naturalChar));
+    tmp$ = this.naturalToName.reverse.get_11rb$(toBoxedChar(naturalChar));
     if (tmp$ == null) {
       return to(null, name);
     }
@@ -725,8 +780,10 @@ var MusicTheory = function (_, Kotlin) {
   function transposeChord_JS(chord, originKey, targetKey) {
     return chord.transpose_gyj958$(originKey, targetKey);
   }
-  function transposeChordsText_JS(chordsText, originKey, targetKey) {
-    return chordsText.transpose_gyj958$(originKey, targetKey);
+  function transposeChordsText_JS(chordsText, originKey, targetKey, reduceSpaces) {
+    if (reduceSpaces === void 0)
+      reduceSpaces = false;
+    return reduceSpaces ? chordsText.transposeReducingSpaces_gyj958$(originKey, targetKey) : chordsText.transpose_gyj958$(originKey, targetKey);
   }
   function musicTextFromPlainText_JS(text) {
     return PlainTextAPI$Companion_getInstance().musicTextFromPlainText_61zpoe$(text);
@@ -737,7 +794,6 @@ var MusicTheory = function (_, Kotlin) {
   var package$titovtima = _.titovtima || (_.titovtima = {});
   var package$musicTheory = package$titovtima.musicTheory || (package$titovtima.musicTheory = {});
   package$musicTheory.BiMap = BiMap;
-  package$musicTheory.BiHashMap = BiHashMap;
   Object.defineProperty(Chord, 'Companion', {
     get: Chord$Companion_getInstance
   });
