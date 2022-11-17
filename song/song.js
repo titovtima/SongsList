@@ -770,40 +770,38 @@ function updateTextareaWidth() {
 let current_key = null;
 function addKeyChooseLine() {
     if (!song_data) return;
-    document.querySelectorAll('.key_choose_container').forEach(container => {
-        let origin_key = null;
-        if (!song_data.key) {
-            if (!edit_mode) {
-                container.style.display = 'none';
-                return;
-            }
-        } else {
-            origin_key = MusicTheory.keyFromName(song_data.key);
-        }
-        container.style.display = 'block';
 
+    let origin_key = null;
+    if (song_data.key)  {
+        origin_key = MusicTheory.keyFromName(song_data.key);
+    }
+    current_key = origin_key;
+    let keys = [];
+
+    if (edit_mode || !origin_key || origin_key.mode === '') {
+        keys.push('C', 'D♭', 'D', 'E♭', 'E', 'F', 'F♯', 'G', 'A♭', 'A', 'B♭', 'B');
+    }
+    if (edit_mode || !origin_key || origin_key.mode === 'm') {
+        keys.push('Am', 'B♭m', 'Bm', 'Cm', 'C♯m', 'Dm', 'D♯m', 'Em', 'Fm', 'F♯m', 'Gm', 'G♯m');
+    }
+
+    let keys_buttons_images = {};
+    keys.forEach(key => keys_buttons_images[key] = []);
+
+    document.querySelectorAll('.key_choose_container').forEach(container => {
         if (!origin_key && !edit_mode) {
             container.style.display = 'none';
             return;
         }
-        current_key = origin_key;
-        let keys = [];
+        container.style.display = 'block';
 
-        if (edit_mode || !origin_key || origin_key.mode === '') {
-            keys.push('C', 'D♭', 'D', 'E♭', 'E', 'F', 'F♯', 'G', 'A♭', 'A', 'B♭', 'B');
-        }
-        if (edit_mode || !origin_key || origin_key.mode === 'm') {
-            keys.push('Am', 'B♭m', 'Bm', 'Cm', 'C♯m', 'Dm', 'D♯m', 'Em', 'Fm', 'F♯m', 'Gm', 'G♯m');
-        }
-
-        let keys_buttons_images = {}
         keys.forEach(key => {
             let button = document.createElement('div');
             button.className += ' key_choose_button';
             let img = document.createElement('img');
             img.src = '/assets/key_background.png';
             img.className += ' key_choose_image';
-            keys_buttons_images[key] = img;
+            keys_buttons_images[key].push(img);
             button.append(img);
             let text = document.createElement('h4');
             text.innerHTML = key;
@@ -845,10 +843,10 @@ function addKeyChooseLine() {
                         } catch (e) {
                         }
                     });
-                    for (let k in keys_buttons_images) {
-                        keys_buttons_images[k].src = '/assets/key_background.png'
+                    for (let k of keys) {
+                        keys_buttons_images[k].forEach(img => img.src = '/assets/key_background.png')
                     }
-                    img.src = '/assets/key_background_on.png';
+                    keys_buttons_images[key].forEach(img => img.src = '/assets/key_background_on.png');
                     if (edit_mode)
                         origin_key = current_key;
                 }
