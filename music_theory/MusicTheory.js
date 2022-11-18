@@ -16,6 +16,9 @@ var MusicTheory = function (_, Kotlin) {
   var sortedWith = Kotlin.kotlin.collections.sortedWith_eknfly$;
   var wrapFunction = Kotlin.wrapFunction;
   var Comparator = Kotlin.kotlin.Comparator;
+  var contains = Kotlin.kotlin.text.contains_sgbm27$;
+  var repeat = Kotlin.kotlin.text.repeat_94bcnn$;
+  var unboxChar = Kotlin.unboxChar;
   var drop = Kotlin.kotlin.text.drop_6ic1pp$;
   var plus = Kotlin.kotlin.collections.plus_qloxvw$;
   var last = Kotlin.kotlin.collections.last_2p1efm$;
@@ -24,12 +27,12 @@ var MusicTheory = function (_, Kotlin) {
   var collectionSizeOrDefault = Kotlin.kotlin.collections.collectionSizeOrDefault_ba2ldo$;
   var ArrayList_init = Kotlin.kotlin.collections.ArrayList_init_ww73n8$;
   var UnsupportedOperationException_init = Kotlin.kotlin.UnsupportedOperationException_init_pdl1vj$;
-  var copyToArray = Kotlin.kotlin.collections.copyToArray;
+  var get_indices = Kotlin.kotlin.text.get_indices_gw00vp$;
+  var JsMath = Math;
   var emptyList = Kotlin.kotlin.collections.emptyList_287e2$;
   var toString = Kotlin.toString;
   var Exception_init = Kotlin.kotlin.Exception_init_pdl1vj$;
   var Exception = Kotlin.kotlin.Exception;
-  var unboxChar = Kotlin.unboxChar;
   var mapOf = Kotlin.kotlin.collections.mapOf_qfcya0$;
   var joinToString = Kotlin.kotlin.collections.joinToString_fmv235$;
   var iterator = Kotlin.kotlin.text.iterator_gw00vp$;
@@ -252,44 +255,71 @@ var MusicTheory = function (_, Kotlin) {
     return new ChordsText(destination);
   };
   ChordsText.prototype.transposeReducingSpaces_gyj958$ = function (origin, target) {
-    var array = copyToArray(this.list);
-    var destination = ArrayList_init(array.length);
-    var tmp$, tmp$_0;
-    var index = 0;
-    for (tmp$ = 0; tmp$ !== array.length; ++tmp$) {
-      var item = array[tmp$];
-      var tmp$_1 = destination.add_11rb$;
-      var index_0 = (tmp$_0 = index, index = tmp$_0 + 1 | 0, tmp$_0);
+    var needSpaces = {v: 0};
+    var $receiver = this.list;
+    var destination = ArrayList_init(collectionSizeOrDefault($receiver, 10));
+    var tmp$;
+    tmp$ = $receiver.iterator();
+    loop_label: while (tmp$.hasNext()) {
+      var item = tmp$.next();
+      var tmp$_0 = destination.add_11rb$;
       var transform$result;
-      if (Kotlin.isType(item, Either$Left)) {
-        var newChord = item.value.transpose_gyj958$(origin, target);
-        switch (newChord.name.length - item.value.name.length | 0) {
-          case 1:
-            if ((index_0 + 1 | 0) < array.length) {
-              var nextElement = array[index_0 + 1 | 0];
-              if (Kotlin.isType(nextElement, Either$Right) && nextElement.value.charCodeAt(0) === 32)
-                array[index_0 + 1 | 0] = eitherRight(drop(nextElement.value, 1));
+      transform$break: do {
+        if (Kotlin.isType(item, Either$Left)) {
+          var newChord = item.value.transpose_gyj958$(origin, target);
+          needSpaces.v = needSpaces.v + (item.value.name.length - newChord.name.length) | 0;
+          transform$result = eitherLeft(newChord);
+        } else if (Kotlin.isType(item, Either$Right)) {
+          if (contains(item.value, 10)) {
+            needSpaces.v = 0;
+            transform$result = item;
+            break transform$break;
+          }
+          if (needSpaces.v === 0) {
+            transform$result = item;
+          } else if (needSpaces.v > 0)
+            if (item.value.charCodeAt(0) !== 32) {
+              transform$result = item;
+            } else {
+              var neededSpaces = needSpaces.v;
+              needSpaces.v = 0;
+              transform$result = eitherRight(repeat(' ', neededSpaces) + item.value);
             }
-
-            break;
-          case -1:
-            if ((index_0 + 1 | 0) < array.length) {
-              var nextElement_0 = array[index_0 + 1 | 0];
-              if (Kotlin.isType(nextElement_0, Either$Right)) {
-                var other = nextElement_0.value;
-                array[index_0 + 1 | 0] = eitherRight(String.fromCharCode(32) + other);
+           else {
+            var $receiver_0 = item.value;
+            var indexOfFirst$result;
+            indexOfFirst$break: do {
+              var tmp$_1, tmp$_0_0, tmp$_1_0, tmp$_2;
+              tmp$_1 = get_indices($receiver_0);
+              tmp$_0_0 = tmp$_1.first;
+              tmp$_1_0 = tmp$_1.last;
+              tmp$_2 = tmp$_1.step;
+              for (var index = tmp$_0_0; index <= tmp$_1_0; index += tmp$_2) {
+                if (unboxChar(toBoxedChar($receiver_0.charCodeAt(index))) !== 32) {
+                  indexOfFirst$result = index;
+                  break indexOfFirst$break;
+                }
               }
+              indexOfFirst$result = -1;
             }
-
-            break;
+             while (false);
+            var haveSpaces = indexOfFirst$result;
+            if (haveSpaces === -1)
+              haveSpaces = item.value.length;
+            haveSpaces = haveSpaces - 1 | 0;
+            var a = haveSpaces;
+            var b = -needSpaces.v | 0;
+            var b_0 = JsMath.min(a, b);
+            haveSpaces = JsMath.max(0, b_0);
+            needSpaces.v = needSpaces.v + haveSpaces | 0;
+            transform$result = eitherRight(drop(item.value, haveSpaces));
+          }
+        } else {
+          transform$result = Kotlin.noWhenBranchMatched();
         }
-        transform$result = eitherLeft(newChord);
-      } else if (Kotlin.isType(item, Either$Right)) {
-        transform$result = item;
-      } else {
-        transform$result = Kotlin.noWhenBranchMatched();
       }
-      tmp$_1.call(destination, transform$result);
+       while (false);
+      tmp$_0.call(destination, transform$result);
     }
     return new ChordsText(destination);
   };
