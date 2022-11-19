@@ -408,7 +408,7 @@ function findCookies() {
     return cookies;
 }
 
-async function checkPassword(password, user = null) {
+async function checkPassword(password, user = null, updateCookie = false) {
     let p = fetch('/auth', {
         "method": "POST",
         "headers": {
@@ -421,8 +421,10 @@ async function checkPassword(password, user = null) {
     });
     let response = await p;
     if (response.ok) {
-        document.cookie = `user=${user}; max-age=2500000; path=/; samesite=lax`;
-        document.cookie = `password=${password}; max-age=2500000; path=/; samesite=lax`;
+        if (updateCookie) {
+            document.cookie = `user=${user}; max-age=2500000; path=/; samesite=lax`;
+            document.cookie = `password=${password}; max-age=2500000; path=/; samesite=lax`;
+        }
         return true;
     }
     return false;
@@ -440,7 +442,7 @@ async function showAdminConfirm(aim, data = null) {
 
     async function exitPasswordWindow(authorized = false) {
         if (!password_window) return;
-        if (authorized || await checkPassword(password_input.value)) {
+        if (authorized || await checkPassword(password_input.value, null, true)) {
             overlay.style.display = 'none';
             password_window.style.display = 'none';
             let jsonString = '{"correct_password_entered": true}';
