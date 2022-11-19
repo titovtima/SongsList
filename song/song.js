@@ -495,6 +495,7 @@ function checkClickCoordsNotButton(event) {
 }
 
 function switchToEditMode() {
+    ym(88797016,'reachGoal','edit_song');
     edit_mode = true;
 
     let edit_button = document.querySelector('#edit_button');
@@ -611,6 +612,7 @@ function sendSongToServer(song_data) {
     }
 
     req.onload = () => {
+        ym(88797016,'reachGoal','save_song');
         document.location.href = `/song/?id=${req.response}`;
     }
 }
