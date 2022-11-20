@@ -28,8 +28,6 @@ app.get('/song', (req, res) => {
 });
 
 app.use('/auth', (req, res) => {
-    console.log(req.body);
-
     let user = req.body.user;
     let password = req.body.password;
     if (checkAuth(password, user))
@@ -99,10 +97,10 @@ app.post('/song', (req, res) => {
         song_id = max_song_id;
         max_song_id++;
     }
-    console.log('Get song from IP: ', req.ip);
-    console.log('Song data: ', song_data);
 
+    let time = new Date()
     fs.appendFile('songs_changes.txt', 'Get song from IP: ' + req.ip + '\n' +
+        'Date: ' + time.toString() + '\n' +
         'Song id: ' + song_id + '\n' +
         'Song data:\n' + JSON.stringify(song_data) + '\n\n', err => {});
 
