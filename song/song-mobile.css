@@ -58,3 +58,22 @@ textarea {
     line-height: 75px;
     font-size: 40px;
 }
+
+#general_buttons_line {
+    height: 130px;
+}
+
+#home_button {
+    height: 120px;
+    width: 120px;
+}
+
+#settings_button {
+    height: 120px;
+    width: 120px;
+}
+
+#edit_button {
+    height: 120px;
+    width: 120px;
+}

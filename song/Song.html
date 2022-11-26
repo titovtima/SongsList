@@ -25,6 +25,12 @@
     <link rel="stylesheet" type="text/css" href="/general.css">
 </head>
 <body class="background">
+<div id="flex_box">
+<div id="general_buttons_line">
+    <a href="/songs" id="home_button"></a>
+    <button id="settings_button" class="pointer_over"></button>
+    <a id="edit_button"></a>
+</div>
 <div class="scroll" id="main_scroll">
     <header>
         <h1 id="song_name" class="text song_name"></h1>
@@ -72,14 +78,27 @@
         <button type="submit" class="input" id="send_song_button">Сохранить песню</button>
     </div></form>
 </div>
-<a href="/songs" id="home_button"></a>
-<a id="edit_button"></a>
+</div>
 <div id="overlay"></div>
 <div id="password_window" class="window">
     <form id="send_password">
         <label for="password_input">Введите пароль администратора</label>
         <input type="password" id="password_input">
     </form>
+</div>
+<div id="settings_window" class="window">
+    <div class="hor_scroll">
+    <form id="notation_form">
+        Система обозначений
+        <div><input type="radio" name="notation" value="English">
+            <span id="English_notation_text"> английская (B - си, B♭ - си бемоль)</span>
+        </div>
+        <div><input type="radio" name="notation" value="German">
+            <span id="German_notation_text"> немецкая (H - си, B - си бемоль)</span>
+        </div>
+    </form>
+    </div>
+    <button id="exit_settings_window">Готово</button>
 </div>
 
 <script src="/music_theory/kotlin.js"></script>

@@ -33,6 +33,8 @@ var MusicTheory = function (_, Kotlin) {
   var toString = Kotlin.toString;
   var Exception_init = Kotlin.kotlin.Exception_init_pdl1vj$;
   var Exception = Kotlin.kotlin.Exception;
+  var Enum = Kotlin.kotlin.Enum;
+  var throwISE = Kotlin.throwISE;
   var mapOf = Kotlin.kotlin.collections.mapOf_qfcya0$;
   var joinToString = Kotlin.kotlin.collections.joinToString_fmv235$;
   var iterator = Kotlin.kotlin.text.iterator_gw00vp$;
@@ -46,6 +48,8 @@ var MusicTheory = function (_, Kotlin) {
   ChordException.prototype.constructor = ChordException;
   KeyException.prototype = Object.create(Exception.prototype);
   KeyException.prototype.constructor = KeyException;
+  NotationSystem.prototype = Object.create(Enum.prototype);
+  NotationSystem.prototype.constructor = NotationSystem;
   function BiMap(direct) {
     this.direct_0 = direct;
     var tmp$;
@@ -115,8 +119,12 @@ var MusicTheory = function (_, Kotlin) {
     this.type = type;
     if (!Chord$Companion_getInstance().chordTypes.contains_11rb$(this.type))
       throw new ChordException(this.note, this.type);
-    this.name = this.note.name + this.type;
   }
+  Chord.prototype.name_548ocs$ = function (notationSystem) {
+    if (notationSystem === void 0)
+      notationSystem = defaultNotation;
+    return this.note.name_548ocs$(notationSystem) + this.type;
+  };
   function Chord$Companion() {
     Chord$Companion_instance = this;
     this.chordTypes = listOf(['', 'm', '7', 'm7', 'maj7', 'mmaj7', 'dim', 'sus4', 'sus2', 'dim7', '+5', '\xF8']);
@@ -124,8 +132,10 @@ var MusicTheory = function (_, Kotlin) {
   function Chord$Companion$chordFromString$lambda(it) {
     return it.length;
   }
-  Chord$Companion.prototype.chordFromString_61zpoe$ = function (name) {
-    var tmp$ = Note$Companion_getInstance().noteFromString_61zpoe$(name);
+  Chord$Companion.prototype.chordFromString_2zf50e$ = function (name, notationSystem) {
+    if (notationSystem === void 0)
+      notationSystem = defaultNotation;
+    var tmp$ = Note$Companion_getInstance().noteFromString_2zf50e$(name, notationSystem);
     var note = tmp$.component1()
     , last_name = tmp$.component2();
     if (note == null)
@@ -147,8 +157,10 @@ var MusicTheory = function (_, Kotlin) {
     }
     return to(null, name);
   };
-  Chord$Companion.prototype.chordFromName_61zpoe$ = function (name) {
-    var tmp$ = this.chordFromString_61zpoe$(name);
+  Chord$Companion.prototype.chordFromName_2zf50e$ = function (name, notationSystem) {
+    if (notationSystem === void 0)
+      notationSystem = defaultNotation;
+    var tmp$ = this.chordFromString_2zf50e$(name, notationSystem);
     var chord = tmp$.component1()
     , rest = tmp$.component2();
     if (chord == null || !equals(rest, ''))
@@ -180,20 +192,36 @@ var MusicTheory = function (_, Kotlin) {
     Chord.call($this, chord.note, chord.type);
     return $this;
   }
-  function Chord_init_0(name, $this) {
+  function Chord_init_0(name, notationSystem, $this) {
+    if (notationSystem === void 0)
+      notationSystem = defaultNotation;
     $this = $this || Object.create(Chord.prototype);
-    Chord_init(Chord$Companion_getInstance().chordFromName_61zpoe$(name), $this);
+    Chord_init(Chord$Companion_getInstance().chordFromName_2zf50e$(name, notationSystem), $this);
     return $this;
   }
-  function ChordsText(list) {
+  function ChordsText(list, notationSystem) {
     ChordsText$Companion_getInstance();
+    if (notationSystem === void 0)
+      notationSystem = defaultNotation;
     this.list = list;
+    this.notationSystem_woigta$_0 = notationSystem;
   }
+  Object.defineProperty(ChordsText.prototype, 'notationSystem', {
+    configurable: true,
+    get: function () {
+      return this.notationSystem_woigta$_0;
+    },
+    set: function (notationSystem) {
+      this.notationSystem_woigta$_0 = notationSystem;
+    }
+  });
   function ChordsText$Companion() {
     ChordsText$Companion_instance = this;
   }
-  ChordsText$Companion.prototype.fromPlainText_61zpoe$ = function (text) {
-    return ChordsText_init(PlainTextAPI$Companion_getInstance().musicTextFromPlainText_61zpoe$(text));
+  ChordsText$Companion.prototype.fromPlainText_2zf50e$ = function (text, notationSystem) {
+    if (notationSystem === void 0)
+      notationSystem = defaultNotation;
+    return ChordsText_init(PlainTextAPI$Companion_getInstance().musicTextFromPlainText_61zpoe$(text), notationSystem);
   };
   ChordsText$Companion.$metadata$ = {
     kind: Kind_OBJECT,
@@ -217,7 +245,7 @@ var MusicTheory = function (_, Kotlin) {
       var tmp$_0 = destination.add_11rb$;
       var transform$result;
       if (Kotlin.isType(item, Either$Left)) {
-        transform$result = item.value.name;
+        transform$result = item.value.name_548ocs$(this.notationSystem);
       } else if (Kotlin.isType(item, Either$Right)) {
         transform$result = item.value;
       } else {
@@ -252,7 +280,45 @@ var MusicTheory = function (_, Kotlin) {
       }
       tmp$_0.call(destination, transform$result);
     }
-    return new ChordsText(destination);
+    return new ChordsText(destination, this.notationSystem);
+  };
+  ChordsText.prototype.reduceSpaces_0 = function (string, needSpaces) {
+    var tmp$;
+    if (contains(string, 10)) {
+      return to(string, 0);
+    }
+    if (needSpaces === 0)
+      tmp$ = to(string, 0);
+    else if (needSpaces > 0)
+      tmp$ = string.charCodeAt(0) !== 32 ? to(string, needSpaces) : to(repeat(' ', needSpaces) + string, 0);
+    else {
+      var indexOfFirst$result;
+      indexOfFirst$break: do {
+        var tmp$_0, tmp$_0_0, tmp$_1, tmp$_2;
+        tmp$_0 = get_indices(string);
+        tmp$_0_0 = tmp$_0.first;
+        tmp$_1 = tmp$_0.last;
+        tmp$_2 = tmp$_0.step;
+        for (var index = tmp$_0_0; index <= tmp$_1; index += tmp$_2) {
+          if (unboxChar(toBoxedChar(string.charCodeAt(index))) !== 32) {
+            indexOfFirst$result = index;
+            break indexOfFirst$break;
+          }
+        }
+        indexOfFirst$result = -1;
+      }
+       while (false);
+      var haveSpaces = indexOfFirst$result;
+      if (haveSpaces === -1)
+        haveSpaces = string.length;
+      haveSpaces = haveSpaces - 1 | 0;
+      var a = haveSpaces;
+      var b = -needSpaces | 0;
+      var b_0 = JsMath.min(a, b);
+      haveSpaces = JsMath.max(0, b_0);
+      tmp$ = to(drop(string, haveSpaces), needSpaces + haveSpaces | 0);
+    }
+    return tmp$;
   };
   ChordsText.prototype.transposeReducingSpaces_gyj958$ = function (origin, target) {
     var needSpaces = {v: 0};
@@ -260,82 +326,63 @@ var MusicTheory = function (_, Kotlin) {
     var destination = ArrayList_init(collectionSizeOrDefault($receiver, 10));
     var tmp$;
     tmp$ = $receiver.iterator();
-    loop_label: while (tmp$.hasNext()) {
+    while (tmp$.hasNext()) {
       var item = tmp$.next();
       var tmp$_0 = destination.add_11rb$;
       var transform$result;
-      transform$break: do {
-        if (Kotlin.isType(item, Either$Left)) {
-          var newChord = item.value.transpose_gyj958$(origin, target);
-          needSpaces.v = needSpaces.v + (item.value.name.length - newChord.name.length) | 0;
-          transform$result = eitherLeft(newChord);
-        } else if (Kotlin.isType(item, Either$Right)) {
-          if (contains(item.value, 10)) {
-            needSpaces.v = 0;
-            transform$result = item;
-            break transform$break;
-          }
-          if (needSpaces.v === 0) {
-            transform$result = item;
-          } else if (needSpaces.v > 0)
-            if (item.value.charCodeAt(0) !== 32) {
-              transform$result = item;
-            } else {
-              var neededSpaces = needSpaces.v;
-              needSpaces.v = 0;
-              transform$result = eitherRight(repeat(' ', neededSpaces) + item.value);
-            }
-           else {
-            var $receiver_0 = item.value;
-            var indexOfFirst$result;
-            indexOfFirst$break: do {
-              var tmp$_1, tmp$_0_0, tmp$_1_0, tmp$_2;
-              tmp$_1 = get_indices($receiver_0);
-              tmp$_0_0 = tmp$_1.first;
-              tmp$_1_0 = tmp$_1.last;
-              tmp$_2 = tmp$_1.step;
-              for (var index = tmp$_0_0; index <= tmp$_1_0; index += tmp$_2) {
-                if (unboxChar(toBoxedChar($receiver_0.charCodeAt(index))) !== 32) {
-                  indexOfFirst$result = index;
-                  break indexOfFirst$break;
-                }
-              }
-              indexOfFirst$result = -1;
-            }
-             while (false);
-            var haveSpaces = indexOfFirst$result;
-            if (haveSpaces === -1)
-              haveSpaces = item.value.length;
-            haveSpaces = haveSpaces - 1 | 0;
-            var a = haveSpaces;
-            var b = -needSpaces.v | 0;
-            var b_0 = JsMath.min(a, b);
-            haveSpaces = JsMath.max(0, b_0);
-            needSpaces.v = needSpaces.v + haveSpaces | 0;
-            transform$result = eitherRight(drop(item.value, haveSpaces));
-          }
-        } else {
-          transform$result = Kotlin.noWhenBranchMatched();
-        }
+      if (Kotlin.isType(item, Either$Left)) {
+        var newChord = item.value.transpose_gyj958$(origin, target);
+        needSpaces.v = needSpaces.v + (item.value.name_548ocs$(this.notationSystem).length - newChord.name_548ocs$(this.notationSystem).length) | 0;
+        transform$result = eitherLeft(newChord);
+      } else if (Kotlin.isType(item, Either$Right)) {
+        var reduced = this.reduceSpaces_0(item.value, needSpaces.v);
+        needSpaces.v = reduced.second;
+        transform$result = eitherRight(reduced.first);
+      } else {
+        transform$result = Kotlin.noWhenBranchMatched();
       }
-       while (false);
       tmp$_0.call(destination, transform$result);
     }
-    return new ChordsText(destination);
+    return new ChordsText(destination, this.notationSystem);
+  };
+  ChordsText.prototype.changeNotation_xv89oz$ = function (newNotation, reduceSpaces) {
+    if (reduceSpaces === void 0)
+      reduceSpaces = false;
+    if (newNotation === this.notationSystem)
+      return;
+    if (reduceSpaces) {
+      var needSpaces = {v: 0};
+      var tmp$;
+      tmp$ = this.list.iterator();
+      while (tmp$.hasNext()) {
+        var element = tmp$.next();
+        if (Kotlin.isType(element, Either$Left))
+          needSpaces.v = needSpaces.v + (element.value.name_548ocs$(this.notationSystem).length - element.value.name_548ocs$(newNotation).length) | 0;
+        else if (Kotlin.isType(element, Either$Right)) {
+          var reduced = this.reduceSpaces_0(element.value, needSpaces.v);
+          needSpaces.v = reduced.second;
+          eitherRight(reduced.first);
+        } else
+          Kotlin.noWhenBranchMatched();
+      }
+    }
+    this.notationSystem = newNotation;
   };
   ChordsText.$metadata$ = {
     kind: Kind_CLASS,
     simpleName: 'ChordsText',
     interfaces: []
   };
-  function ChordsText_init(text, $this) {
+  function ChordsText_init(text, notationSystem, $this) {
+    if (notationSystem === void 0)
+      notationSystem = defaultNotation;
     $this = $this || Object.create(ChordsText.prototype);
     ChordsText$Companion_getInstance();
     var tmp$;
     var restText = text;
     var resultList = emptyList();
     while (restText.length > 0) {
-      var tmp$_0 = Chord$Companion_getInstance().chordFromString_61zpoe$(restText);
+      var tmp$_0 = Chord$Companion_getInstance().chordFromString_2zf50e$(restText, notationSystem);
       var chord = tmp$_0.component1()
       , newRestText = tmp$_0.component2();
       if (chord != null) {
@@ -359,7 +406,7 @@ var MusicTheory = function (_, Kotlin) {
     }
     if (resultList.isEmpty())
       resultList = plus(resultList, eitherRight(''));
-    ChordsText.call($this, resultList);
+    ChordsText.call($this, resultList, notationSystem);
     return $this;
   }
   function Either() {
@@ -456,7 +503,7 @@ var MusicTheory = function (_, Kotlin) {
       chordName = null;
     if (message === void 0)
       message = null;
-    Exception_init('Exception: note ' + toString(note != null ? note.name : null) + ', type ' + toString(type) + ', chord name ' + toString(chordName) + ', message: ' + toString(message), this);
+    Exception_init('Exception: note ' + toString(note != null ? note.name_548ocs$() : null) + ', type ' + toString(type) + ', chord name ' + toString(chordName) + ', message: ' + toString(message), this);
     this.note = note;
     this.type = type;
     this.chordName = chordName;
@@ -495,8 +542,12 @@ var MusicTheory = function (_, Kotlin) {
     Key$Companion_getInstance();
     this.tonic = tonic;
     this.mode = mode;
-    this.name = this.tonic.name + this.mode;
   }
+  Key.prototype.name_548ocs$ = function (notationSystem) {
+    if (notationSystem === void 0)
+      notationSystem = defaultNotation;
+    return this.tonic.name_548ocs$(notationSystem) + this.mode;
+  };
   function Key$Companion() {
     Key$Companion_instance = this;
     this.modes = listOf(['', 'm']);
@@ -504,8 +555,10 @@ var MusicTheory = function (_, Kotlin) {
   function Key$Companion$keyFromString$lambda(it) {
     return it.length;
   }
-  Key$Companion.prototype.keyFromString_61zpoe$ = function (name) {
-    var tmp$ = Note$Companion_getInstance().noteFromString_61zpoe$(name);
+  Key$Companion.prototype.keyFromString_2zf50e$ = function (name, notationSystem) {
+    if (notationSystem === void 0)
+      notationSystem = defaultNotation;
+    var tmp$ = Note$Companion_getInstance().noteFromString_2zf50e$(name, notationSystem);
     var note = tmp$.component1()
     , last_name = tmp$.component2();
     if (note == null)
@@ -527,8 +580,10 @@ var MusicTheory = function (_, Kotlin) {
     }
     return to(null, name);
   };
-  Key$Companion.prototype.keyFromName_61zpoe$ = function (name) {
-    var tmp$ = this.keyFromString_61zpoe$(name);
+  Key$Companion.prototype.keyFromName_2zf50e$ = function (name, notationSystem) {
+    if (notationSystem === void 0)
+      notationSystem = defaultNotation;
+    var tmp$ = this.keyFromString_2zf50e$(name, notationSystem);
     var key = tmp$.component1()
     , rest = tmp$.component2();
     if (key == null || !equals(rest, ''))
@@ -557,22 +612,85 @@ var MusicTheory = function (_, Kotlin) {
     Key.call($this, key.tonic, key.mode);
     return $this;
   }
-  function Key_init_0(name, $this) {
+  function Key_init_0(name, notationSystem, $this) {
+    if (notationSystem === void 0)
+      notationSystem = defaultNotation;
     $this = $this || Object.create(Key.prototype);
-    Key_init(Key$Companion_getInstance().keyFromName_61zpoe$(name), $this);
+    Key_init(Key$Companion_getInstance().keyFromName_2zf50e$(name, notationSystem), $this);
     return $this;
+  }
+  function NotationSystem(name, ordinal, notation) {
+    Enum.call(this);
+    this.notation = notation;
+    this.name$ = name;
+    this.ordinal$ = ordinal;
+  }
+  function NotationSystem_initFields() {
+    NotationSystem_initFields = function () {
+    };
+    NotationSystem$English_instance = new NotationSystem('English', 0, 'English');
+    NotationSystem$German_instance = new NotationSystem('German', 1, 'German');
+  }
+  var NotationSystem$English_instance;
+  function NotationSystem$English_getInstance() {
+    NotationSystem_initFields();
+    return NotationSystem$English_instance;
+  }
+  var NotationSystem$German_instance;
+  function NotationSystem$German_getInstance() {
+    NotationSystem_initFields();
+    return NotationSystem$German_instance;
+  }
+  NotationSystem.$metadata$ = {
+    kind: Kind_CLASS,
+    simpleName: 'NotationSystem',
+    interfaces: [Enum]
+  };
+  function NotationSystem$values() {
+    return [NotationSystem$English_getInstance(), NotationSystem$German_getInstance()];
+  }
+  NotationSystem.values = NotationSystem$values;
+  function NotationSystem$valueOf(name) {
+    switch (name) {
+      case 'English':
+        return NotationSystem$English_getInstance();
+      case 'German':
+        return NotationSystem$German_getInstance();
+      default:
+        throwISE('No enum constant titovtima.musicTheory.NotationSystem.' + name);
+    }
+  }
+  NotationSystem.valueOf_61zpoe$ = NotationSystem$valueOf;
+  var defaultNotation;
+  function notationFromString(string) {
+    switch (string) {
+      case 'English':
+        return NotationSystem$English_getInstance();
+      case 'German':
+        return NotationSystem$German_getInstance();
+      default:
+        return null;
+    }
+  }
+  function notationFromStringOrDefault(string) {
+    var tmp$;
+    return (tmp$ = notationFromString(string)) != null ? tmp$ : defaultNotation;
   }
   function Note(noteId, natural) {
     Note$Companion_getInstance();
     this.noteId = (noteId + 1200 | 0) % 12 | 0;
     this.natural = (natural + 700 | 0) % 7 | 0;
+  }
+  Note.prototype.name_548ocs$ = function (notationSystem) {
+    if (notationSystem === void 0)
+      notationSystem = defaultNotation;
     var tmp$;
-    tmp$ = Note$Companion_getInstance().nameFromId_vux9f0$(this.noteId, this.natural);
+    tmp$ = Note$Companion_getInstance().nameFromId_w6nr7w$(this.noteId, this.natural, notationSystem);
     if (tmp$ == null) {
       throw new NoteException(this.noteId, this.natural);
     }
-    this.name = tmp$;
-  }
+    return tmp$;
+  };
   function Note$Companion() {
     Note$Companion_instance = this;
     this.sharp = toBoxedChar(9839);
@@ -580,11 +698,26 @@ var MusicTheory = function (_, Kotlin) {
     this.doubleSharp = '\uD834\uDD2A';
     this.doubleFlat = '\uD834\uDD2B';
     this.naturalToId = new BiMap(mapOf([to(0, 0), to(1, 2), to(2, 4), to(3, 5), to(4, 7), to(5, 9), to(6, 11)]));
-    this.naturalToName = new BiMap(mapOf([to(0, toBoxedChar(67)), to(1, toBoxedChar(68)), to(2, toBoxedChar(69)), to(3, toBoxedChar(70)), to(4, toBoxedChar(71)), to(5, toBoxedChar(65)), to(6, toBoxedChar(66))]));
   }
-  Note$Companion.prototype.nameFromId_vux9f0$ = function (noteId, natural) {
+  Note$Companion.prototype.naturalToName_548ocs$ = function (notationSystem) {
+    if (notationSystem === void 0)
+      notationSystem = defaultNotation;
+    switch (notationSystem.name) {
+      case 'English':
+        return new BiMap(mapOf([to(0, toBoxedChar(67)), to(1, toBoxedChar(68)), to(2, toBoxedChar(69)), to(3, toBoxedChar(70)), to(4, toBoxedChar(71)), to(5, toBoxedChar(65)), to(6, toBoxedChar(66))]));
+      case 'German':
+        return new BiMap(mapOf([to(0, toBoxedChar(67)), to(1, toBoxedChar(68)), to(2, toBoxedChar(69)), to(3, toBoxedChar(70)), to(4, toBoxedChar(71)), to(5, toBoxedChar(65)), to(6, toBoxedChar(72))]));
+      default:
+        return Kotlin.noWhenBranchMatched();
+    }
+  };
+  Note$Companion.prototype.nameFromId_w6nr7w$ = function (noteId, natural, notationSystem) {
+    if (notationSystem === void 0)
+      notationSystem = defaultNotation;
     var tmp$, tmp$_0, tmp$_1;
-    tmp$ = unboxChar(this.naturalToName.get_11rb$(natural));
+    if (notationSystem === NotationSystem$German_getInstance() && noteId === 10 && natural === 6)
+      return 'B';
+    tmp$ = unboxChar(this.naturalToName_548ocs$(notationSystem).get_11rb$(natural));
     if (tmp$ == null) {
       return null;
     }
@@ -616,12 +749,17 @@ var MusicTheory = function (_, Kotlin) {
     var other = tmp$_1;
     return String.fromCharCode(naturalName) + other;
   };
-  Note$Companion.prototype.noteFromString_61zpoe$ = function (name) {
+  Note$Companion.prototype.noteFromString_2zf50e$ = function (name, notationSystem) {
+    if (notationSystem === void 0)
+      notationSystem = defaultNotation;
     var tmp$, tmp$_0, tmp$_1;
     if (name.length === 0)
       return to(null, name);
     var naturalChar = name.charCodeAt(0);
-    tmp$ = this.naturalToName.reverse.get_11rb$(toBoxedChar(naturalChar));
+    if (notationSystem === NotationSystem$German_getInstance() && naturalChar === 66) {
+      return to(new Note(10, 6), name.substring(1));
+    }
+    tmp$ = this.naturalToName_548ocs$(notationSystem).reverse.get_11rb$(toBoxedChar(naturalChar));
     if (tmp$ == null) {
       return to(null, name);
     }
@@ -656,8 +794,10 @@ var MusicTheory = function (_, Kotlin) {
     }
     return tmp$_1;
   };
-  Note$Companion.prototype.noteFromName_61zpoe$ = function (name) {
-    var tmp$ = this.noteFromString_61zpoe$(name);
+  Note$Companion.prototype.noteFromName_2zf50e$ = function (name, notationSystem) {
+    if (notationSystem === void 0)
+      notationSystem = defaultNotation;
+    var tmp$ = this.noteFromString_2zf50e$(name, notationSystem);
     var note = tmp$.component1()
     , rest = tmp$.component2();
     if (note == null || !equals(rest, ''))
@@ -678,7 +818,7 @@ var MusicTheory = function (_, Kotlin) {
   }
   Note.prototype.transpose_gyj958$ = function (origin, target) {
     if (!equals(origin.mode, target.mode))
-      throw new KeyException('Try to transpose from ' + origin.name + ' to ' + target.name);
+      throw new KeyException('Try to transpose from ' + origin.name_548ocs$() + ' to ' + target.name_548ocs$());
     else
       return new Note(this.noteId + (target.tonic.noteId - origin.tonic.noteId) | 0, this.natural + (target.tonic.natural - origin.tonic.natural) | 0);
   };
@@ -692,9 +832,11 @@ var MusicTheory = function (_, Kotlin) {
     Note.call($this, note.noteId, note.natural);
     return $this;
   }
-  function Note_init_0(name, $this) {
+  function Note_init_0(name, notationSystem, $this) {
+    if (notationSystem === void 0)
+      notationSystem = defaultNotation;
     $this = $this || Object.create(Note.prototype);
-    Note_init(Note$Companion_getInstance().noteFromName_61zpoe$(name), $this);
+    Note_init(Note$Companion_getInstance().noteFromName_2zf50e$(name, notationSystem), $this);
     return $this;
   }
   function PlainTextAPI() {
@@ -795,17 +937,17 @@ var MusicTheory = function (_, Kotlin) {
     simpleName: 'PlainTextAPI',
     interfaces: []
   };
-  function chordFromName_JS(name) {
-    return Chord$Companion_getInstance().chordFromName_61zpoe$(name);
+  function chordFromName_JS(name, notationSystem) {
+    return Chord$Companion_getInstance().chordFromName_2zf50e$(name, notationFromStringOrDefault(notationSystem));
   }
-  function keyFromName_JS(name) {
-    return Key$Companion_getInstance().keyFromName_61zpoe$(name);
+  function keyFromName_JS(name, notationSystem) {
+    return Key$Companion_getInstance().keyFromName_2zf50e$(name, notationFromStringOrDefault(notationSystem));
   }
-  function chordFromString_JS(name) {
-    return Chord$Companion_getInstance().chordFromString_61zpoe$(name);
+  function chordFromString_JS(name, notationSystem) {
+    return Chord$Companion_getInstance().chordFromString_2zf50e$(name, notationFromStringOrDefault(notationSystem));
   }
-  function keyFromString_JS(name) {
-    return Key$Companion_getInstance().keyFromString_61zpoe$(name);
+  function keyFromString_JS(name, notationSystem) {
+    return Key$Companion_getInstance().keyFromString_2zf50e$(name, notationFromStringOrDefault(notationSystem));
   }
   function transposeChord_JS(chord, originKey, targetKey) {
     return chord.transpose_gyj958$(originKey, targetKey);
@@ -818,8 +960,31 @@ var MusicTheory = function (_, Kotlin) {
   function musicTextFromPlainText_JS(text) {
     return PlainTextAPI$Companion_getInstance().musicTextFromPlainText_61zpoe$(text);
   }
-  function chordsTextFromPlainText_JS(text) {
-    return ChordsText$Companion_getInstance().fromPlainText_61zpoe$(text);
+  function chordsTextFromPlainText_JS(text, notationSystem) {
+    return ChordsText$Companion_getInstance().fromPlainText_2zf50e$(text, notationFromStringOrDefault(notationSystem));
+  }
+  function changeChordsTextNotation_JS(chordsText, newNotation, reduceSpaces) {
+    if (reduceSpaces === void 0)
+      reduceSpaces = false;
+    chordsText.changeNotation_xv89oz$(notationFromStringOrDefault(newNotation), reduceSpaces);
+  }
+  function noteName_JS(note, notationSystem) {
+    if (notationSystem === void 0)
+      notationSystem = 'English';
+    return note.name_548ocs$(notationFromStringOrDefault(notationSystem));
+  }
+  function chordName_JS(chord, notationSystem) {
+    if (notationSystem === void 0)
+      notationSystem = 'English';
+    return chord.name_548ocs$(notationFromStringOrDefault(notationSystem));
+  }
+  function keyName_JS(key, notationSystem) {
+    if (notationSystem === void 0)
+      notationSystem = 'English';
+    return key.name_548ocs$(notationFromStringOrDefault(notationSystem));
+  }
+  function chordsTextToString_JS(chordsText) {
+    return chordsText.toString();
   }
   var package$titovtima = _.titovtima || (_.titovtima = {});
   var package$musicTheory = package$titovtima.musicTheory || (package$titovtima.musicTheory = {});
@@ -828,12 +993,12 @@ var MusicTheory = function (_, Kotlin) {
     get: Chord$Companion_getInstance
   });
   package$musicTheory.Chord_init_2g26u1$ = Chord_init;
-  package$musicTheory.Chord_init_61zpoe$ = Chord_init_0;
+  package$musicTheory.Chord_init_2zf50e$ = Chord_init_0;
   package$musicTheory.Chord = Chord;
   Object.defineProperty(ChordsText, 'Companion', {
     get: ChordsText$Companion_getInstance
   });
-  package$musicTheory.ChordsText_init_61zpoe$ = ChordsText_init;
+  package$musicTheory.ChordsText_init_2zf50e$ = ChordsText_init;
   package$musicTheory.ChordsText = ChordsText;
   Either.Left = Either$Left;
   Either.Right = Either$Right;
@@ -847,13 +1012,27 @@ var MusicTheory = function (_, Kotlin) {
     get: Key$Companion_getInstance
   });
   package$musicTheory.Key_init_tmx3tw$ = Key_init;
-  package$musicTheory.Key_init_61zpoe$ = Key_init_0;
+  package$musicTheory.Key_init_2zf50e$ = Key_init_0;
   package$musicTheory.Key = Key;
+  Object.defineProperty(NotationSystem, 'English', {
+    get: NotationSystem$English_getInstance
+  });
+  Object.defineProperty(NotationSystem, 'German', {
+    get: NotationSystem$German_getInstance
+  });
+  package$musicTheory.NotationSystem = NotationSystem;
+  Object.defineProperty(package$musicTheory, 'defaultNotation', {
+    get: function () {
+      return defaultNotation;
+    }
+  });
+  package$musicTheory.notationFromString_61zpoe$ = notationFromString;
+  package$musicTheory.notationFromStringOrDefault_61zpoe$ = notationFromStringOrDefault;
   Object.defineProperty(Note, 'Companion', {
     get: Note$Companion_getInstance
   });
   package$musicTheory.Note_init_4o0j9x$ = Note_init;
-  package$musicTheory.Note_init_61zpoe$ = Note_init_0;
+  package$musicTheory.Note_init_2zf50e$ = Note_init_0;
   package$musicTheory.Note = Note;
   Object.defineProperty(PlainTextAPI, 'Companion', {
     get: PlainTextAPI$Companion_getInstance
@@ -867,6 +1046,12 @@ var MusicTheory = function (_, Kotlin) {
   _.transposeChordsText = transposeChordsText_JS;
   _.musicTextFromPlainText = musicTextFromPlainText_JS;
   _.chordsTextFromPlainText = chordsTextFromPlainText_JS;
+  _.changeChordsTextNotation = changeChordsTextNotation_JS;
+  _.noteName = noteName_JS;
+  _.chordName = chordName_JS;
+  _.keyName = keyName_JS;
+  _.chordsTextToString = chordsTextToString_JS;
+  defaultNotation = NotationSystem$English_getInstance();
   Kotlin.defineModule('MusicTheory', _);
   return _;
 }(typeof MusicTheory === 'undefined' ? {} : MusicTheory, kotlin);

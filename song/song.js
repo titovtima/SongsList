@@ -64,11 +64,18 @@ function loadSong(data) {
 
     if (data.chords)
         for (let part of data.chords) {
+            let chords = MusicTheory.chordsTextFromPlainText(part.chords);
+            MusicTheory.changeChordsTextNotation(chords, settings.notation);
+            part.chords = MusicTheory.chordsTextToString(chords);
+            console.log(part.chords);
             new SongPart('chords', part);
         }
 
     if (data.text_chords)
         for (let part of data.text_chords) {
+            let chords_text = MusicTheory.chordsTextFromPlainText(part.text_chords);
+            MusicTheory.changeChordsTextNotation(chords_text, settings.notation, true);
+            part.text_chords = MusicTheory.chordsTextToString(chords_text);
             new SongPart('text_chords', part);
         }
 
@@ -378,8 +385,8 @@ function fitHeaderFontSize(start_size = 60, min_size = 30) {
     header.style.overflowX = 'auto';
 }
 
-header.style.maxWidth = window.innerWidth - 200 + 'px';
-input_song_name.style.maxWidth = window.innerWidth - 200 + 'px';
+header.style.maxWidth = window.innerWidth - 20 + 'px';
+input_song_name.style.maxWidth = window.innerWidth - 20 + 'px';
 
 function updateMainContentHeight() {
     let main_content = document.querySelector('.main_content');
@@ -572,7 +579,7 @@ function switchToEditMode() {
         if (event)
             event.preventDefault();
 
-        let forms = document.querySelectorAll('form:not(#send_song):not(#send_password)')
+        let forms = document.querySelectorAll('form:not(#send_song):not(#send_password):not(#notation_form)')
         forms.forEach(value => {
             value.onsubmit();
         })
@@ -587,13 +594,20 @@ function switchToEditMode() {
             song_data.text.push(part.data);
         }
         for (let part of song_parts.chords_parts) {
+            console.log(part);
+            let chords = MusicTheory.chordsTextFromPlainText(part.data.chords, settings.notation);
+            MusicTheory.changeChordsTextNotation(chords, 'English');
+            part.data.chords = MusicTheory.chordsTextToString(chords);
             song_data.chords.push(part.data);
         }
         for (let part of song_parts.text_chords_parts) {
+            let text_chords = MusicTheory.chordsTextFromPlainText(part.data.text_chords, settings.notation);
+            MusicTheory.changeChordsTextNotation(text_chords, 'English', true);
+            part.data.text_chords = MusicTheory.chordsTextToString(text_chords);
             song_data.text_chords.push(part.data);
         }
         if (current_key !== null)
-            song_data.key = current_key.name;
+            song_data.key = MusicTheory.keyName(current_key);
 
         showAdminConfirm('send', song_data);
     }
@@ -788,6 +802,7 @@ function addKeyChooseLine() {
     if (edit_mode || !origin_key || origin_key.mode === 'm') {
         keys.push('Am', 'B♭m', 'Bm', 'Cm', 'C♯m', 'Dm', 'D♯m', 'Em', 'Fm', 'F♯m', 'Gm', 'G♯m');
     }
+    // keys = keys.map(value => MusicTheory.keyFromName(value));
 
     let keys_buttons_images = {};
     keys.forEach(key => keys_buttons_images[key] = []);
@@ -799,35 +814,38 @@ function addKeyChooseLine() {
         }
         container.style.display = 'block';
 
-        keys.forEach(key => {
+        keys.forEach(key_name => {
+            let key = MusicTheory.keyFromName(key_name);
+            let notation_key_name = MusicTheory.keyName(key, settings.notation);
             let button = document.createElement('div');
             button.className += ' key_choose_button';
             let img = document.createElement('img');
             img.src = '/assets/key_background.png';
             img.className += ' key_choose_image';
-            keys_buttons_images[key].push(img);
+            keys_buttons_images[key_name].push(img);
             button.append(img);
             let text = document.createElement('h4');
-            text.innerHTML = key;
+            text.innerHTML = notation_key_name;
             text.className += ' key_choose_text';
             button.append(text);
             container.append(button);
 
             button.onclick = () => {
-                current_key = MusicTheory.keyFromName(key);
+                current_key = key;
                 if (!origin_key) {
                     origin_key = current_key;
                     img.src = '/assets/key_background_on.png';
-                } else if (origin_key.name === key && edit_mode) {
+                } else if (MusicTheory.keyName(origin_key) === key_name && edit_mode) {
                     origin_key = null;
                     current_key = null;
                     img.src = '/assets/key_background.png';
                 } else {
                     song_parts.chords_parts.forEach(part => {
-                        let chords_text = MusicTheory.chordsTextFromPlainText(part.data.chords);
+                        let chords_text = MusicTheory.chordsTextFromPlainText(part.data.chords, settings.notation);
+                        console.log(chords_text);
                         try {
-                            let new_chords = MusicTheory
-                                .transposeChordsText(chords_text, origin_key, current_key).toString();
+                            let new_chords = MusicTheory.chordsTextToString(
+                                MusicTheory.transposeChordsText(chords_text, origin_key, current_key));
                             part.addData({
                                 "name": part.data.name,
                                 "chords": new_chords
@@ -836,10 +854,10 @@ function addKeyChooseLine() {
                         }
                     });
                     song_parts.text_chords_parts.forEach(part => {
-                        let chords_text = MusicTheory.chordsTextFromPlainText(part.data.text_chords);
+                        let chords_text = MusicTheory.chordsTextFromPlainText(part.data.text_chords, settings.notation);
                         try {
-                            let new_chords = MusicTheory
-                                .transposeChordsText(chords_text, origin_key, current_key, true).toString();
+                            let new_chords = MusicTheory.chordsTextToString(
+                                MusicTheory.transposeChordsText(chords_text, origin_key, current_key, true));
                             part.addData({
                                 "name": part.data.name,
                                 "text_chords": new_chords
@@ -850,19 +868,72 @@ function addKeyChooseLine() {
                     for (let k of keys) {
                         keys_buttons_images[k].forEach(img => img.src = '/assets/key_background.png')
                     }
-                    keys_buttons_images[key].forEach(img => img.src = '/assets/key_background_on.png');
+                    keys_buttons_images[key_name].forEach(img => img.src = '/assets/key_background_on.png');
                     if (edit_mode)
                         origin_key = current_key;
                 }
             };
 
-            if (origin_key && key === origin_key.name)
+            console.log('origin_key: ', origin_key);
+            if (origin_key && MusicTheory.keyName(origin_key) === key_name)
                 img.src = '/assets/key_background_on.png';
         });
     });
     updateMainContentHeight();
     // updateChordsInnerButtons();
     // updateTextChordsInnerButtons();
+}
+
+let settings_button = document.querySelector('#settings_button');
+settings_button.onclick = () => {
+    showSettingsWindow();
+}
+
+let settings = {}
+function setStartSettings() {
+    // document.cookie = 'settings=a; max-age=-1';
+    let cookie = findCookies().settings;
+    if (cookie) {
+        cookie.split('|').forEach(value => {
+            let setting = value.split('_');
+            settings[setting[0]] = setting[1];
+        });
+    }
+    if (!settings.notation)
+        settings.notation = 'English';
+}
+setStartSettings();
+
+function showSettingsWindow() {
+    let overlay = document.querySelector('#overlay');
+    let settings_window = document.querySelector('#settings_window');
+    overlay.style.display = 'block';
+    settings_window.style.display = 'block';
+
+    let notation_form = document.querySelector('#notation_form');
+    notation_form.notation.value = settings.notation;
+    let English_notation_text = document.querySelector('#English_notation_text');
+    let German_notation_text = document.querySelector('#German_notation_text');
+    English_notation_text.addEventListener('click', () => { notation_form.notation.value = 'English'; });
+    German_notation_text.addEventListener('click', () => { notation_form.notation.value = 'German'; });
+
+    let exit_settings_window = document.querySelector('#exit_settings_window');
+    exit_settings_window.onclick = () => {
+        changeNotationSystem(notation_form.notation.value);
+
+        let settings_cookie_arr = [];
+        for (let setting in settings)
+            settings_cookie_arr.push(`${setting}_${settings[setting]}`);
+        document.cookie = `settings=${settings_cookie_arr.join('|')}`;
+        overlay.style.display = 'none';
+        settings_window.style.display = 'none';
+        window.location.reload();
+    }
+}
+
+function changeNotationSystem(newNotation) {
+    if (newNotation === settings.notation) return;
+    settings.notation = newNotation
 }
 
 // window.addEventListener('resize', () => {
