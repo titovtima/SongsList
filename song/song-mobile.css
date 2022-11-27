@@ -60,20 +60,20 @@ textarea {
 }
 
 #general_buttons_line {
-    height: 130px;
+    height: 110px;
 }
 
 #home_button {
-    height: 120px;
-    width: 120px;
+    height: 100px;
+    width: 100px;
 }
 
 #settings_button {
-    height: 120px;
-    width: 120px;
+    height: 100px;
+    width: 100px;
 }
 
 #edit_button {
-    height: 120px;
-    width: 120px;
+    height: 100px;
+    width: 100px;
 }
