@@ -3,6 +3,7 @@ const songs_data_path = '/songs_data/';
 const urlParams = new URLSearchParams(window.location.search);
 const songNumber = urlParams.get('id');
 
+let headerStartFontSize, headerMinFontSize;
 if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
     let mobile_css_link = document.createElement("link");
     mobile_css_link.rel = "stylesheet";
@@ -10,6 +11,8 @@ if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigat
     mobile_css_link.href = "song-mobile.css";
     let head = document.querySelector('head');
     head.append(mobile_css_link);
+    headerMinFontSize = 40;
+    headerStartFontSize = 75;
 }
 
 let edit_mode = false;
@@ -368,7 +371,13 @@ function updateTextChordsInnerButtons() {
     song_parts.chords_parts.forEach(value => value.updateInnerButtonsPositions());
 }
 
-function fitHeaderFontSize(start_size = 60, min_size = 30) {
+if (!headerMinFontSize) {
+    headerMinFontSize = 30;
+}
+if (!headerStartFontSize) {
+    headerStartFontSize = 60;
+}
+function fitHeaderFontSize(start_size = headerStartFontSize, min_size = headerMinFontSize) {
     let header_font_size = start_size;
     header.style.fontSize = header_font_size + 'px';
     header.style.whiteSpace = 'normal';
@@ -889,7 +898,7 @@ settings_button.onclick = () => {
     showSettingsWindow();
 }
 
-let settings = {}
+let settings = {};
 function setStartSettings() {
     // document.cookie = 'settings=a; max-age=-1';
     let cookie = findCookies().settings;
