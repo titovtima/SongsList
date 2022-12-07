@@ -27,6 +27,10 @@ app.get('/song', (req, res) => {
     res.sendFile(__dirname + '/song/Song.html');
 });
 
+app.get('/guess_interval', (req, res) => {
+    res.sendFile(__dirname + '/guess_interval/index.html');
+});
+
 app.use('/auth', (req, res) => {
     let user = req.body.user;
     let password = req.body.password;
