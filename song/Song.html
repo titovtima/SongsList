@@ -30,6 +30,7 @@
     <a href="/songs" id="home_button"></a>
     <button id="settings_button" class="pointer_over"></button>
     <a id="edit_button"></a>
+    <button id="user_button" class="pointer_over"></button>
 </div>
 <div class="scroll" id="main_scroll">
     <header>
@@ -98,7 +99,25 @@
         </div>
     </form>
     </div>
-    <button id="exit_settings_window">Готово</button>
+    <button id="exit_settings_window" class="window_button">Готово</button>
+</div>
+<div id="user_window" class="window">
+    <div id="log_in_section" class="window_section">
+        <div>Логин: <input type="text" id="input_user_login"></div>
+        <div>Пароль: <input type="password" id="input_user_password"></div>
+        <button id="submit_user_login" class="window_button">Войти</button>
+        <div class="center"><button id="registration_button" class="text_button">Зарегистрироваться</button></div>
+    </div>
+    <div id="registration_section" class="window_section">
+        <div>Логин: <input type="text" id="input_new_user_login"></div>
+        <div>Пароль: <input type="password" id="input_new_user_password"></div>
+        <div>Повторите пароль: <input type="password" id="input_new_user_repeat_password"></div>
+        <button id="submit_user_registration" class="window_button">Зарегистрироваться</button>
+    </div>
+    <div id="user_section" class="window_section">
+        <div>Пользователь: <span id="show_user_login"></span></div>
+        <button id="logout_button" class="window_button">Выйти</button>
+    </div>
 </div>
 
 <script src="/music_theory/kotlin.js"></script>

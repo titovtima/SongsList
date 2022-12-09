@@ -27,6 +27,6 @@
     overflow: auto;
 }
 
-.pointer_over:hover {
+.pointer_over:hover, .text_button:hover {
     cursor: pointer;
 }

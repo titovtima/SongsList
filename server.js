@@ -31,25 +31,47 @@ app.get('/guess_interval', (req, res) => {
     res.sendFile(__dirname + '/guess_interval/index.html');
 });
 
-app.use('/auth', (req, res) => {
+app.use('/auth/login', (req, res) => {
     let user = req.body.user;
     let password = req.body.password;
-    if (checkAuth(password, user))
-        res.sendStatus(200);
+    let userData = checkAuth(password, user);
+    if (userData)
+        res.json(userData);
     else
         res.sendStatus(403);
 });
 
-function checkAuth(password, user=null) {
+app.use('/auth/reg', (req, res) => {
+    let user = req.body.user;
+    let password = req.body.password;
+    let fileData = JSON.parse(fs.readFileSync('users.json','utf-8'));
+    let usersList = fileData.users;
+    if (usersList.hasOwnProperty(user))
+        res.sendStatus(403);
+    else {
+        usersList[user] = {
+            'password': password
+        }
+        let newFileData = {
+            'users': usersList
+        };
+        fs.writeFile('users.json', JSON.stringify(newFileData), err => {
+            if (err)
+                res.sendStatus(500);
+            else
+                res.sendStatus(200);
+        })
+    }
+});
+
+function checkAuth(password, user) {
     const n = 2472942968189431706898462913067925658209124041544162680908145890301107704237n;
     const e = 5281668766765633818307894358032591567n;
 
-    let lower_case_password = password.toLowerCase();
-    let encoded_password = encodeRSA(password);
-    let encoded_lower_case_password = encodeRSA(lower_case_password);
-    if (encoded_lower_case_password === 256936898532198594958756561132414261138151402058674183683957539453558674134n)
-        return true;
-
+    let fileData = JSON.parse(fs.readFileSync('users.json','utf-8'));
+    let usersList = fileData.users;
+    if (usersList[user] && usersList[user].password === password)
+        return usersList[user];
     return false;
 
     function quickPow(a, p, mod) {

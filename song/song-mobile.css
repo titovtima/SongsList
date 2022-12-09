@@ -78,6 +78,11 @@ textarea {
     width: 100px;
 }
 
+#user_button {
+    height: 100px;
+    width: 100px;
+}
+
 .window {
     font-size: 40px;
 }
