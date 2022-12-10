@@ -5,12 +5,15 @@ const songNumber = urlParams.get('id');
 
 let headerStartFontSize, headerMinFontSize;
 if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-    let mobile_css_link = document.createElement("link");
-    mobile_css_link.rel = "stylesheet";
-    mobile_css_link.type = "text/css";
-    mobile_css_link.href = "song-mobile.css";
-    let head = document.querySelector('head');
-    head.append(mobile_css_link);
+    let mobileCssList = ['song-mobile.css', '/general-mobile.css'];
+    for (let link of mobileCssList) {
+        let mobileCssLink = document.createElement("link");
+        mobileCssLink.rel = "stylesheet";
+        mobileCssLink.type = "text/css";
+        mobileCssLink.href = link;
+        let head = document.querySelector('head');
+        head.append(mobileCssLink);
+    }
     headerMinFontSize = 40;
     headerStartFontSize = 75;
 }

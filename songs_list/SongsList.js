@@ -7,12 +7,15 @@ songListScroll.style.maxHeight = window.innerHeight - 180 + 'px';
 let searchSongInput = document.querySelector('#song_search');
 
 if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-    let mobileCssLink = document.createElement("link");
-    mobileCssLink.rel = "stylesheet";
-    mobileCssLink.type = "text/css";
-    mobileCssLink.href = "SongList-mobile.css";
-    let head = document.querySelector('head');
-    head.append(mobileCssLink);
+    let mobileCssList = ['SongList-mobile.css', '/general-mobile.css'];
+    for (let link of mobileCssList) {
+        let mobileCssLink = document.createElement("link");
+        mobileCssLink.rel = "stylesheet";
+        mobileCssLink.type = "text/css";
+        mobileCssLink.href = link;
+        let head = document.querySelector('head');
+        head.append(mobileCssLink);
+    }
 }
 
 fetch(SONGS_DATA_PATH + 'songs_list.json')

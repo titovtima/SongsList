@@ -1,0 +1,12 @@
+#general_buttons_line {
+    height: 110px;
+}
+
+#user_button {
+    height: 100px;
+    width: 100px;
+}
+
+.window {
+    font-size: 40px;
+}

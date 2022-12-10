@@ -59,10 +59,6 @@ textarea {
     font-size: 40px;
 }
 
-#general_buttons_line {
-    height: 110px;
-}
-
 #home_button {
     height: 100px;
     width: 100px;
@@ -76,13 +72,4 @@ textarea {
 #edit_button {
     height: 100px;
     width: 100px;
-}
-
-#user_button {
-    height: 100px;
-    width: 100px;
-}
-
-.window {
-    font-size: 40px;
 }
