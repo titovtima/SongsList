@@ -6,33 +6,81 @@
     <title>Песни</title>
 
     <!-- Yandex.Metrika counter -->
-    <script type="text/javascript" >
-        (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-            m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+    <script type="text/javascript">
+        (function (m, e, t, r, i, k, a) {
+            m[i] = m[i] || function () {
+                (m[i].a = m[i].a || []).push(arguments)
+            };
+            m[i].l = 1 * new Date();
+            k = e.createElement(t), a = e.getElementsByTagName(t)[0], k.async = 1, k.src = r, a.parentNode.insertBefore(k, a)
+        })
         (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
 
         ym(88797016, "init", {
-            clickmap:true,
-            trackLinks:true,
-            accurateTrackBounce:true,
-            webvisor:true
+            clickmap: true,
+            trackLinks: true,
+            accurateTrackBounce: true,
+            webvisor: true
         });
     </script>
-    <noscript><div><img src="https://mc.yandex.ru/watch/88797016" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <noscript>
+        <div><img src="https://mc.yandex.ru/watch/88797016" style="position:absolute; left:-9999px;" alt=""/></div>
+    </noscript>
     <!-- /Yandex.Metrika counter -->
 
     <link rel="stylesheet" type="text/css" href="/general.css">
     <link rel="stylesheet" type="text/css" href="/songs_list/SongsList.css">
 </head>
 <body class="background">
-
-<input type="text" id="song_search" class="song_search">
-<div class="scroll" id="main_scroll">
-    <div class="list_of_contents" id="songs_list">
+<div id="flex_box">
+    <div id="general_buttons_line">
+        <button id="user_button" class="pointer_over"></button>
     </div>
+    <div class="rest_flex_part">
+        <input type="text" id="song_search" class="song_search" placeholder="Тексты загружаются">
+        <div class="scroll" id="song_list_scroll">
+            <div class="list_of_contents" id="songs_list">
+            </div>
 
-    <a id="add_song" class="pointer_over"><i>+ добавить песню</i></a>
+            <a id="add_song" class="pointer_over"><i>+ добавить песню</i></a>
+        </div>
+    </div>
 </div>
+
+<div id="overlay"></div>
+<div id="password_window" class="window">
+    <form id="send_password">
+        <label for="password_input">Введите пароль администратора</label>
+        <input type="password" id="password_input">
+    </form>
+</div>
+<div id="user_window" class="window">
+    <div id="log_in_section" class="window_section">
+        <form id="log_in_form">
+            <div>Логин: <input type="text" id="input_user_login"></div>
+            <div>Пароль: <input type="password" id="input_user_password"></div>
+            <input type="submit" id="submit_user_login" class="window_button" value="Войти">
+        </form>
+        <div class="center">
+            <button id="registration_button" class="text_button">Зарегистрироваться</button>
+        </div>
+    </div>
+    <div id="registration_section" class="window_section">
+        <form id="registration_form">
+            <div>Логин: <input type="text" id="input_new_user_login"></div>
+            <div>Пароль: <input type="password" id="input_new_user_password"></div>
+            <div>Повторите пароль: <input type="password" id="input_new_user_repeat_password"></div>
+            <input type="submit" id="submit_user_registration" class="window_button" value="Зарегистрироваться">
+        </form>
+    </div>
+    <div id="user_section" class="window_section">
+        <div>Пользователь: <span id="show_user_login"></span></div>
+        <button id="logout_button" class="window_button">Выйти</button>
+    </div>
+</div>
+
+<script src="/general.js"></script>
+<script src="/users/users.js"></script>
 <script src="/songs_list/SongsList.js"></script>
 </body>
 </html>

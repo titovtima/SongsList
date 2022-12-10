@@ -44,7 +44,7 @@ app.use('/auth/login', (req, res) => {
 app.use('/auth/reg', (req, res) => {
     let user = req.body.user;
     let password = req.body.password;
-    let fileData = JSON.parse(fs.readFileSync('users.json','utf-8'));
+    let fileData = JSON.parse(fs.readFileSync('users/users.json','utf-8'));
     let usersList = fileData.users;
     if (usersList.hasOwnProperty(user))
         res.sendStatus(403);
@@ -55,7 +55,7 @@ app.use('/auth/reg', (req, res) => {
         let newFileData = {
             'users': usersList
         };
-        fs.writeFile('users.json', JSON.stringify(newFileData), err => {
+        fs.writeFile('users/users.json', JSON.stringify(newFileData), err => {
             if (err)
                 res.sendStatus(500);
             else
@@ -68,7 +68,7 @@ function checkAuth(password, user) {
     const n = 2472942968189431706898462913067925658209124041544162680908145890301107704237n;
     const e = 5281668766765633818307894358032591567n;
 
-    let fileData = JSON.parse(fs.readFileSync('users.json','utf-8'));
+    let fileData = JSON.parse(fs.readFileSync('users/users.json','utf-8'));
     let usersList = fileData.users;
     if (usersList[user] && usersList[user].password === password)
         return usersList[user];

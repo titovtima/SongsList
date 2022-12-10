@@ -15,9 +15,6 @@ if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigat
     headerStartFontSize = 75;
 }
 
-let admin = false;
-let user;
-getUserFromCookie();
 let edit_mode = false;
 
 let header = document.querySelector('#song_name');
@@ -51,7 +48,6 @@ function loadSong(data) {
             let chords = MusicTheory.chordsTextFromPlainText(part.chords);
             MusicTheory.changeChordsTextNotation(chords, settings.notation);
             part.chords = MusicTheory.chordsTextToString(chords);
-            console.log(part.chords);
             new SongPart('chords', part);
         }
 
@@ -396,300 +392,6 @@ function updateMainContentHeight() {
     text_chords_column.style.height = '100%';
 }
 
-function findCookies() {
-    let cookies = {};
-    document.cookie.split('; ').forEach(value => {
-        let pair = value.split('=');
-        cookies[pair[0]] = pair[1];
-    });
-    return cookies;
-}
-
-class RSAEncoder {
-    constructor(n, e) {
-        this.n = n;
-        this.e = e;
-    }
-
-    quickPow(a, p, mod) {
-        if (p === 0n) return 1n;
-        if (p === 1n) return a % mod;
-
-        let a2 = this.quickPow(a % mod, p / 2n, mod);
-        if (p % 2n === 0n) {
-            return a2 * a2 % mod;
-        } else {
-            return (a2 * a2 % mod) * a % mod;
-        }
-    }
-
-    encode(string) {
-        let num = 0n;
-        string.split('').forEach((value, index) => {
-            num += BigInt(value.charCodeAt(0) + index * 256);
-            num %= this.n;
-        });
-
-        return this.quickPow(num, this.e, this.n).toString();
-    }
-}
-
-let encoder = new RSAEncoder(
-    2472942968189431706898462913067925658209124041544162680908145890301107704237n,
-    5281668766765633818307894358032591567n);
-
-let userButton = document.querySelector('#user_button');
-let overlay = document.querySelector('#overlay');
-let userWindow = document.querySelector('#user_window');
-let userSection = document.querySelector('#user_section');
-let logInSection = document.querySelector('#log_in_section');
-let registrationSection = document.querySelector('#registration_section');
-
-function getUserFromCookie() {
-    let userCookie = findCookies().user;
-    try {
-        user = JSON.parse(userCookie);
-    } catch (e) {
-        user = null;
-    }
-    if (user) {
-        let userButton = document.querySelector('#user_button');
-        userButton.style.backgroundImage = 'url("/assets/user_green.png")';
-    }
-}
-
-userButton.onclick = () => {
-    overlay.style.display = 'block';
-    userWindow.style.display = 'block';
-    if (user) {
-        let showUserLogin = document.querySelector('#show_user_login');
-        showUserLogin.innerHTML = user.login;
-        userSection.style.display = 'block';
-        let logoutButton = document.querySelector('#logout_button');
-        logoutButton.onclick = () => {
-            user = null;
-            document.cookie = 'user=null; max-age=-1; path=/; samesite=lax';
-            userButton.style.backgroundImage = 'url("/assets/user.png")';
-            userSection.style.display = 'none';
-            showLogInWindow();
-        }
-    } else {
-        userSection.style.display = 'none';
-        showLogInWindow();
-    }
-
-    setTimeout(() => { document.addEventListener('click', handlerCloseUserWindowClick); }, 100);
-}
-
-let handlerCloseUserWindowClick = event => {
-    let t = event.target;
-    if (t !== userWindow && !userWindow.contains(t))
-        exitUserWindow();
-}
-
-function exitUserWindow() {
-    userWindow.style.display = 'none';
-    overlay.style.display = 'none';
-    userSection.style.display = 'none';
-    logInSection.style.display = 'none';
-    registrationSection.style.display = 'none';
-
-    if (user) {
-        userButton.style.backgroundImage = 'url("/assets/user_green.png")';
-    } else {
-        userButton.style.backgroundImage = 'url("/assets/user.png")';
-    }
-
-    document.removeEventListener('click', handlerCloseUserWindowClick);
-}
-
-function showLogInWindow() {
-    overlay.style.display = 'block';
-    userWindow.style.display = 'block';
-
-    userSection.style.display = 'none';
-    registrationSection.style.display = 'none';
-    logInSection.style.display = 'block';
-
-    let submitLogin = document.querySelector('#submit_user_login');
-    submitLogin.onclick = () => {
-        login();
-    }
-
-    async function login() {
-        let loginInput = document.querySelector('#input_user_login');
-        let passwordInput = document.querySelector('#input_user_password');
-        let login = loginInput.value;
-        let password = passwordInput.value;
-        if (await checkUserPassword(password, login, true)) {
-            exitUserWindow();
-        } else {
-            alert('Неверный логин или пароль');
-            passwordInput.value = '';
-        }
-    }
-
-    let registrationButton = document.querySelector('#registration_button');
-    registrationButton.onclick = () => {
-        console.log('registration button');
-        logInSection.style.display = 'none';
-        registrationSection.style.display = 'block';
-
-        let submitRegistration = document.querySelector('#submit_user_registration');
-        submitRegistration.onclick = () => {
-            register();
-        }
-    }
-
-    async function register() {
-        let loginInput = document.querySelector('#input_new_user_login');
-        let passwordInput = document.querySelector('#input_new_user_password');
-        let repeatPasswordInput = document.querySelector('#input_new_user_repeat_password');
-        let password = passwordInput.value;
-        let repeatPassword = repeatPasswordInput.value;
-        if (password !== repeatPassword) {
-            alert('Пароли не совпадают');
-            passwordInput.value = '';
-            repeatPasswordInput.value = '';
-            return;
-        }
-        let login = loginInput.value;
-        let encodedPassword = encoder.encode(password);
-        let p = fetch('/auth/reg', {
-            "method": "POST",
-            "headers": {
-                "Content-Type": "application/json"
-            },
-            "body": JSON.stringify({
-                "password": encodedPassword,
-                "user": login
-            })
-        });
-        let response = await p;
-        if (response.ok) {
-            let userData = {
-                'login': login,
-                'password': password
-            };
-            user = userData;
-            document.cookie = `user=${JSON.stringify(userData)}; max-age=2500000; path=/; samesite=lax`;
-            exitUserWindow();
-        } else {
-            alert('Пользователь с таким логином уже существует');
-            loginInput.value = '';
-            passwordInput.value = '';
-            repeatPasswordInput.value = '';
-        }
-    }
-}
-
-async function checkUserPassword(password, login, updateCookie = false) {
-    let encodedPassword = encoder.encode(password);
-    // console.log(encodedPassword);
-    let p = fetch('/auth/login', {
-        "method": "POST",
-        "headers": {
-            "Content-Type": "application/json"
-        },
-        "body": JSON.stringify({
-            "password": encodedPassword,
-            "user": login
-        })
-    });
-    let response = await p;
-    if (response.ok) {
-        let userData = await response.json();
-        userData.login = login;
-        if (updateCookie) {
-            document.cookie = `user=${JSON.stringify(userData)}; max-age=2500000; path=/; samesite=lax`;
-        }
-        user = userData;
-        return true;
-    }
-    return false;
-}
-
-function checkAdmin() {
-    if ((user && user.admin) || admin) {
-        admin = true;
-        return true;
-    }
-    let password = findCookies().admin_password;
-    if (checkAdminPassword(password)) {
-        admin = true;
-        return true;
-    }
-}
-
-function checkAdminPassword(password, updateCookie = false) {
-    if (password) {
-        let lowerCasePassword = password.toLowerCase();
-        let encodedLowerCasePassword = encoder.encode(lowerCasePassword);
-        if (encodedLowerCasePassword === '256936898532198594958756561132414261138151402058674183683957539453558674134') {
-            if (updateCookie)
-                document.cookie = `admin_password=${password}; max-age=2500000; path=/; samesite=lax`;
-            return true;
-        }
-    }
-    return false;
-}
-
-let handlerClosePasswordWindowClick = event => {
-    let t = event.target;
-    if (t !== passwordWindow && !passwordWindow.contains(t))
-        exitPasswordWindow();
-}
-
-let passwordWindow = document.querySelector('#password_window');
-function showAdminConfirm(aim, data = null) {
-    let overlay = document.querySelector('#overlay');
-    let passwordWindow = document.querySelector('#password_window');
-    let passwordInput = document.querySelector('#password_input');
-    let sendPassword = document.querySelector('#send_password');
-    overlay.style.display = 'block';
-    passwordWindow.style.display = 'block';
-    passwordWindow.aim = aim;
-    sendPassword.onsubmit = event => {
-        if (event)
-            event.preventDefault();
-
-        if (checkAdminPassword(passwordInput.value)) {
-            exitPasswordWindow(aim, true, data);
-            return true;
-        } else {
-            passwordInput.value = '';
-            alert('Введён неверный пароль');
-        }
-    }
-
-    document.addEventListener('click', handlerClosePasswordWindowClick);
-}
-
-function exitPasswordWindow(aim, authorized = false, data = null) {
-    if (!passwordWindow) return;
-    document.removeEventListener('click', handlerClosePasswordWindowClick);
-    let passwordInput = document.querySelector('#password_input');
-    if (authorized || checkAdminPassword(passwordInput.value, true)) {
-        overlay.style.display = 'none';
-        passwordWindow.style.display = 'none';
-        let jsonString = '{"correct_admin_password_entered": true}';
-        ym(88797016, 'params', JSON.parse(jsonString));
-        if (aim === 'edit')
-            switchToEditMode();
-        if (aim === 'send')
-            sendSongToServer(data);
-    } else {
-        overlay.style.display = 'none';
-        passwordWindow.style.display = 'none';
-        alert('Введён неверный пароль');
-        if (passwordWindow.aim === 'edit') {
-            let urlNoEdit = new URL(document.location.href);
-            urlNoEdit.searchParams.delete('edit')
-            document.location.href = urlNoEdit.toString();
-        }
-    }
-}
-
 function fitTextareaHeight(elem) {
     elem.style.height = '0';
     elem.style.height = elem.scrollHeight + 2 + 'px';
@@ -792,7 +494,6 @@ function switchToEditMode() {
             song_data.text.push(part.data);
         }
         for (let part of song_parts.chords_parts) {
-            console.log(part);
             let chords = MusicTheory.chordsTextFromPlainText(part.data.chords, settings.notation);
             MusicTheory.changeChordsTextNotation(chords, 'English');
             part.data.chords = MusicTheory.chordsTextToString(chords);
@@ -807,7 +508,7 @@ function switchToEditMode() {
         if (current_key !== null)
             song_data.key = MusicTheory.keyName(current_key);
 
-        showAdminConfirm('send', song_data);
+        showAdminConfirm('send_song', song_data);
     }
 
     setEditButtonUrl();
@@ -1040,7 +741,6 @@ function addKeyChooseLine() {
                 } else {
                     song_parts.chords_parts.forEach(part => {
                         let chords_text = MusicTheory.chordsTextFromPlainText(part.data.chords, settings.notation);
-                        console.log(chords_text);
                         try {
                             let new_chords = MusicTheory.chordsTextToString(
                                 MusicTheory.transposeChordsText(chords_text, origin_key, current_key));
@@ -1072,7 +772,6 @@ function addKeyChooseLine() {
                 }
             };
 
-            console.log('origin_key: ', origin_key);
             if (origin_key && MusicTheory.keyName(origin_key) === key_name)
                 img.src = '/assets/key_background_on.png';
         });
@@ -1134,9 +833,9 @@ function changeNotationSystem(newNotation) {
     settings.notation = newNotation;
 }
 
-checkAdmin();
+User.checkAdmin();
 if (urlParams.get('edit')) {
-    if (!admin) {
+    if (!User.isAdmin) {
         showAdminConfirm('edit');
     }
     switchToEditMode();

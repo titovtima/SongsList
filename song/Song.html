@@ -32,7 +32,7 @@
     <a id="edit_button"></a>
     <button id="user_button" class="pointer_over"></button>
 </div>
-<div class="scroll" id="main_scroll">
+<div class="scroll rest_flex_part" id="main_scroll">
     <header>
         <h1 id="song_name" class="text song_name"></h1>
         <form id="input_song_name_form">
@@ -80,6 +80,7 @@
     </div></form>
 </div>
 </div>
+
 <div id="overlay"></div>
 <div id="password_window" class="window">
     <form id="send_password">
@@ -103,16 +104,22 @@
 </div>
 <div id="user_window" class="window">
     <div id="log_in_section" class="window_section">
-        <div>Логин: <input type="text" id="input_user_login"></div>
-        <div>Пароль: <input type="password" id="input_user_password"></div>
-        <button id="submit_user_login" class="window_button">Войти</button>
-        <div class="center"><button id="registration_button" class="text_button">Зарегистрироваться</button></div>
+        <form id="log_in_form">
+            <div>Логин: <input type="text" id="input_user_login"></div>
+            <div>Пароль: <input type="password" id="input_user_password"></div>
+            <input type="submit" id="submit_user_login" class="window_button" value="Войти">
+        </form>
+        <div class="center">
+            <button id="registration_button" class="text_button">Зарегистрироваться</button>
+        </div>
     </div>
     <div id="registration_section" class="window_section">
-        <div>Логин: <input type="text" id="input_new_user_login"></div>
-        <div>Пароль: <input type="password" id="input_new_user_password"></div>
-        <div>Повторите пароль: <input type="password" id="input_new_user_repeat_password"></div>
-        <button id="submit_user_registration" class="window_button">Зарегистрироваться</button>
+        <form id="registration_form">
+            <div>Логин: <input type="text" id="input_new_user_login"></div>
+            <div>Пароль: <input type="password" id="input_new_user_password"></div>
+            <div>Повторите пароль: <input type="password" id="input_new_user_repeat_password"></div>
+            <input type="submit" id="submit_user_registration" class="window_button" value="Зарегистрироваться">
+        </form>
     </div>
     <div id="user_section" class="window_section">
         <div>Пользователь: <span id="show_user_login"></span></div>
@@ -120,6 +127,8 @@
     </div>
 </div>
 
+<script src="/general.js"></script>
+<script src="/users/users.js"></script>
 <script src="/music_theory/kotlin.js"></script>
 <script src="/music_theory/MusicTheory.js"></script>
 <script src="song.js"></script>

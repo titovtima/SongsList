@@ -1,88 +1,99 @@
-const songs_data_path = '/songs_data/';
+const SONGS_DATA_PATH = '/songs_data/';
 
-let html_list = document.querySelector('#songs_list');
-let add_song = document.querySelector('#add_song');
-let main_scroll = document.querySelector('#main_scroll');
-main_scroll.style.maxHeight = window.innerHeight - 100 + 'px';
+let htmlList = document.querySelector('#songs_list');
+let addSong = document.querySelector('#add_song');
+let songListScroll = document.querySelector('#song_list_scroll');
+songListScroll.style.maxHeight = window.innerHeight - 180 + 'px';
+let searchSongInput = document.querySelector('#song_search');
 
-fetch(songs_data_path + 'songs_list.json')
+if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+    let mobileCssLink = document.createElement("link");
+    mobileCssLink.rel = "stylesheet";
+    mobileCssLink.type = "text/css";
+    mobileCssLink.href = "SongList-mobile.css";
+    let head = document.querySelector('head');
+    head.append(mobileCssLink);
+}
+
+fetch(SONGS_DATA_PATH + 'songs_list.json')
     .then(response => response.json())
-    .then(response => load_songs_list(response));
+    .then(response => loadSongsList(response));
 
-let songs_list = [];
-let max_id = 0;
-function load_songs_list(list) {
-    songs_list = [];
+let songsList = [];
+let maxId = 0;
+function loadSongsList(list) {
+    songsList = [];
     for (let id in list) {
-        max_id = Math.max(max_id, Number(id));
+        maxId = Math.max(maxId, Number(id));
         let ref = document.createElement('a');
         ref.append(list[id].name);
         ref.href = '/song?id=' + id;
         ref.className = 'ref_to_song_in_table';
         let div = document.createElement('div');
         div.append(ref);
-        songs_list.push({name: list[id].name, element: div, id: id});
+        songsList.push({name: list[id].name, element: div, id: id});
     }
-    songs_list.sort(sort_songs);
-    for (let song of songs_list)
-        html_list.append(song.element);
+    songsList.sort(sortSongs);
+    for (let song of songsList)
+        htmlList.append(song.element);
 
-    add_song.href = `/song?id=new&edit=true`;
+    addSong.href = `/song?id=new&edit=true`;
 
-    load_songs_texts();
+    loadSongsTexts().then(() => {
+        searchSongInput.placeholder = 'Поиск песни';
+    });
 }
 
-function sort_songs(a, b) {
+function sortSongs(a, b) {
     if (a.name < b.name) return -1;
     if (a.name > b.name) return 1;
     return 0;
 }
 
-function search_songs_by_name(name) {
+function searchSongsByName(name) {
     let words = name.trim().toLowerCase().split(' ');
-    return songs_list.filter(song => words.every(word => song.name.toLowerCase().includes(word)));
+    return songsList.filter(song => words.every(word => song.name.toLowerCase().includes(word)));
 }
 
-let songs_text = {};
-let songs_text_loaded = false;
-async function load_songs_texts() {
-    songs_list.forEach(song => {
+let songsTexts = {};
+let songsTextsLoaded = false;
+async function loadSongsTexts() {
+    songsList.forEach(song => {
         console.log('Loading song text ', song);
-        fetch(songs_data_path + song.id + '.json')
+        fetch(SONGS_DATA_PATH + song.id + '.json')
             .then(response => response.json())
             .then(result => {
                 let text_parts = result.text;
                 let song_words = "";
                 text_parts.forEach(part => song_words += part.text + " ");
                 console.log(song_words);
-                songs_text[song.id] = song_words;
+                songsTexts[song.id] = song_words;
             })
             .then(result => {
-                songs_text_loaded = true;
+                songsTextsLoaded = true;
             });
     });
 }
 
-function search_songs_by_text(text) {
-    console.log('texts loaded: ', songs_text_loaded);
+function searchSongsByText(text) {
+    console.log('texts loaded: ', songsTextsLoaded);
     let words = text.trim().toLowerCase().split(' ');
-    return songs_list.filter(song => {
+    return songsList.filter(song => {
         if (words.every(word => song.name.toLowerCase().includes(word)))
             return true
         else
-            if (songs_text_loaded)
-                return words.every(word => songs_text[song.id].toLowerCase().includes(word));
+            if (songsTextsLoaded)
+                return words.every(word => songsTexts[song.id].toLowerCase().includes(word));
             else return false;
     });
 }
 
-let search_input = document.querySelector('#song_search');
-search_input.oninput = () => {
-    search_input.style.width = '500px';
-    search_input.style.width =
-        Math.max(500, Math.min(window.innerWidth - 80, search_input.scrollWidth + 5)) + 'px';
-    let new_list = search_songs_by_text(search_input.value);
-    html_list.innerHTML = "";
+searchSongInput.oninput = () => {
+    searchSongInput.style.width = '500px';
+    searchSongInput.style.width =
+        Math.max(500, Math.min(window.innerWidth - 80, searchSongInput.scrollWidth + 5)) + 'px';
+    let new_list = searchSongsByText(searchSongInput.value);
+    htmlList.innerHTML = "";
     for (let song of new_list)
-        html_list.append(song.element);
+        htmlList.append(song.element);
 }
