@@ -29,7 +29,7 @@
     <!-- /Yandex.Metrika counter -->
 
     <link rel="stylesheet" type="text/css" href="/general.css">
-    <link rel="stylesheet" type="text/css" href="/songs_list/SongsList.css">
+    <link rel="stylesheet" type="text/css" href="/songs/Songs.css">
 </head>
 <body class="background">
 <div id="flex_box">
@@ -37,12 +37,17 @@
         <button id="user_button" class="pointer_over"></button>
     </div>
     <div class="rest_flex_part">
-        <input type="text" id="song_search" class="song_search" placeholder="Тексты загружаются">
-        <div class="scroll" id="song_list_scroll">
-            <div class="list_of_contents" id="songs_list">
-            </div>
+        <div id="personal_songs_lists">
 
-            <a id="add_song" class="pointer_over"><i>+ добавить песню</i></a>
+        </div>
+        <div id="main_songs_list_display">
+            <input type="text" id="song_search" class="song_search" placeholder="Тексты загружаются">
+            <div class="scroll" id="song_list_scroll">
+                <div class="list_of_contents" id="songs_list">
+                </div>
+
+                <a id="add_song" class="pointer_over"><i>+ добавить песню</i></a>
+            </div>
         </div>
     </div>
 </div>
@@ -81,6 +86,6 @@
 
 <script src="/general.js"></script>
 <script src="/users/users.js"></script>
-<script src="/songs_list/SongsList.js"></script>
+<script src="/songs/Songs.js"></script>
 </body>
 </html>

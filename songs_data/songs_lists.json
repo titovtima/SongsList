@@ -1,0 +1,10 @@
+{
+  "lists": [
+    {
+      "name": "Детские",
+      "users_read": [],
+      "users_write": [ "titovtima" ],
+      "songs_ids": [ "1" ]
+    }
+  ]
+}

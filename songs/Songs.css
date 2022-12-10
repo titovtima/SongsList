@@ -5,12 +5,12 @@
 }
 
 .list_of_contents {
-    margin: 20px 40px 0 40px;
+    margin: 10px 0 0 40px;
     overflow-y: auto;
 }
 
 .song_search {
-    margin: 20px 40px 10px 40px;
+    margin: 20px 0 10px 40px;
     font-size: 30px;
     padding: 5px;
 }
@@ -24,6 +24,11 @@ a {
 
 #add_song {
     font-size: 40px;
-    margin: 0 40px 10px 40px;
+    margin: 0 0 10px 40px;
     color: #0aa;
+}
+
+#personal_songs_lists {
+    background: linear-gradient(to top, #ccffaa, #d1ffee);
+    overflow-y: auto;
 }

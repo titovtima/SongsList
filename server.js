@@ -20,7 +20,7 @@ app.get("/transpose", (req, res) => {
 });
 
 app.get('/songs', (req, res) => {
-    res.sendFile(__dirname + '/songs_list/SongsList.html');
+    res.sendFile(__dirname + '/songs/Songs.html');
 });
 
 app.get('/song', (req, res) => {
@@ -99,7 +99,7 @@ function checkAuth(password, user) {
 
 let songs_list;
 let max_song_id = 1;
-fs.readFile(songs_data_path + 'songs_list.json','utf-8', (err1, data) => {
+fs.readFile(songs_data_path + 'songs.json','utf-8', (err1, data) => {
     if (err1) throw err1;
     songs_list = JSON.parse(data);
     while (songs_list[max_song_id]) max_song_id++;
@@ -132,10 +132,10 @@ app.post('/song', (req, res) => {
 
     fs.writeFile(songs_data_path + song_id + '.json', JSON.stringify(song_data),  err => {
         if (err) res.sendStatus(500);
-        fs.readFile(songs_data_path + 'songs_list.json','utf-8', (err1, data) => {
+        fs.readFile(songs_data_path + 'songs.json','utf-8', (err1, data) => {
             let songs_list = JSON.parse(data);
             songs_list[song_id] = { "name": song_data.name };
-            fs.writeFile(songs_data_path + 'songs_list.json', JSON.stringify(songs_list),  err2 => {
+            fs.writeFile(songs_data_path + 'songs.json', JSON.stringify(songs_list),  err2 => {
                 if (err2)
                     res.sendStatus(500);
                 res.end(String(song_id));
