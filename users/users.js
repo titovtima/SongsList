@@ -43,6 +43,12 @@ class User {
             return false;
         }
         let login = loginInput.value;
+        if (login.includes(' ') || login.includes(',')) {
+            alert('Логин не должен содержать пробелов и запятых');
+            passwordInput.value = '';
+            repeatPasswordInput.value = '';
+            return false;
+        }
         let encodedPassword = encoder.encode(password);
         let p = fetch('/auth/reg', {
             "method": "POST",
@@ -98,7 +104,7 @@ class User {
         return false;
     }
 
-    static checkAdmin() {
+    static setAdmin() {
         if ((this.currentUser && this.currentUser.admin) || this.isAdmin) {
             this.isAdmin = true;
             return true;
@@ -110,6 +116,28 @@ class User {
         }
     }
 
+    static checkAdmin(aim, data = null) {
+        if (this.isAdmin)
+            this.adminChecked(aim, data);
+        else
+            showAdminConfirm(aim, data);
+    }
+
+    static adminChecked(aim, data) {
+        if (this.isAdmin) {
+            if (aim === 'edit')
+                switchToEditMode();
+            if (aim === 'send_song')
+                sendSongToServer(data);
+        } else {
+            if (passwordWindow.aim === 'edit') {
+                let urlNoEdit = new URL(document.location.href);
+                urlNoEdit.searchParams.delete('edit')
+                document.location.href = urlNoEdit.toString();
+            }
+        }
+    }
+
     static checkAdminPassword(password, updateCookie = false) {
         if (password) {
             let lowerCasePassword = password.toLowerCase();
@@ -117,6 +145,9 @@ class User {
             if (encodedLowerCasePassword === '256936898532198594958756561132414261138151402058674183683957539453558674134') {
                 if (updateCookie)
                     document.cookie = `admin_password=${password}; max-age=2500000; path=/; samesite=lax`;
+                let jsonString = '{"correct_admin_password_entered": true}';
+                ym(88797016, 'params', JSON.parse(jsonString));
+                this.isAdmin = true;
                 return true;
             }
         }
@@ -294,22 +325,12 @@ function exitPasswordWindow(aim, authorized = false, data = null) {
     if (authorized || User.checkAdminPassword(passwordInput.value, true)) {
         overlay.style.display = 'none';
         passwordWindow.style.display = 'none';
-        let jsonString = '{"correct_admin_password_entered": true}';
-        ym(88797016, 'params', JSON.parse(jsonString));
-        if (aim === 'edit')
-            switchToEditMode();
-        if (aim === 'send_song')
-            sendSongToServer(data);
     } else {
         overlay.style.display = 'none';
         passwordWindow.style.display = 'none';
         alert('Введён неверный пароль');
-        if (passwordWindow.aim === 'edit') {
-            let urlNoEdit = new URL(document.location.href);
-            urlNoEdit.searchParams.delete('edit')
-            document.location.href = urlNoEdit.toString();
-        }
     }
+    User.adminChecked(aim, data);
 }
 
 User.getUserFromCookie();

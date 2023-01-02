@@ -43,6 +43,36 @@
     flex: 0 1 auto;
 }
 
+#home_button {
+    background-image: url("/assets/home.png");
+    float: right;
+    width: 70px;
+    height: 70px;
+    background-size: contain;
+    margin: 5px;
+}
+
+#settings_button {
+    border: none;
+    background-color: rgba(0, 0, 0, 0);
+    background-image: url("/assets/settings.png");
+    float: right;
+    width: 70px;
+    height: 70px;
+    min-height: 70px;
+    background-size: contain;
+    margin: 5px;
+}
+
+#edit_button {
+    background-image: url("/assets/edit.png");
+    float: right;
+    width: 70px;
+    height: 70px;
+    background-size: contain;
+    margin: 5px;
+}
+
 #user_button {
     border: none;
     background-color: rgba(0, 0, 0, 0);

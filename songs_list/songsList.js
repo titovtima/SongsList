@@ -6,8 +6,23 @@ let songListScroll = document.querySelector('#song_list_scroll');
 songListScroll.style.maxHeight = window.innerHeight - 180 + 'px';
 let searchSongInput = document.querySelector('#song_search');
 
+let songListId;
+function getSongListIdFromURL() {
+    let urlParts = window.location.toString().split('?')[0].split('/');
+    let ind = urlParts.length - 1;
+    let res;
+    // while (!res && urlParts[ind] !== 'titovtima.ru') {
+    while (!res && urlParts[ind] !== 'localhost:3000') {
+        res = Number(urlParts[ind]);
+        ind--;
+    }
+    if (res)
+        songListId = res.toString();
+}
+getSongListIdFromURL();
+
 if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-    let mobileCssList = ['Songs-mobile.css', '/general-mobile.css'];
+    let mobileCssList = ['/general-mobile.css'];
     for (let link of mobileCssList) {
         let mobileCssLink = document.createElement("link");
         mobileCssLink.rel = "stylesheet";
@@ -19,36 +34,20 @@ if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigat
 }
 
 let loadAllSongs = fetch(SONGS_DATA_PATH + 'songs.json')
-    .then(response => response.json())
-    .then(response => {
-        let listToShow = response;
-        let loadSongsPromises = [];
-        for (let id in listToShow) {
-            let promise = fetch(SONGS_DATA_PATH + id + '.json')
-                .then(response => response.json())
-                .then(result => {
-                    if (result.private &&
-                        !(result.users_read && User.currentUser && result.users_read.includes(User.currentUser.login))
-                    ) {
-                        delete listToShow[id];
-                    } else {
-                        let textParts = result.text;
-                        let songWords = "";
-                        textParts.forEach(part => songWords += part.text + " ");
-                        songsTexts[id] = songWords;
-                    }
-                });
-            loadSongsPromises.push(promise);
-        }
-        Promise.all(loadSongsPromises).then(result => {
-            songsTextsLoaded = true;
-            loadSongsList(listToShow);
-        });
-    });
+    .then(response => response.json());
 
 let loadSongsLists = fetch(SONGS_DATA_PATH + 'songs_lists.json')
     .then(response => response.json())
-    .then(response => showSongsListsInfo(response));
+// loadSongsLists.then(response => showSongsListsInfo(response));
+
+Promise.all([loadAllSongs, loadSongsLists]).then(response => {
+    let listToShow = response[0];
+    let songsIdToInclude = response[1][songListId].songs_ids;
+    for (let id in listToShow)
+        if (!songsIdToInclude.includes(id))
+            delete listToShow[id];
+    loadSongsList(listToShow);
+});
 
 let songsList = [];
 function loadSongsList(list) {
@@ -69,9 +68,9 @@ function loadSongsList(list) {
 
     addSong.href = `/song?id=new&edit=true`;
 
-    // loadSongsTexts().then(() => {
-    searchSongInput.placeholder = 'Поиск песни';
-    // });
+    loadSongsTexts().then(() => {
+        searchSongInput.placeholder = 'Поиск песни';
+    });
 }
 
 function sortSongs(a, b) {
@@ -112,9 +111,9 @@ function searchSongsByText(text) {
         if (words.every(word => song.name.toLowerCase().includes(word)))
             return true
         else
-            if (songsTextsLoaded)
-                return words.every(word => songsTexts[song.id].toLowerCase().includes(word));
-            else return false;
+        if (songsTextsLoaded)
+            return words.every(word => songsTexts[song.id].toLowerCase().includes(word));
+        else return false;
     });
 }
 
@@ -126,49 +125,4 @@ searchSongInput.oninput = () => {
     htmlList.innerHTML = "";
     for (let song of new_list)
         htmlList.append(song.element);
-}
-
-let mainSongsListDisplay = document.querySelector('#main_songs_list_display');
-let personalSongsLists = document.querySelector('#personal_songs_lists');
-if (User.currentUser) {
-    updatePersonalSongsListsPosition();
-} else {
-    personalSongsLists.style.display = 'none';
-}
-
-function updatePersonalSongsListsPosition() {
-    if (window.innerWidth > 800) {
-        personalSongsLists.style.width = '30%';
-        mainSongsListDisplay.style.width = '70%';
-        personalSongsLists.style.float = 'right';
-        mainSongsListDisplay.style.width = 'right';
-        personalSongsLists.style.height = '100%';
-        mainSongsListDisplay.style.height = '100%';
-    } else {
-        personalSongsLists.style.height = '30%';
-        mainSongsListDisplay.style.height = '70%';
-        personalSongsLists.style.float = 'top';
-        mainSongsListDisplay.style.float = 'top';
-        personalSongsLists.style.width = '100%';
-        mainSongsListDisplay.style.width = '100%';
-    }
-}
-
-window.addEventListener('resize', () => {
-    updatePersonalSongsListsPosition();
-});
-
-function showSongsListsInfo(data) {
-    let user = User.currentUser;
-    for (let listId in data) {
-        let list = data[listId];
-        let usersRead = list.users_read;
-        if (!list.public && (!user || !usersRead.includes(user.login)))
-            continue;
-        let link = document.createElement('a');
-        link.append(list.name);
-        link.href = '/songs_list/' + listId;
-        link.style.display = 'block';
-        personalSongsLists.append(link);
-    }
 }

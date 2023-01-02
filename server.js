@@ -3,12 +3,12 @@ const app = express();
 const fs = require('fs');
 const songs_data_path = __dirname + '/songs_data/';
 
-const host = 'titovtima.ru';
-const http_port = 80;
-const https_port = 443;
+// const host = 'titovtima.ru';
+// const http_port = 80;
+// const https_port = 443;
 
-// const host = 'localhost';
-// const http_port = 3000;
+const host = 'localhost';
+const http_port = 3000;
 
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());
@@ -21,6 +21,10 @@ app.get("/transpose", (req, res) => {
 
 app.get('/songs', (req, res) => {
     res.sendFile(__dirname + '/songs/Songs.html');
+});
+
+app.use('/songs_list/', (req, res) => {
+    res.sendFile(__dirname + '/songs_list/songsList.html');
 });
 
 app.get('/song', (req, res) => {
@@ -152,22 +156,22 @@ app.get("/", (req, res) => {
 //     res.sendFile(__dirname + '/main.html');
 // });
 
-const http_app = express();
+// const http_app = express();
+//
+// http_app.use("/", (req, res) => {
+//     res.redirect(301, 'https://' + host + req.path);
+// });
 
-http_app.use("/", (req, res) => {
-    res.redirect(301, 'https://' + host + req.path);
-});
+app.listen(http_port, host);
 
-http_app.listen(http_port, host);
-
-const https = require('https');
-
-https
-    .createServer(
-        {
-            key: fs.readFileSync('/root/ssl/titovtima.key'),
-            cert: fs.readFileSync('/root/ssl/titovtima.crt'),
-        },
-        app
-    )
-    .listen(https_port, host);
+// const https = require('https');
+//
+// https
+//     .createServer(
+//         {
+//             key: fs.readFileSync('/root/ssl/titovtima.key'),
+//             cert: fs.readFileSync('/root/ssl/titovtima.crt'),
+//         },
+//         app
+//     )
+//     .listen(https_port, host);

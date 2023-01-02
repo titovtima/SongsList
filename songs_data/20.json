@@ -42,5 +42,15 @@
       "text_chords": "G             D              Em \n Если Бог за нас, кто против нас\n             C               G \nЕсли Бог за нас, кто против нас\n             D                   Em   C \nЕсли Бог за нас, кто может быть против"
     }
   ],
-  "key": "G"
+  "key": "G",
+  "private": true,
+  "users_read": [
+    "titovtima",
+    "1",
+    "Tima"
+  ],
+  "users_write": [
+    "titovtima",
+    "Tima"
+  ]
 }

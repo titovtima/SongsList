@@ -34,8 +34,10 @@ let chords_column = document.querySelector('#chords_column');
 let text_chords_column = document.querySelector('#text_chords_column');
 
 let song_data = undefined;
+let songDataLoadedPromise;
 function loadSong(data) {
     song_data = data;
+    checkEditPermission();
     let name = data.name;
     if (!name) name = '';
     header.append(name);
@@ -406,6 +408,12 @@ function checkClickCoordsNotButton(event) {
     return !t.className.includes('song_part_button');
 }
 
+let privateSettingsLine = document.querySelector('#private_settings_line');
+let privateCheckbox = document.querySelector('#private_checkbox');
+let usersListContainer = document.querySelector('#users_lists_container');
+let usersReadInput = document.querySelector('#users_read_input');
+let usersWriteInput = document.querySelector('#users_write_input');
+
 function switchToEditMode() {
     ym(88797016,'reachGoal','edit_song');
     edit_mode = true;
@@ -477,45 +485,70 @@ function switchToEditMode() {
             updateSongName();
     });
 
+    privateSettingsLine.style.display = 'block';
+    if (song_data && song_data.private)
+        privateCheckbox.checked = true;
+    updatePrivateSettingsLine();
+
     let send_song_form = document.querySelector('#send_song');
     send_song_form.onsubmit = event => {
         if (event)
             event.preventDefault();
 
-        let forms = document.querySelectorAll('form:not(#send_song):not(#send_password):not(#notation_form)')
+        let forms = document.querySelectorAll('.edit_song_form');
         forms.forEach(value => {
             value.onsubmit();
-        })
+        });
 
-        let song_data = {
-            "name": header.innerHTML,
-            "text": [],
-            "chords": [],
-            "text_chords": []
-        };
-        for (let part of song_parts.text_parts) {
-            song_data.text.push(part.data);
-        }
-        for (let part of song_parts.chords_parts) {
-            let chords = MusicTheory.chordsTextFromPlainText(part.data.chords, settings.notation);
-            MusicTheory.changeChordsTextNotation(chords, 'English');
-            part.data.chords = MusicTheory.chordsTextToString(chords);
-            song_data.chords.push(part.data);
-        }
-        for (let part of song_parts.text_chords_parts) {
-            let text_chords = MusicTheory.chordsTextFromPlainText(part.data.text_chords, settings.notation);
-            MusicTheory.changeChordsTextNotation(text_chords, 'English', true);
-            part.data.text_chords = MusicTheory.chordsTextToString(text_chords);
-            song_data.text_chords.push(part.data);
-        }
-        if (current_key !== null)
-            song_data.key = MusicTheory.keyName(current_key);
+        let songDataToSend = fillSongData();
 
-        showAdminConfirm('send_song', song_data);
+        if (!song_data.private || !songDataToSend.private)
+            User.checkAdmin('send_song', songDataToSend);
+        else {
+            sendSongToServer(songDataToSend);
+        }
     }
 
     setEditButtonUrl();
     // addKeyChooseLine();
+}
+
+function fillSongData() {
+    let songDataToSend = {
+        "name": header.innerHTML,
+        "text": [],
+        "chords": [],
+        "text_chords": []
+    };
+    for (let part of song_parts.text_parts) {
+        songDataToSend.text.push(part.data);
+    }
+    for (let part of song_parts.chords_parts) {
+        let chords = MusicTheory.chordsTextFromPlainText(part.data.chords, settings.notation);
+        MusicTheory.changeChordsTextNotation(chords, 'English');
+        part.data.chords = MusicTheory.chordsTextToString(chords);
+        songDataToSend.chords.push(part.data);
+    }
+    for (let part of song_parts.text_chords_parts) {
+        let text_chords = MusicTheory.chordsTextFromPlainText(part.data.text_chords, settings.notation);
+        MusicTheory.changeChordsTextNotation(text_chords, 'English', true);
+        part.data.text_chords = MusicTheory.chordsTextToString(text_chords);
+        songDataToSend.text_chords.push(part.data);
+    }
+    if (current_key !== null)
+        songDataToSend.key = MusicTheory.keyName(current_key);
+    if (privateCheckbox.checked) {
+        songDataToSend.private = true;
+        let usersRead = usersReadInput.value.split(', ');
+        usersRead = usersRead.map(value => value.split(',')).flat();
+        usersRead = usersRead.map(value => value.split(' ')).flat().filter(value => value.length > 0);
+        songDataToSend.users_read = usersRead;
+        let usersWrite = usersWriteInput.value.split(', ');
+        usersWrite = usersWrite.map(value => value.split(',')).flat();
+        usersWrite = usersWrite.map(value => value.split(' ')).flat().filter(value => value.length > 0);
+        songDataToSend.users_write = usersWrite;
+    }
+    return songDataToSend;
 }
 
 function sendSongToServer(song_data) {
@@ -836,12 +869,50 @@ function changeNotationSystem(newNotation) {
     settings.notation = newNotation;
 }
 
-User.checkAdmin();
-if (urlParams.get('edit')) {
-    if (!User.isAdmin) {
-        showAdminConfirm('edit');
+privateCheckbox.addEventListener('click', () => {
+    updatePrivateSettingsLine();
+});
+
+function updatePrivateSettingsLine() {
+    if (privateCheckbox.checked) {
+        usersListContainer.style.display = 'block';
+        if (song_data && song_data.users_read) {
+            usersReadInput.value = song_data.users_read.toString();
+        } else {
+            if (User.currentUser)
+                usersReadInput.value = User.currentUser.login;
+        }
+        if (song_data && song_data.users_write) {
+            usersWriteInput.value = song_data.users_write.toString();
+        } else {
+            if (User.currentUser)
+                usersWriteInput.value = User.currentUser.login;
+        }
+    } else {
+        usersListContainer.style.display = 'none';
     }
-    switchToEditMode();
+}
+
+User.setAdmin();
+function checkEditPermission() {
+    if (urlParams.get('edit')) {
+        if (song_data.private) {
+            if (User.currentUser && song_data.users_write && song_data.users_write.includes(User.currentUser.login)) {
+                switchToEditMode();
+            } else {
+                alert('Нет доступа к редактированию');
+                let urlNoEdit = new URL(document.location.href);
+                urlNoEdit.searchParams.delete('edit')
+                document.location.href = urlNoEdit.toString();
+            }
+        } else {
+            if (!User.isAdmin) {
+                showAdminConfirm('edit');
+            } else {
+                switchToEditMode();
+            }
+        }
+    }
 }
 
 fetch(songs_data_path + songNumber + '.json')
@@ -860,7 +931,21 @@ fetch(songs_data_path + songNumber + '.json')
                 "text_chords": []
             })
     })
-    .then(response => loadSong(response));
+    .then(response => {
+        if (!response.private ||
+            (response.users_read && User.currentUser && response.users_read.includes(User.currentUser.login)) ||
+            (response.users_write && User.currentUser && response.users_write.includes(User.currentUser.login))
+        ) {
+            loadSong(response)
+        } else {
+            loadSong({
+                "name": "Песня не найдена 😕",
+                "text": [],
+                "chords": [],
+                "text_chords": []
+            });
+        }
+    });
 
 // window.addEventListener('resize', () => {
     // updateChordsInnerButtons();
