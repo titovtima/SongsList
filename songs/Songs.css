@@ -26,6 +26,7 @@ a {
     font-size: 40px;
     margin: 0 0 10px 40px;
     color: #0aa;
+    display: none;
 }
 
 #add_songs_list {

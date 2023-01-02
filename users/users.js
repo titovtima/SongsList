@@ -1,3 +1,5 @@
+// document.cookie = "admin_password=qq; max-age=-1; path=/; samesite=lax";
+
 class User {
     static currentUser = null;
     static isAdmin = false;
@@ -116,25 +118,11 @@ class User {
         }
     }
 
-    static checkAdmin(aim, data = null) {
-        if (this.isAdmin)
-            this.adminChecked(aim, data);
-        else
-            showAdminConfirm(aim, data);
-    }
-
-    static adminChecked(aim, data) {
+    static checkAdmin(callback) {
         if (this.isAdmin) {
-            if (aim === 'edit')
-                switchToEditMode();
-            if (aim === 'send_song')
-                sendSongToServer(data);
+            callback(true);
         } else {
-            if (passwordWindow.aim === 'edit') {
-                let urlNoEdit = new URL(document.location.href);
-                urlNoEdit.searchParams.delete('edit')
-                document.location.href = urlNoEdit.toString();
-            }
+            showAdminConfirm(callback);
         }
     }
 
@@ -294,20 +282,20 @@ let handlerClosePasswordWindowClick = event => {
 }
 
 let passwordWindow = document.querySelector('#password_window');
-function showAdminConfirm(aim, data = null) {
+function showAdminConfirm(callback) {
     let overlay = document.querySelector('#overlay');
     let passwordWindow = document.querySelector('#password_window');
     let passwordInput = document.querySelector('#password_input');
     let sendPassword = document.querySelector('#send_password');
     overlay.style.display = 'block';
     passwordWindow.style.display = 'block';
-    passwordWindow.aim = aim;
     sendPassword.onsubmit = event => {
         if (event)
             event.preventDefault();
 
-        if (User.checkAdminPassword(passwordInput.value)) {
-            exitPasswordWindow(aim, true, data);
+        if (User.checkAdminPassword(passwordInput.value, true)) {
+            exitPasswordWindow();
+            callback(true);
             return true;
         } else {
             passwordInput.value = '';
@@ -315,25 +303,33 @@ function showAdminConfirm(aim, data = null) {
         }
     }
 
-    document.addEventListener('click', handlerClosePasswordWindowClick);
+    handlerClosePasswordWindowClick = event => {
+        let t = event.target;
+        if (t !== passwordWindow && !passwordWindow.contains(t)) {
+            let passwordValue = passwordInput.value;
+            exitPasswordWindow();
+            if (User.checkAdminPassword(passwordValue, true)) {
+                callback(true);
+            } else {
+                alert('Введён неверный пароль');
+                callback(false);
+            }
+        }
+    }
+
+    setTimeout(() => {
+        document.addEventListener('click', handlerClosePasswordWindowClick);
+    }, 10);
 }
 
-function exitPasswordWindow(aim, authorized = false, data = null) {
-    if (!passwordWindow) return;
+function exitPasswordWindow() {
     document.removeEventListener('click', handlerClosePasswordWindowClick);
-    let passwordInput = document.querySelector('#password_input');
-    if (authorized || User.checkAdminPassword(passwordInput.value, true)) {
-        overlay.style.display = 'none';
-        passwordWindow.style.display = 'none';
-    } else {
-        overlay.style.display = 'none';
-        passwordWindow.style.display = 'none';
-        alert('Введён неверный пароль');
-    }
-    User.adminChecked(aim, data);
+    overlay.style.display = 'none';
+    passwordWindow.style.display = 'none';
 }
 
 User.getUserFromCookie();
 if (User.currentUser) {
     userButton.style.backgroundImage = 'url("/assets/user_green.png")';
 }
+User.setAdmin();

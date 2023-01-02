@@ -154,6 +154,10 @@ function updatePersonalSongsListsPosition() {
     }
 }
 
+if (User.isAdmin || User.currentUser) {
+    addSong.style.display = 'block';
+}
+
 window.addEventListener('resize', () => {
     updatePersonalSongsListsPosition();
 });

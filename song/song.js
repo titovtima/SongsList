@@ -34,7 +34,6 @@ let chords_column = document.querySelector('#chords_column');
 let text_chords_column = document.querySelector('#text_chords_column');
 
 let song_data = undefined;
-let songDataLoadedPromise;
 function loadSong(data) {
     song_data = data;
     checkEditPermission();
@@ -503,7 +502,11 @@ function switchToEditMode() {
         let songDataToSend = fillSongData();
 
         if (!song_data.private || !songDataToSend.private)
-            User.checkAdmin('send_song', songDataToSend);
+            User.checkAdmin(authorized => {
+                if (authorized) {
+                    sendSongToServer(songDataToSend);
+                }
+            });
         else {
             sendSongToServer(songDataToSend);
         }
@@ -889,11 +892,16 @@ function updatePrivateSettingsLine() {
                 usersWriteInput.value = User.currentUser.login;
         }
     } else {
-        usersListContainer.style.display = 'none';
+        User.checkAdmin(authorized => {
+            if (authorized) {
+                usersListContainer.style.display = 'none';
+            } else {
+                privateCheckbox.checked = true;
+            }
+        })
     }
 }
 
-User.setAdmin();
 function checkEditPermission() {
     if (urlParams.get('edit')) {
         if (song_data.private) {
@@ -906,11 +914,15 @@ function checkEditPermission() {
                 document.location.href = urlNoEdit.toString();
             }
         } else {
-            if (!User.isAdmin) {
-                showAdminConfirm('edit');
-            } else {
-                switchToEditMode();
-            }
+            User.checkAdmin(authorized => {
+                if (authorized) {
+                    switchToEditMode();
+                } else {
+                    let urlNoEdit = new URL(document.location.href);
+                    urlNoEdit.searchParams.delete('edit')
+                    document.location.href = urlNoEdit.toString();
+                }
+            });
         }
     }
 }
@@ -918,12 +930,20 @@ function checkEditPermission() {
 fetch(songs_data_path + songNumber + '.json')
     .then(response => {
         if (response.ok) return response.json()
-        else if (urlParams.has('edit')) return Promise.resolve({
-            "name": "Новая песня",
-            "text": [],
-            "chords": [],
-            "text_chords": []
-        })
+        else if (urlParams.has('edit')) {
+            let newSongData = {
+                "name": "Новая песня",
+                "text": [],
+                "chords": [],
+                "text_chords": []
+            }
+            if (!User.isAdmin) {
+                newSongData.private = true;
+                newSongData.users_read = [User.currentUser.login];
+                newSongData.users_write = [User.currentUser.login];
+            }
+            return Promise.resolve(newSongData)
+        }
         else return Promise.resolve({
                 "name": "Песня не найдена 😕",
                 "text": [],
