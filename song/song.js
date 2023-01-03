@@ -130,19 +130,20 @@ class SongPart {
         delete_cross.onclick = () => {
             // this.button_clicked = true;
             this.wrap_div.remove();
+            song_parts[this.type + '_parts'].splice(this.part_num, 1);
+            for (let id = this.part_num; id < song_parts[this.type + '_parts'].length; id++) {
+                song_parts[this.type + '_parts'][id].part_num--;
+            }
             if (this.type === 'text') {
-                song_parts.text_parts.splice(this.part_num, 1);
-                updateTextInnerButtons();
+                redrawSongText();
             }
             if (this.type === 'chords') {
-                song_parts.chords_parts.splice(this.part_num, 1);
-                updateChordsInnerButtons();
+                redrawSongChords();
             }
             if (this.type === 'text_chords') {
-                song_parts.text_chords_parts.splice(this.part_num, 1);
-                updateTextChordsInnerButtons();
+                redrawSongTextChords();
             }
-            updateMainContentHeight();
+            // updateMainContentHeight();
         }
         if (edit_mode)
             delete_cross.style.display = 'block';
@@ -191,7 +192,7 @@ class SongPart {
         arrow_down.className = 'move_song_part_down input pointer_over song_part_button';
         arrow_down.onclick = () => {
             // this.button_clicked = true;
-            if (parent.part_num < song_parts[this.type + '_parts'].length - 1) {
+            if (this.part_num < song_parts[this.type + '_parts'].length - 1) {
                 let n = this.part_num;
                 this.part_num = n + 1;
                 song_parts[this.type + '_parts'].splice(n, 2,
