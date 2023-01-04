@@ -25,8 +25,9 @@ let loadAllSongs = fetch(SONGS_DATA_PATH + 'songs.json')
             let promise = fetch(SONGS_DATA_PATH + id + '.json')
                 .then(response => response.json())
                 .then(result => {
-                    if (result.private &&
-                        !(result.users_read && User.currentUser && result.users_read.includes(User.currentUser.login))
+                    if (result.private
+                        && !(result.users_read && User.currentUser && result.users_read.includes(User.currentUser.login))
+                        && !(result.users_write && User.currentUser && result.users_write.includes(User.currentUser.login))
                     ) {
                         delete listToShow[id];
                     } else {
@@ -66,9 +67,7 @@ function loadSongsList(list) {
 
     addSong.href = `/song?id=new&edit=true`;
 
-    // loadSongsTexts().then(() => {
     searchSongInput.placeholder = 'Поиск песни';
-    // });
 }
 
 function sortSongs(a, b) {
@@ -133,7 +132,7 @@ function updatePersonalSongsListsPosition() {
 }
 
 if (User.isAdmin || User.currentUser) {
-    addSong.style.display = 'block';
+    addSong.style.display = 'inline';
 }
 
 window.addEventListener('resize', () => {
@@ -145,7 +144,8 @@ function showSongsListsInfo(data) {
     for (let listId in data) {
         let list = data[listId];
         let usersRead = list.users_read;
-        if (!list.public && (!user || !usersRead.includes(user.login)))
+        let usersWrite = list.users_write;
+        if (!list.public && (!user || (!usersRead.includes(user.login) && !usersWrite.includes(user.login))))
             continue;
         let link = document.createElement('a');
         link.append(list.name);

@@ -500,14 +500,18 @@ function switchToEditMode() {
 
         let songDataToSend = fillSongData();
 
-        if (!song_data.private || !songDataToSend.private)
-            User.checkAdmin(authorized => {
-                if (authorized) {
-                    sendSongToServer(songDataToSend);
-                }
-            });
-        else {
-            sendSongToServer(songDataToSend);
+        if (songDataToSend.private && songDataToSend.users_write.length === 0) {
+            alert('Нельзя сделать приватную песню без редакторов');
+        } else {
+            if (!song_data.private || !songDataToSend.private) {
+                User.checkAdmin(authorized => {
+                    if (authorized) {
+                        sendSongToServer(songDataToSend);
+                    }
+                });
+            } else {
+                sendSongToServer(songDataToSend);
+            }
         }
     }
 

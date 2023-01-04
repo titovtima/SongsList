@@ -23,10 +23,13 @@ a {
 }
 
 #add_song {
-    font-size: 40px;
     margin: 0 0 10px 40px;
-    color: #0aa;
     display: none;
+}
+
+#add_song_text {
+    font-size: 40px;
+    color: #0aa;
 }
 
 #add_songs_list {

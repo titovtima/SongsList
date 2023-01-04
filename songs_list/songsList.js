@@ -206,6 +206,10 @@ function saveList() {
     let usersWrite = usersWriteInput.value.split(', ');
     usersWrite = usersWrite.map(value => value.split(' ')).flat();
     usersWrite = usersWrite.map(value => value.split(',')).flat().filter(value => value.length > 0);
+    if (usersWrite.length === 0) {
+        alert('Нельзя сделать список без редакторов');
+        return;
+    }
     let listData = {
         'id': songListId,
         'name': listNameInput.value.trim(),
@@ -237,6 +241,8 @@ editButton.onclick = () => {
         loadSongsLists.then(() => {
             if (checkEditPermission())
                 switchToEditMode();
+            else
+                alert('Нет доступа к редактированию');
         });
     }
 }
