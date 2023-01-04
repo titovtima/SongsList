@@ -1,5 +1,3 @@
-const songs_data_path = '/songs_data/';
-
 const urlParams = new URLSearchParams(window.location.search);
 const songNumber = urlParams.get('id');
 
@@ -928,7 +926,7 @@ function checkEditPermission() {
     }
 }
 
-fetch(songs_data_path + songNumber + '.json')
+fetch(SONGS_DATA_PATH + songNumber + '.json')
     .then(response => {
         if (response.ok) return response.json()
         else if (urlParams.has('edit')) {

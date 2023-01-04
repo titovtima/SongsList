@@ -22,7 +22,7 @@ a {
     white-space: nowrap;
 }
 
-#add_new_song, #add_song_by_id {
+#add_new_song, #add_song_by_id_container {
     font-size: 40px;
     margin: 0 40px 0;
     color: #0aa;

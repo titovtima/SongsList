@@ -1,5 +1,3 @@
-const SONGS_DATA_PATH = '/songs_data/';
-
 let htmlList = document.querySelector('#songs_list');
 let addSong = document.querySelector('#add_song');
 let songListScroll = document.querySelector('#song_list_scroll');
@@ -41,7 +39,6 @@ let loadAllSongs = fetch(SONGS_DATA_PATH + 'songs.json')
             loadSongsPromises.push(promise);
         }
         Promise.all(loadSongsPromises).then(result => {
-            songsTextsLoaded = true;
             loadSongsList(listToShow);
         });
     });
@@ -86,16 +83,14 @@ function searchSongsByName(name) {
 }
 
 let songsTexts = {};
-let songsTextsLoaded = false;
 
 function searchSongsByText(text) {
-    console.log('texts loaded: ', songsTextsLoaded);
     let words = text.trim().toLowerCase().split(' ');
     return songsList.filter(song => {
         if (words.every(word => song.name.toLowerCase().includes(word)))
             return true
         else
-            if (songsTextsLoaded)
+            if (songsTexts[song.id])
                 return words.every(word => songsTexts[song.id].toLowerCase().includes(word));
             else return false;
     });

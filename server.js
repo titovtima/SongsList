@@ -23,7 +23,7 @@ app.get('/songs', (req, res) => {
     res.sendFile(__dirname + '/songs/Songs.html');
 });
 
-app.use('/songs_list/', (req, res) => {
+app.get('/songs_list/:songListId', (req, res) => {
     res.sendFile(__dirname + '/songs_list/songsList.html');
 });
 
@@ -148,27 +148,31 @@ app.post('/song', (req, res) => {
     });
 });
 
-let maxSongsListId = 0;
+let maxSongsListId = 1;
 let songsListsData;
-fs.readFile(songs_data_path + 'songs_list.json', 'utf-8', (err, data) => {
+fs.readFile(songs_data_path + 'songs_lists.json', 'utf-8', (err, data) => {
     if (err) throw err;
     songsListsData = data;
     while (songsListsData[maxSongsListId]) maxSongsListId++;
 });
 
-app.post('/songs_list', (req, res) => {
+app.post('/songs_list/:songsListId', (req, res) => {
     let reqData = req.body;
-    if (!checkAuth(reqData.password, reqData.user))
+    console.log(reqData);
+    if (!checkAuth(reqData.password, reqData.user)) {
         res.sendStatus(403);
-    let fileData;
-    fs.readFile(songs_data_path + 'songs_list.json', 'utf-8', (err, data) => {
-        fileData = JSON.parse(data);
-    });
+        return;
+    }
+    let fileData = JSON.parse(fs.readFileSync(songs_data_path + 'songs_lists.json', 'utf-8'));
     let list = fileData[reqData.id];
-    if (list && !list.users_write.includes(reqData.user))
+    if (list && !list.users_write.includes(reqData.user)) {
         res.sendStatus(403);
-    if (!reqData.name || !reqData.users_read || !reqData.users_write || !reqData.songs_ids)
+        return;
+    }
+    if (!reqData.name || !reqData.users_read || !reqData.users_write || !reqData.songs_ids) {
         res.sendStatus(400);
+        return;
+    }
     let songListId = reqData.id;
     if (songListId === 'new') {
         songListId = maxSongsListId;
@@ -180,7 +184,7 @@ app.post('/songs_list', (req, res) => {
         'users_write': reqData.users_write,
         'songs_ids': reqData.songs_ids
     };
-    fs.writeFile(songs_data_path + 'songs_list.json', JSON.stringify(fileData), err => {
+    fs.writeFile(songs_data_path + 'songs_lists.json', JSON.stringify(fileData), err => {
         if (err)
             res.sendStatus(500);
         else
