@@ -87,23 +87,6 @@ function searchSongsByName(name) {
 
 let songsTexts = {};
 let songsTextsLoaded = false;
-async function loadSongsTexts() {
-    songsList.forEach(song => {
-        console.log('Loading song text ', song);
-        fetch(SONGS_DATA_PATH + song.id + '.json')
-            .then(response => response.json())
-            .then(result => {
-                let text_parts = result.text;
-                let song_words = "";
-                text_parts.forEach(part => song_words += part.text + " ");
-                // console.log(song_words);
-                songsTexts[song.id] = song_words;
-            })
-            .then(result => {
-                songsTextsLoaded = true;
-            });
-    });
-}
 
 function searchSongsByText(text) {
     console.log('texts loaded: ', songsTextsLoaded);

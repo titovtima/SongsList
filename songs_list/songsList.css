@@ -22,8 +22,51 @@ a {
     white-space: nowrap;
 }
 
-#add_song {
+#add_new_song, #add_song_by_id {
     font-size: 40px;
-    margin: 0 0 10px 40px;
+    margin: 0 40px 0;
     color: #0aa;
+    display: none;
+}
+
+i {
+    font-size: 40px;
+}
+
+#song_id_to_add {
+    width: 150px;
+}
+
+#users_lists_container {
+    margin-left: 40px;
+    display: none;
+}
+
+#save_list_button {
+    font-size: 40px;
+    margin: 10px 0 20px 0;
+    padding: 10px;
+    background: none;
+    border: none;
+    display: none;
+    width: max-content;
+    border-radius: 10px;
+}
+
+#save_list_button:hover {
+    cursor: pointer;
+    background-image: linear-gradient(to top, #fddb92 0%, #d1fdff 100%);
+    color: #077;
+}
+
+.list_name {
+    width: 100%;
+    height: 100%;
+    font-size: 60px;
+    overflow-y: auto;
+    text-align: center;
+}
+
+#input_list_name {
+    display: none;
 }

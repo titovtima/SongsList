@@ -9,10 +9,6 @@
     width: 100%;
 }
 
-* {
-    font-size: 30px;
-}
-
 .song_text {
     font-size: 30px;
 }
@@ -81,12 +77,6 @@
     display: none;
 }
 
-.center {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-}
-
 form {
     display: block;
 }
@@ -105,10 +95,6 @@ form {
     cursor: pointer;
     background-image: linear-gradient(to top, #fddb92 0%, #d1fdff 100%);
     color: #077;
-}
-
-label {
-    display: block;
 }
 
 .above_scroll_display_column {

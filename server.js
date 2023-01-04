@@ -148,6 +148,45 @@ app.post('/song', (req, res) => {
     });
 });
 
+let maxSongsListId = 0;
+let songsListsData;
+fs.readFile(songs_data_path + 'songs_list.json', 'utf-8', (err, data) => {
+    if (err) throw err;
+    songsListsData = data;
+    while (songsListsData[maxSongsListId]) maxSongsListId++;
+});
+
+app.post('/songs_list', (req, res) => {
+    let reqData = req.body;
+    if (!checkAuth(reqData.password, reqData.user))
+        res.sendStatus(403);
+    let fileData;
+    fs.readFile(songs_data_path + 'songs_list.json', 'utf-8', (err, data) => {
+        fileData = JSON.parse(data);
+    });
+    let list = fileData[reqData.id];
+    if (list && !list.users_write.includes(reqData.user))
+        res.sendStatus(403);
+    if (!reqData.name || !reqData.users_read || !reqData.users_write || !reqData.songs_ids)
+        res.sendStatus(400);
+    let songListId = reqData.id;
+    if (songListId === 'new') {
+        songListId = maxSongsListId;
+        maxSongsListId++;
+    }
+    fileData[songListId] = {
+        'name': reqData.name,
+        'users_read': reqData.users_read,
+        'users_write': reqData.users_write,
+        'songs_ids': reqData.songs_ids
+    };
+    fs.writeFile(songs_data_path + 'songs_list.json', JSON.stringify(fileData), err => {
+        if (err)
+            res.sendStatus(500);
+        else
+            res.end(songListId);
+    });
+});
 
 app.get("/", (req, res) => {
     res.redirect(301, '/songs');
