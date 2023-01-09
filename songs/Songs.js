@@ -55,7 +55,7 @@ function loadSongsList(list) {
     for (let id in list) {
         let ref = document.createElement('a');
         ref.append(list[id].name);
-        ref.href = '/song?id=' + id;
+        ref.href = '/song/' + id;
         ref.className = 'ref_to_song_in_table';
         let div = document.createElement('div');
         div.append(ref);
@@ -107,20 +107,22 @@ let mainSongsListDisplay = document.querySelector('#main_songs_list_display');
 let personalSongsLists = document.querySelector('#personal_songs_lists');
 
 function updatePersonalSongsListsPosition() {
-    if (window.innerWidth > 800) {
-        personalSongsLists.style.width = '30%';
-        mainSongsListDisplay.style.width = '70%';
-        personalSongsLists.style.float = 'right';
-        mainSongsListDisplay.style.width = 'right';
-        personalSongsLists.style.height = '100%';
-        mainSongsListDisplay.style.height = '100%';
-    } else {
-        personalSongsLists.style.height = '30%';
-        mainSongsListDisplay.style.height = '70%';
-        personalSongsLists.style.float = 'top';
-        mainSongsListDisplay.style.float = 'top';
-        personalSongsLists.style.width = '100%';
-        mainSongsListDisplay.style.width = '100%';
+    if (User.currentUser) {
+        if (window.innerWidth > 800) {
+            personalSongsLists.style.width = '30%';
+            mainSongsListDisplay.style.width = '70%';
+            personalSongsLists.style.float = 'right';
+            mainSongsListDisplay.style.width = 'right';
+            personalSongsLists.style.height = '100%';
+            mainSongsListDisplay.style.height = '100%';
+        } else {
+            personalSongsLists.style.height = '30%';
+            mainSongsListDisplay.style.height = '70%';
+            personalSongsLists.style.float = 'top';
+            mainSongsListDisplay.style.float = 'top';
+            personalSongsLists.style.width = '100%';
+            mainSongsListDisplay.style.width = '100%';
+        }
     }
 }
 

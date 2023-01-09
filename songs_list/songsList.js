@@ -14,20 +14,17 @@ let usersReadInput = document.querySelector('#users_read_input');
 let usersWriteInput = document.querySelector('#users_write_input');
 let editButton = document.querySelector('#edit_button');
 
-let songListId;
+let songsListId;
 let editMode = false;
-let songListData;
+let songsListData;
 function getSongListIdFromURL() {
     let urlParts = window.location.toString().split('?')[0].split('/');
-    let ind = urlParts.length - 1;
-    let res;
-    // while (!res && urlParts[ind] !== 'titovtima.ru') {
-    while (!res && urlParts[ind] !== 'localhost:3000') {
-        res = Number(urlParts[ind]);
-        ind--;
+    let ind = urlParts.findIndex(value => value === 'songs_list');
+    if (urlParts.length > ind + 1 && urlParts[ind + 1].length > 0) {
+        songsListId = urlParts[ind + 1];
     }
-    if (res)
-        songListId = res.toString();
+    if (!songsListId)
+        songsListId = 'new';
 }
 getSongListIdFromURL();
 
@@ -49,20 +46,20 @@ let loadAllSongs = fetch(SONGS_DATA_PATH + 'songs.json')
 let loadSongsLists = fetch(SONGS_DATA_PATH + 'songs_lists.json')
     .then(response => response.json())
     .then(response => {
-        songListData = response[songListId];
+        songsListData = response[songsListId];
     });
 
 Promise.all([loadAllSongs, loadSongsLists, userCookiePromise]).then(response => {
     let listToShow = response[0];
-    if (!songListData) {
-        songListData = {
+    if (!songsListData) {
+        songsListData = {
             'name': 'Новый список',
             'users_read': [ User.currentUser.login ],
             'users_write': [ User.currentUser.login ],
             'songs_ids': [ ]
         }
     }
-    let songsIdToInclude = songListData.songs_ids;
+    let songsIdToInclude = songsListData.songs_ids;
     for (let id in listToShow)
         if (!songsIdToInclude.includes(id))
             delete listToShow[id];
@@ -71,10 +68,10 @@ Promise.all([loadAllSongs, loadSongsLists, userCookiePromise]).then(response => 
 
 let songsList = [];
 function loadSongsList(list) {
-    listNameHeader.innerHTML = songListData.name;
-    listNameInput.value = songListData.name;
+    listNameHeader.innerHTML = songsListData.name;
+    listNameInput.value = songsListData.name;
     let pageTitle = document.querySelector('title');
-    pageTitle.innerHTML = songListData.name;
+    pageTitle.innerHTML = songsListData.name;
 
     songsList = [];
     for (let id in list) {
@@ -93,7 +90,7 @@ function pushSongToSongList(songId, songName) {
     console.log('push song, id=', songId);
     let ref = document.createElement('a');
     ref.append(songName);
-    ref.href = '/song?id=' + songId;
+    ref.href = '/song/' + songId;
     ref.className = 'ref_to_song_in_table';
     let div = document.createElement('div');
     div.append(ref);
@@ -185,8 +182,8 @@ function switchToEditMode() {
     addSongByIdContainer.style.display = 'block';
     saveListButton.style.display = 'block';
     usersListContainer.style.display = 'block';
-    usersReadInput.value = songListData.users_read.toString();
-    usersWriteInput.value = songListData.users_write.toString();
+    usersReadInput.value = songsListData.users_read.toString();
+    usersWriteInput.value = songsListData.users_write.toString();
 
     listNameHeader.addEventListener('click', handlerClickOnHeader);
 
@@ -194,7 +191,7 @@ function switchToEditMode() {
 }
 
 function checkEditPermission() {
-    return User.currentUser && songListData.users_write && songListData.users_write.includes(User.currentUser.login);
+    return User.currentUser && songsListData.users_write && songsListData.users_write.includes(User.currentUser.login);
 }
 
 function turnOffEditMode() {
@@ -221,7 +218,7 @@ function saveList() {
         return;
     }
     let listData = {
-        'id': songListId,
+        'id': songsListId,
         'name': listNameInput.value.trim(),
         'users_read': usersRead,
         'users_write': usersWrite,
@@ -229,7 +226,7 @@ function saveList() {
         'user': User.currentUser.login,
         'password': User.currentUser.password
     };
-    fetch('/songs_list/' + songListId, {
+    fetch('/songs_list/' + songsListId, {
         'method': 'POST',
         'headers': {
             'Content-Type': 'application/json'

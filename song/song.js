@@ -1,6 +1,3 @@
-const urlParams = new URLSearchParams(window.location.search);
-const songNumber = urlParams.get('id');
-
 let headerStartFontSize, headerMinFontSize;
 if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
     let mobileCssList = ['song-mobile.css', '/general-mobile.css'];
@@ -32,6 +29,22 @@ let chords_column = document.querySelector('#chords_column');
 let text_chords_column = document.querySelector('#text_chords_column');
 
 let song_data = undefined;
+
+const urlParams = new URLSearchParams(window.location.search);
+let songId;
+function getSongIdFromUrl() {
+    let urlParts = window.location.toString().split('?')[0].split('/');
+    let ind = urlParts.findIndex(value => value === 'song');
+    if ((urlParts.length > ind + 1) && urlParts[ind + 1].length > 0) {
+        songId = urlParts[ind + 1];
+    } else {
+        songId = urlParams.get('id');
+    }
+    if (!songId)
+        songId = 'new';
+}
+getSongIdFromUrl();
+
 function loadSong(data) {
     song_data = data;
     checkEditPermission();
@@ -930,9 +943,10 @@ function checkEditPermission() {
     }
 }
 
-fetch(SONGS_DATA_PATH + songNumber + '.json')
+let loadSongDataPromise = fetch(SONGS_DATA_PATH + songId + '.json')
+Promise.all([loadSongDataPromise, userCookiePromise])
     .then(response => {
-        if (response.ok) return response.json()
+        if (response[0].ok) return response[0].json()
         else if (urlParams.has('edit')) {
             let newSongData = {
                 "name": "Новая песня",
@@ -946,13 +960,12 @@ fetch(SONGS_DATA_PATH + songNumber + '.json')
                 newSongData.users_write = [User.currentUser.login];
             }
             return Promise.resolve(newSongData)
-        }
-        else return Promise.resolve({
-                "name": "Песня не найдена 😕",
-                "text": [],
-                "chords": [],
-                "text_chords": []
-            })
+        } else return Promise.resolve({
+            "name": "Песня не найдена 😕",
+            "text": [],
+            "chords": [],
+            "text_chords": []
+        })
     })
     .then(response => {
         if (!response.private ||

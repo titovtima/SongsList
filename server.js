@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const fs = require('fs');
 const songs_data_path = __dirname + '/songs_data/';
+const users_data_path = __dirname + '/users/';
 
 // const host = 'titovtima.ru';
 // const http_port = 80;
@@ -28,6 +29,17 @@ app.get('/songs_list/:songListId', (req, res) => {
 });
 
 app.get('/song', (req, res) => {
+    let url = new URL(req.url, 'https://' + host);
+    if (!url.searchParams.has('id')) {
+        url.searchParams.set('id', 'new');
+    }
+    let newUrl = '/song/' + url.searchParams.get('id');
+    url.searchParams.delete('id');
+    newUrl += url.search + url.hash;
+    res.redirect(301, newUrl);
+});
+
+app.get('/song/:songId', (req, res) => {
     res.sendFile(__dirname + '/song/Song.html');
 });
 
@@ -50,7 +62,7 @@ app.use('/auth/login', (req, res) => {
 app.use('/auth/reg', (req, res) => {
     let user = req.body.user;
     let password = req.body.password;
-    let fileData = JSON.parse(fs.readFileSync('users/users.json','utf-8'));
+    let fileData = JSON.parse(fs.readFileSync(users_data_path + 'users.json','utf-8'));
     let usersList = fileData.users;
     if (usersList.hasOwnProperty(user))
         res.sendStatus(403);
@@ -61,7 +73,7 @@ app.use('/auth/reg', (req, res) => {
         let newFileData = {
             'users': usersList
         };
-        fs.writeFile('users/users.json', JSON.stringify(newFileData), err => {
+        fs.writeFile(users_data_path + 'users.json', JSON.stringify(newFileData), err => {
             if (err)
                 res.sendStatus(500);
             else
@@ -74,7 +86,7 @@ function checkAuth(password, user) {
     const n = 2472942968189431706898462913067925658209124041544162680908145890301107704237n;
     const e = 5281668766765633818307894358032591567n;
 
-    let fileData = JSON.parse(fs.readFileSync('users/users.json','utf-8'));
+    let fileData = JSON.parse(fs.readFileSync(users_data_path + 'users.json','utf-8'));
     let usersList = fileData.users;
     if (usersList[user] && usersList[user].password === password)
         return usersList[user];
@@ -111,40 +123,36 @@ fs.readFile(songs_data_path + 'songs.json','utf-8', (err1, data) => {
     while (songs_list[max_song_id]) max_song_id++;
 });
 
-app.post('/song', (req, res) => {
+app.post('/song/:songId', (req, res) => {
     let url = new URL(req.url, 'https://' + host);
     if (!url.searchParams.has('edit')) {
         res.sendStatus(403);
         return;
     }
-    if (!url.searchParams.has('id')) {
-        res.sendStatus(400);
-        return;
-    }
-    let song_id = url.searchParams.get('id');
 
+    let songId = req.params.songId;
     let song_data = req.body;
 
-    if (song_id === 'new') {
-        song_id = max_song_id;
+    if (songId === 'new') {
+        songId = max_song_id;
         max_song_id++;
     }
 
-    let time = new Date()
+    let time = new Date();
     fs.appendFile('songs_changes.txt', 'Get song from IP: ' + req.ip + '\n' +
         'Date: ' + time.toString() + '\n' +
-        'Song id: ' + song_id + '\n' +
+        'Song id: ' + songId + '\n' +
         'Song data:\n' + JSON.stringify(song_data) + '\n\n', err => {});
 
-    fs.writeFile(songs_data_path + song_id + '.json', JSON.stringify(song_data),  err => {
+    fs.writeFile(songs_data_path + songId + '.json', JSON.stringify(song_data),  err => {
         if (err) res.sendStatus(500);
         fs.readFile(songs_data_path + 'songs.json','utf-8', (err1, data) => {
             let songs_list = JSON.parse(data);
-            songs_list[song_id] = { "name": song_data.name };
+            songs_list[songId] = { "name": song_data.name };
             fs.writeFile(songs_data_path + 'songs.json', JSON.stringify(songs_list),  err2 => {
                 if (err2)
                     res.sendStatus(500);
-                res.end(String(song_id));
+                res.end(String(songId));
             });
         });
     });

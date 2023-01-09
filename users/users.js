@@ -235,6 +235,7 @@ function exitUserWindow() {
     }
 
     document.removeEventListener('click', handlerCloseUserWindowClick);
+    window.location.reload();
 }
 
 function showLogInWindow() {
@@ -330,5 +331,5 @@ function exitPasswordWindow() {
     passwordWindow.style.display = 'none';
 }
 
-let userCookiePromise = User.setUserFromCookie();
 User.setAdmin();
+let userCookiePromise = User.setUserFromCookie();
