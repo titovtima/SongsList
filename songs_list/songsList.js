@@ -52,8 +52,16 @@ let loadSongsLists = fetch(SONGS_DATA_PATH + 'songs_lists.json')
         songListData = response[songListId];
     });
 
-Promise.all([loadAllSongs, loadSongsLists]).then(response => {
+Promise.all([loadAllSongs, loadSongsLists, userCookiePromise]).then(response => {
     let listToShow = response[0];
+    if (!songListData) {
+        songListData = {
+            'name': 'Новый список',
+            'users_read': [ User.currentUser.login ],
+            'users_write': [ User.currentUser.login ],
+            'songs_ids': [ ]
+        }
+    }
     let songsIdToInclude = songListData.songs_ids;
     for (let id in listToShow)
         if (!songsIdToInclude.includes(id))
@@ -65,6 +73,9 @@ let songsList = [];
 function loadSongsList(list) {
     listNameHeader.innerHTML = songListData.name;
     listNameInput.value = songListData.name;
+    let pageTitle = document.querySelector('title');
+    pageTitle.innerHTML = songListData.name;
+
     songsList = [];
     for (let id in list) {
         pushSongToSongList(id, list[id].name);
@@ -124,13 +135,12 @@ async function loadSongText(songId) {
 }
 
 function searchSongsByText(text) {
-    console.log('texts loaded: ', songsTextsLoaded);
     let words = text.trim().toLowerCase().split(' ');
     return songsList.filter(song => {
         if (words.every(word => song.name.toLowerCase().includes(word)))
             return true
         else
-        if (songsTextsLoaded)
+        if (songsTexts[song.id])
             return words.every(word => songsTexts[song.id].toLowerCase().includes(word));
         else return false;
     });
@@ -234,18 +244,20 @@ function saveList() {
     })
 }
 
-editButton.onclick = () => {
-    if (editMode) {
-        saveList();
-    } else {
-        loadSongsLists.then(() => {
-            if (checkEditPermission())
-                switchToEditMode();
-            else
-                alert('Нет доступа к редактированию');
-        });
+userCookiePromise.then(() => {
+    editButton.onclick = () => {
+        if (editMode) {
+            saveList();
+        } else {
+            loadSongsLists.then(() => {
+                if (checkEditPermission())
+                    switchToEditMode();
+                else
+                    alert('Нет доступа к редактированию');
+            });
+        }
     }
-}
+});
 
 saveListButton.onclick = () => {
     saveList();
@@ -273,6 +285,7 @@ addSongById.onclick = () => {
         .then(response => {
             if (response) {
                 pushSongToSongList(songId, response.name);
+                loadSongText(songId);
             }
         });
 }

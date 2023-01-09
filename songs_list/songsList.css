@@ -65,6 +65,8 @@ i {
     font-size: 60px;
     overflow-y: auto;
     text-align: center;
+    min-height: 80px;
+    padding: 20px 0;
 }
 
 #input_list_name {

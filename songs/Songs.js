@@ -18,8 +18,8 @@ if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigat
 
 let loadAllSongs = fetch(SONGS_DATA_PATH + 'songs.json')
     .then(response => response.json())
-    .then(response => {
-        let listToShow = response;
+Promise.all([loadAllSongs, userCookiePromise]).then(response => {
+        let listToShow = response[0];
         let loadSongsPromises = [];
         for (let id in listToShow) {
             let promise = fetch(SONGS_DATA_PATH + id + '.json')
@@ -39,14 +39,14 @@ let loadAllSongs = fetch(SONGS_DATA_PATH + 'songs.json')
                 });
             loadSongsPromises.push(promise);
         }
-        Promise.all(loadSongsPromises).then(result => {
+        Promise.all(loadSongsPromises).then(() => {
             loadSongsList(listToShow);
         });
     });
 
 let loadSongsLists = fetch(SONGS_DATA_PATH + 'songs_lists.json')
     .then(response => response.json())
-    .then(response => showSongsListsInfo(response));
+Promise.all([loadSongsLists, userCookiePromise]).then(response => showSongsListsInfo(response[0]));
 
 let songsList = [];
 function loadSongsList(list) {
@@ -64,8 +64,6 @@ function loadSongsList(list) {
     songsList.sort(sortSongs);
     for (let song of songsList)
         htmlList.append(song.element);
-
-    addSong.href = `/song?id=new&edit=true`;
 
     searchSongInput.placeholder = 'Поиск песни';
 }
@@ -107,11 +105,6 @@ searchSongInput.oninput = () => {
 
 let mainSongsListDisplay = document.querySelector('#main_songs_list_display');
 let personalSongsLists = document.querySelector('#personal_songs_lists');
-if (User.currentUser) {
-    updatePersonalSongsListsPosition();
-} else {
-    personalSongsLists.style.display = 'none';
-}
 
 function updatePersonalSongsListsPosition() {
     if (window.innerWidth > 800) {
@@ -131,9 +124,15 @@ function updatePersonalSongsListsPosition() {
     }
 }
 
-if (User.isAdmin || User.currentUser) {
-    addSong.style.display = 'inline';
-}
+userCookiePromise.then(() => {
+    if (User.isAdmin || User.currentUser) {
+        addSong.style.display = 'inline';
+    }
+    if (User.currentUser) {
+        updatePersonalSongsListsPosition();
+        personalSongsLists.style.display = 'block';
+    }
+});
 
 window.addEventListener('resize', () => {
     updatePersonalSongsListsPosition();

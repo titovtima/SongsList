@@ -4,7 +4,7 @@ class User {
     static currentUser = null;
     static isAdmin = false;
 
-    static getUserFromCookie() {
+    static async setUserFromCookie() {
         let userCookie = findCookies().user;
         let userData;
         try {
@@ -12,9 +12,18 @@ class User {
         } catch (e) {
             userData = null;
         }
-        if (userData)
-            this.currentUser = new User(userData);
-        return this.currentUser;
+        if (userData) {
+            await this.checkUserPassword(userData.password, userData.login, false)
+                .then(result => {
+                    if (result) {
+                        userButton.style.backgroundImage = 'url("/assets/user_green.png")';
+                    } else {
+                        this.currentUser = null;
+                    }
+                });
+        } else {
+            this.currentUser = null;
+        }
     }
 
     static async logIn() {
@@ -22,8 +31,9 @@ class User {
         let passwordInput = document.querySelector('#input_user_password');
         let login = loginInput.value;
         let password = passwordInput.value;
-        if (await User.checkUserPassword(password, login, true)) {
-            this.currentUser = new User({ 'login': login, 'password': password });
+        let encodedPassword = encoder.encode(password);
+        if (await User.checkUserPassword(encodedPassword, login, true)) {
+            this.currentUser = new User({ 'login': login, 'password': encodedPassword });
             return this.currentUser;
         } else {
             alert('Неверный логин или пароль');
@@ -36,17 +46,15 @@ class User {
         let loginInput = document.querySelector('#input_new_user_login');
         let passwordInput = document.querySelector('#input_new_user_password');
         let repeatPasswordInput = document.querySelector('#input_new_user_repeat_password');
+        let login = loginInput.value;
+        if (login.includes(' ') || login.includes(',')) {
+            alert('Логин не должен содержать пробелов и запятых');
+            return false;
+        }
         let password = passwordInput.value;
         let repeatPassword = repeatPasswordInput.value;
         if (password !== repeatPassword) {
             alert('Пароли не совпадают');
-            passwordInput.value = '';
-            repeatPasswordInput.value = '';
-            return false;
-        }
-        let login = loginInput.value;
-        if (login.includes(' ') || login.includes(',')) {
-            alert('Логин не должен содержать пробелов и запятых');
             passwordInput.value = '';
             repeatPasswordInput.value = '';
             return false;
@@ -66,37 +74,31 @@ class User {
         if (response.ok) {
             let userData = {
                 'login': login,
-                'password': password
+                'password': encodedPassword
             };
             this.currentUser = userData;
             document.cookie = `user=${JSON.stringify(userData)}; max-age=2500000; path=/; samesite=lax`;
             return this.currentUser;
         } else {
             alert('Пользователь с таким логином уже существует');
-            loginInput.value = '';
-            passwordInput.value = '';
-            repeatPasswordInput.value = '';
             return false;
         }
     }
 
     static async checkUserPassword(password, login, updateCookie = false) {
-        let encodedPassword = encoder.encode(password);
-        // console.log(encodedPassword);
         let p = fetch('/auth/login', {
             "method": "POST",
             "headers": {
                 "Content-Type": "application/json"
             },
             "body": JSON.stringify({
-                "password": encodedPassword,
+                "password": password,
                 "user": login
             })
         });
         let response = await p;
         if (response.ok) {
             let userData = await response.json();
-            userData.login = login;
             if (updateCookie) {
                 document.cookie = `user=${JSON.stringify(userData)}; max-age=2500000; path=/; samesite=lax`;
             }
@@ -328,8 +330,5 @@ function exitPasswordWindow() {
     passwordWindow.style.display = 'none';
 }
 
-User.getUserFromCookie();
-if (User.currentUser) {
-    userButton.style.backgroundImage = 'url("/assets/user_green.png")';
-}
+let userCookiePromise = User.setUserFromCookie();
 User.setAdmin();

@@ -39,10 +39,12 @@ app.use('/auth/login', (req, res) => {
     let user = req.body.user;
     let password = req.body.password;
     let userData = checkAuth(password, user);
-    if (userData)
+    if (userData) {
+        userData.login = user;
         res.json(userData);
-    else
+    } else {
         res.sendStatus(403);
+    }
 });
 
 app.use('/auth/reg', (req, res) => {
