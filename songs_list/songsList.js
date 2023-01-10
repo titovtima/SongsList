@@ -38,6 +38,7 @@ if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigat
         let head = document.querySelector('head');
         head.append(mobileCssLink);
     }
+    songListScroll.style.maxHeight = window.innerHeight - 210 + 'px';
 }
 
 let loadAllSongs = fetch(SONGS_DATA_PATH + 'songs.json')

@@ -9,6 +9,8 @@ if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigat
         let head = document.querySelector('head');
         head.append(mobileCssLink);
     }
+    let mainScroll = document.querySelector('#main_scroll');
+    mainScroll.style.maxHeight = window.innerHeight - 110 + 'px';
     headerMinFontSize = 40;
     headerStartFontSize = 75;
 }
