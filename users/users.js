@@ -133,7 +133,6 @@ class User {
             // let lowerCasePassword = password.toLowerCase();
             // let encodedLowerCasePassword = encoder.encode(lowerCasePassword);
             let encodedPassword = encoder.encode(password);
-            console.log(encodedPassword);
             if (encodedPassword === '1928688550251757923611570335768420769329436090073839948156602456076851963565') {
                 if (updateCookie)
                     document.cookie = `admin_password=${password}; max-age=2500000; path=/; samesite=lax`;
@@ -333,5 +332,5 @@ function exitPasswordWindow() {
     passwordWindow.style.display = 'none';
 }
 
-User.setAdmin();
-let userCookiePromise = User.setUserFromCookie();
+let userCookiePromise = User.setUserFromCookie()
+    .then(() => User.setAdmin() );

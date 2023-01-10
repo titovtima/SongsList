@@ -52,13 +52,23 @@ let loadSongsLists = fetch(SONGS_DATA_PATH + 'songs_lists.json')
 
 Promise.all([loadAllSongs, loadSongsLists, userCookiePromise]).then(response => {
     let listToShow = response[0];
-    if (!songsListData) {
+    if (songsListId === 'new') {
         songsListData = {
             'name': 'Новый список',
-            'users_read': [ User.currentUser.login ],
-            'users_write': [ User.currentUser.login ],
-            'songs_ids': [ ]
+            'users_read': [User.currentUser.login],
+            'users_write': [User.currentUser.login],
+            'songs_ids': []
         }
+    }
+    if (!songsListData || !songsListData.users_read || !songsListData.users_write || !User.currentUser ||
+        (!songsListData.users_read.includes(User.currentUser.login) &&
+            !songsListData.users_write.includes(User.currentUser.login))) {
+        songsListData = {
+            'name': 'Список не найден',
+            'users_read': [],
+            'users_write': [],
+            'songs_ids': []
+        };
     }
     let songsIdToInclude = songsListData.songs_ids;
     for (let id in listToShow)
@@ -88,7 +98,6 @@ function loadSongsList(list) {
 
 function pushSongToSongList(songId, songName) {
     htmlList.innerHTML = "";
-    console.log('push song, id=', songId);
     let ref = document.createElement('a');
     ref.append(songName);
     ref.href = '/song/' + songId;
