@@ -130,9 +130,11 @@ class User {
 
     static checkAdminPassword(password, updateCookie = false) {
         if (password) {
-            let lowerCasePassword = password.toLowerCase();
-            let encodedLowerCasePassword = encoder.encode(lowerCasePassword);
-            if (encodedLowerCasePassword === '256936898532198594958756561132414261138151402058674183683957539453558674134') {
+            // let lowerCasePassword = password.toLowerCase();
+            // let encodedLowerCasePassword = encoder.encode(lowerCasePassword);
+            let encodedPassword = encoder.encode(password);
+            console.log(encodedPassword);
+            if (encodedPassword === '1928688550251757923611570335768420769329436090073839948156602456076851963565') {
                 if (updateCookie)
                     document.cookie = `admin_password=${password}; max-age=2500000; path=/; samesite=lax`;
                 let jsonString = '{"correct_admin_password_entered": true}';
