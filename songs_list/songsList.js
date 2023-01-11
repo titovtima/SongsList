@@ -4,7 +4,6 @@ let addSongByIdContainer = document.querySelector('#add_song_by_id_container');
 let addSongById = document.querySelector('#add_song_by_id');
 let songIdToAdd = document.querySelector('#song_id_to_add');
 let songListScroll = document.querySelector('#song_list_scroll');
-songListScroll.style.maxHeight = window.innerHeight - 180 + 'px';
 let searchSongInput = document.querySelector('#song_search');
 let saveListButton = document.querySelector('#save_list_button');
 let listNameHeader = document.querySelector('#list_name');
@@ -38,8 +37,8 @@ if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigat
         let head = document.querySelector('head');
         head.append(mobileCssLink);
     }
-    songListScroll.style.maxHeight = window.innerHeight - 210 + 'px';
 }
+updateElementMaxHeightToPageBottom(songListScroll);
 
 let loadAllSongs = fetch(SONGS_DATA_PATH + 'songs.json')
     .then(response => response.json());
@@ -198,6 +197,7 @@ function switchToEditMode() {
     listNameHeader.addEventListener('click', handlerClickOnHeader);
 
     editButton.style.backgroundImage = 'url("/assets/edit_on.png")';
+    updateElementMaxHeightToPageBottom(songListScroll);
 }
 
 function checkEditPermission() {
@@ -214,6 +214,7 @@ function turnOffEditMode() {
     listNameHeader.removeEventListener('click', handlerClickOnHeader);
 
     editButton.style.backgroundImage = 'url("/assets/edit.png")';
+    updateElementMaxHeightToPageBottom(songListScroll);
 }
 
 function saveList() {

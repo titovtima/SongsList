@@ -7,6 +7,21 @@
     width: 100px;
 }
 
+#home_button {
+    height: 100px;
+    width: 100px;
+}
+
+#settings_button {
+    height: 100px;
+    width: 100px;
+}
+
+#edit_button {
+    height: 100px;
+    width: 100px;
+}
+
 .window {
     font-size: 40px;
 }

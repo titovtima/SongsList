@@ -8,3 +8,8 @@ function findCookies() {
     });
     return cookies;
 }
+
+function updateElementMaxHeightToPageBottom(elem) {
+    let offsetTop = elem.getBoundingClientRect().top;
+    elem.style.maxHeight = window.innerHeight - offsetTop + 'px';
+}

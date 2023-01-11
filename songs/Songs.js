@@ -1,7 +1,6 @@
 let htmlList = document.querySelector('#songs_list');
 let addSong = document.querySelector('#add_song');
 let songListScroll = document.querySelector('#song_list_scroll');
-songListScroll.style.maxHeight = window.innerHeight - 180 + 'px';
 let searchSongInput = document.querySelector('#song_search');
 
 if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
@@ -14,11 +13,11 @@ if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigat
         let head = document.querySelector('head');
         head.append(mobileCssLink);
     }
-    songListScroll.style.maxHeight = window.innerHeight - 210 + 'px';
 }
+updateElementMaxHeightToPageBottom(songListScroll);
 
 let loadAllSongs = fetch(SONGS_DATA_PATH + 'songs.json')
-    .then(response => response.json())
+    .then(response => response.json());
 Promise.all([loadAllSongs, userCookiePromise]).then(response => {
         let listToShow = response[0];
         let loadSongsPromises = [];
