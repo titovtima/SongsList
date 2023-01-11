@@ -1,19 +1,13 @@
 let headerStartFontSize, headerMinFontSize;
-if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-    let mobileCssList = ['song-mobile.css', '/general-mobile.css'];
-    for (let link of mobileCssList) {
-        let mobileCssLink = document.createElement("link");
-        mobileCssLink.rel = "stylesheet";
-        mobileCssLink.type = "text/css";
-        mobileCssLink.href = link;
-        let head = document.querySelector('head');
-        head.append(mobileCssLink);
-    }
-    let mainScroll = document.querySelector('#main_scroll');
-    mainScroll.style.maxHeight = window.innerHeight - 110 + 'px';
+
+if(isMobile) {
+    addCssFiles(['song-mobile.css', '/general-mobile.css']);
     headerMinFontSize = 40;
     headerStartFontSize = 75;
 }
+
+let mainScroll = document.querySelector('#main_scroll');
+updateElementMaxHeightToPageBottom(mainScroll);
 
 let edit_mode = false;
 

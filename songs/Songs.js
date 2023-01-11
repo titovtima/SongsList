@@ -3,17 +3,10 @@ let addSong = document.querySelector('#add_song');
 let songListScroll = document.querySelector('#song_list_scroll');
 let searchSongInput = document.querySelector('#song_search');
 
-if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-    let mobileCssList = ['Songs-mobile.css', '/general-mobile.css'];
-    for (let link of mobileCssList) {
-        let mobileCssLink = document.createElement("link");
-        mobileCssLink.rel = "stylesheet";
-        mobileCssLink.type = "text/css";
-        mobileCssLink.href = link;
-        let head = document.querySelector('head');
-        head.append(mobileCssLink);
-    }
+if(isMobile) {
+    addCssFiles(['Songs-mobile.css', '/general-mobile.css']);
 }
+
 updateElementMaxHeightToPageBottom(songListScroll);
 
 let loadAllSongs = fetch(SONGS_DATA_PATH + 'songs.json')
@@ -108,7 +101,7 @@ let personalSongsLists = document.querySelector('#personal_songs_lists');
 
 function updatePersonalSongsListsPosition() {
     if (User.currentUser) {
-        if (window.innerWidth > 800) {
+        if (!isMobile && window.innerWidth > 800) {
             personalSongsLists.style.width = '30%';
             mainSongsListDisplay.style.width = '70%';
             personalSongsLists.style.float = 'right';
@@ -116,8 +109,8 @@ function updatePersonalSongsListsPosition() {
             personalSongsLists.style.height = '100%';
             mainSongsListDisplay.style.height = '100%';
         } else {
-            personalSongsLists.style.height = '30%';
-            mainSongsListDisplay.style.height = '70%';
+            personalSongsLists.style.height = '20%';
+            mainSongsListDisplay.style.height = '80%';
             personalSongsLists.style.float = 'top';
             mainSongsListDisplay.style.float = 'top';
             personalSongsLists.style.width = '100%';

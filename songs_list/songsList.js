@@ -27,18 +27,9 @@ function getSongListIdFromURL() {
 }
 getSongListIdFromURL();
 
-if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-    let mobileCssList = ['/general-mobile.css'];
-    for (let link of mobileCssList) {
-        let mobileCssLink = document.createElement("link");
-        mobileCssLink.rel = "stylesheet";
-        mobileCssLink.type = "text/css";
-        mobileCssLink.href = link;
-        let head = document.querySelector('head');
-        head.append(mobileCssLink);
-    }
+if(isMobile) {
+    addCssFiles(['/general-mobile.css']);
 }
-updateElementMaxHeightToPageBottom(songListScroll);
 
 let loadAllSongs = fetch(SONGS_DATA_PATH + 'songs.json')
     .then(response => response.json());
@@ -93,6 +84,7 @@ function loadSongsList(list) {
     loadSongsTexts().then(() => {
         searchSongInput.placeholder = 'Поиск песни';
     });
+    updateElementMaxHeightToPageBottom(songListScroll, 20);
 }
 
 function pushSongToSongList(songId, songName) {
@@ -197,7 +189,7 @@ function switchToEditMode() {
     listNameHeader.addEventListener('click', handlerClickOnHeader);
 
     editButton.style.backgroundImage = 'url("/assets/edit_on.png")';
-    updateElementMaxHeightToPageBottom(songListScroll);
+    updateElementMaxHeightToPageBottom(songListScroll, 20);
 }
 
 function checkEditPermission() {
@@ -214,7 +206,7 @@ function turnOffEditMode() {
     listNameHeader.removeEventListener('click', handlerClickOnHeader);
 
     editButton.style.backgroundImage = 'url("/assets/edit.png")';
-    updateElementMaxHeightToPageBottom(songListScroll);
+    updateElementMaxHeightToPageBottom(songListScroll, 20);
 }
 
 function saveList() {

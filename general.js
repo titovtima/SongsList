@@ -9,7 +9,22 @@ function findCookies() {
     return cookies;
 }
 
-function updateElementMaxHeightToPageBottom(elem) {
+function updateElementMaxHeightToPageBottom(elem, marginBottom = 0) {
     let offsetTop = elem.getBoundingClientRect().top;
-    elem.style.maxHeight = window.innerHeight - offsetTop + 'px';
+    elem.style.maxHeight = window.innerHeight - offsetTop - marginBottom + 'px';
+}
+
+let isMobile = false;
+if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
+    isMobile = true;
+
+function addCssFiles(linksList) {
+    for (let link of linksList) {
+        let linkElement = document.createElement('link');
+        linkElement.rel = 'stylesheet';
+        linkElement.type = 'text/css';
+        linkElement.href = link;
+        let head = document.querySelector('head');
+        head.append(linkElement);
+    }
 }
