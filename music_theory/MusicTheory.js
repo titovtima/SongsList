@@ -33,9 +33,9 @@ var MusicTheory = function (_, Kotlin) {
   var toString = Kotlin.toString;
   var Exception_init = Kotlin.kotlin.Exception_init_pdl1vj$;
   var Exception = Kotlin.kotlin.Exception;
+  var mapOf = Kotlin.kotlin.collections.mapOf_qfcya0$;
   var Enum = Kotlin.kotlin.Enum;
   var throwISE = Kotlin.throwISE;
-  var mapOf = Kotlin.kotlin.collections.mapOf_qfcya0$;
   var joinToString = Kotlin.kotlin.collections.joinToString_fmv235$;
   var iterator = Kotlin.kotlin.text.iterator_gw00vp$;
   Either$Left.prototype = Object.create(Either.prototype);
@@ -48,8 +48,12 @@ var MusicTheory = function (_, Kotlin) {
   ChordException.prototype.constructor = ChordException;
   KeyException.prototype = Object.create(Exception.prototype);
   KeyException.prototype.constructor = KeyException;
+  IntervalException.prototype = Object.create(Exception.prototype);
+  IntervalException.prototype.constructor = IntervalException;
   NotationSystem.prototype = Object.create(Enum.prototype);
   NotationSystem.prototype.constructor = NotationSystem;
+  NoteWithOctave.prototype = Object.create(Note.prototype);
+  NoteWithOctave.prototype.constructor = NoteWithOctave;
   function BiMap(direct) {
     this.direct_0 = direct;
     var tmp$;
@@ -529,6 +533,69 @@ var MusicTheory = function (_, Kotlin) {
     simpleName: 'KeyException',
     interfaces: [Exception]
   };
+  function IntervalException(lowNote, highNote, message) {
+    if (lowNote === void 0)
+      lowNote = null;
+    if (highNote === void 0)
+      highNote = null;
+    if (message === void 0)
+      message = null;
+    Exception_init('Exception: lowNote (noteId: ' + toString(lowNote != null ? lowNote.noteId : null) + ', natural: ' + toString(lowNote != null ? lowNote.natural : null) + '), ' + ('highNote (noteId: ' + toString(highNote != null ? highNote.noteId : null) + ', natural: ' + toString(highNote != null ? highNote.natural : null) + '), message: ' + toString(message)), this);
+    this.lowNote = lowNote;
+    this.highNote = highNote;
+    this.name = 'IntervalException';
+  }
+  IntervalException.$metadata$ = {
+    kind: Kind_CLASS,
+    simpleName: 'IntervalException',
+    interfaces: [Exception]
+  };
+  function Interval(lowNote, highNote) {
+    Interval$Companion_getInstance();
+    this.lowNote = lowNote;
+    this.highNote = highNote;
+    this.name_ru = null;
+    var tmp$;
+    if (this.lowNote.natural > this.highNote.natural || this.lowNote.noteId > this.highNote.noteId)
+      throw new IntervalException(this.lowNote, this.highNote);
+    if ((this.highNote.natural - this.lowNote.natural | 0) > 7 || (this.highNote.noteId - this.lowNote.noteId | 0) > 12)
+      throw new IntervalException(this.lowNote, this.highNote, 'Interval is too wide');
+    var pair = to(this.highNote.natural - this.lowNote.natural | 0, this.highNote.noteId - this.lowNote.noteId | 0);
+    tmp$ = Interval$Companion_getInstance().possibleIntervals.get_11rb$(pair);
+    if (tmp$ == null) {
+      throw new IntervalException(this.lowNote, this.highNote, 'No matching interval');
+    }
+    this.name_ru = tmp$;
+  }
+  function Interval$Companion() {
+    Interval$Companion_instance = this;
+    this.possibleIntervals = new BiMap(mapOf([to(to(0, 0), '\u043F\u0440\u0438\u043C\u0430'), to(to(1, 1), '\u043C\u0430\u043B\u0430\u044F \u0441\u0435\u043A\u0443\u043D\u0434\u0430'), to(to(1, 2), '\u0431\u043E\u043B\u044C\u0448\u0430\u044F \u0441\u0435\u043A\u0443\u043D\u0434\u0430'), to(to(1, 3), '\u0443\u0432\u0435\u043B\u0438\u0447\u0435\u043D\u043D\u0430\u044F \u0441\u0435\u043A\u0443\u043D\u0434\u0430'), to(to(2, 3), '\u043C\u0430\u043B\u0430\u044F \u0442\u0435\u0440\u0446\u0438\u044F'), to(to(2, 4), '\u0431\u043E\u043B\u044C\u0448\u0430\u044F \u0442\u0435\u0440\u0446\u0438\u044F'), to(to(3, 4), '\u0443\u043C\u0435\u043D\u044C\u0448\u0435\u043D\u043D\u0430\u044F \u043A\u0432\u0430\u0440\u0442\u0430'), to(to(3, 5), '\u0447\u0438\u0441\u0442\u0430\u044F \u043A\u0432\u0430\u0440\u0442\u0430'), to(to(3, 6), '\u0443\u0432\u0435\u043B\u0438\u0447\u0435\u043D\u043D\u0430\u044F \u043A\u0432\u0430\u0440\u0442\u0430'), to(to(4, 6), '\u0443\u043C\u0435\u043D\u044C\u0448\u0435\u043D\u043D\u0430\u044F \u043A\u0432\u0438\u043D\u0442\u0430'), to(to(4, 7), '\u0447\u0438\u0441\u0442\u0430\u044F \u043A\u0432\u0438\u043D\u0442\u0430'), to(to(4, 8), '\u0443\u0432\u0435\u043B\u0438\u0447\u0435\u043D\u043D\u0430\u044F \u043A\u0432\u0438\u043D\u0442\u0430'), to(to(5, 8), '\u043C\u0430\u043B\u0430\u044F \u0441\u0435\u043A\u0441\u0442\u0430'), to(to(5, 9), '\u0431\u043E\u043B\u044C\u0448\u0430\u044F \u0441\u0435\u043A\u0441\u0442\u0430'), to(to(6, 9), '\u0443\u043C\u0435\u043D\u044C\u0448\u0435\u043D\u043D\u0430\u044F \u0441\u0435\u043F\u0442\u0438\u043C\u0430'), to(to(6, 10), '\u043C\u0430\u043B\u0430\u044F \u0441\u0435\u043F\u0442\u0438\u043C\u0430'), to(to(6, 11), '\u0431\u043E\u043B\u044C\u0448\u0430\u044F \u0441\u0435\u043F\u0442\u0438\u043C\u0430'), to(to(7, 12), '\u043E\u043A\u0442\u0430\u0432\u0430')]));
+  }
+  Interval$Companion.prototype.makeIntervalWithSwapNotesIfNeeded_byhmno$ = function (firstNote, secondNote) {
+    return firstNote.natural > secondNote.natural ? new Interval(secondNote, firstNote) : new Interval(firstNote, secondNote);
+  };
+  Interval$Companion.$metadata$ = {
+    kind: Kind_OBJECT,
+    simpleName: 'Companion',
+    interfaces: []
+  };
+  var Interval$Companion_instance = null;
+  function Interval$Companion_getInstance() {
+    if (Interval$Companion_instance === null) {
+      new Interval$Companion();
+    }
+    return Interval$Companion_instance;
+  }
+  Interval.$metadata$ = {
+    kind: Kind_CLASS,
+    simpleName: 'Interval',
+    interfaces: []
+  };
+  function Interval_init(lowNote, naturalsDiff, noteIdsDiff, $this) {
+    $this = $this || Object.create(Interval.prototype);
+    Interval.call($this, lowNote, new NoteWithOctave(lowNote.noteId + noteIdsDiff | 0, lowNote.natural + naturalsDiff | 0));
+    return $this;
+  }
   var compareBy$lambda_0 = wrapFunction(function () {
     var compareValues = Kotlin.kotlin.comparisons.compareValues_s00gnj$;
     return function (closure$selector) {
@@ -678,9 +745,21 @@ var MusicTheory = function (_, Kotlin) {
   }
   function Note(noteId, natural) {
     Note$Companion_getInstance();
-    this.noteId = (noteId + 1200 | 0) % 12 | 0;
-    this.natural = (natural + 700 | 0) % 7 | 0;
+    this.noteId_14pdt8$_0 = (noteId + 1200 | 0) % 12 | 0;
+    this.natural_r6judy$_0 = (natural + 700 | 0) % 7 | 0;
   }
+  Object.defineProperty(Note.prototype, 'noteId', {
+    configurable: true,
+    get: function () {
+      return this.noteId_14pdt8$_0;
+    }
+  });
+  Object.defineProperty(Note.prototype, 'natural', {
+    configurable: true,
+    get: function () {
+      return this.natural_r6judy$_0;
+    }
+  });
   Note.prototype.name_548ocs$ = function (notationSystem) {
     if (notationSystem === void 0)
       notationSystem = defaultNotation;
@@ -695,8 +774,8 @@ var MusicTheory = function (_, Kotlin) {
     Note$Companion_instance = this;
     this.sharp = toBoxedChar(9839);
     this.flat = toBoxedChar(9837);
-    this.doubleSharp = '\uD834\uDD2A';
-    this.doubleFlat = '\uD834\uDD2B';
+    this.doubleSharp = '\uE000';
+    this.doubleFlat = '\uE001';
     this.naturalToId = new BiMap(mapOf([to(0, 0), to(1, 2), to(2, 4), to(3, 5), to(4, 7), to(5, 9), to(6, 11)]));
   }
   Note$Companion.prototype.naturalToName_548ocs$ = function (notationSystem) {
@@ -837,6 +916,42 @@ var MusicTheory = function (_, Kotlin) {
       notationSystem = defaultNotation;
     $this = $this || Object.create(Note.prototype);
     Note_init(Note$Companion_getInstance().noteFromName_2zf50e$(name, notationSystem), $this);
+    return $this;
+  }
+  function NoteWithOctave(noteId, natural) {
+    Note.call(this, noteId, natural);
+    this.noteId_p01qgm$_0 = noteId;
+    this.natural_e61v78$_0 = natural;
+    this.octave = 0;
+    if (this.noteId < 0 || this.natural < 0)
+      throw new NoteException(this.noteId, this.natural, void 0, 'Try to create note in octave');
+    var octaveByNatural = this.natural % 7 | 0;
+    var octaveByNoteId = this.noteId % 12 | 0;
+    this.octave = octaveByNatural === octaveByNoteId ? octaveByNatural : 4;
+  }
+  Object.defineProperty(NoteWithOctave.prototype, 'noteId', {
+    get: function () {
+      return this.noteId_p01qgm$_0;
+    }
+  });
+  Object.defineProperty(NoteWithOctave.prototype, 'natural', {
+    get: function () {
+      return this.natural_e61v78$_0;
+    }
+  });
+  NoteWithOctave.prototype.noteWithoutOctave = function () {
+    return Note_init(this);
+  };
+  NoteWithOctave.$metadata$ = {
+    kind: Kind_CLASS,
+    simpleName: 'NoteWithOctave',
+    interfaces: [Note]
+  };
+  function NoteWithOctave_init(note, octave, $this) {
+    if (octave === void 0)
+      octave = 4;
+    $this = $this || Object.create(NoteWithOctave.prototype);
+    NoteWithOctave.call($this, note.noteId + (octave * 12 | 0) | 0, note.natural + (octave * 7 | 0) | 0);
     return $this;
   }
   function PlainTextAPI() {
@@ -986,6 +1101,19 @@ var MusicTheory = function (_, Kotlin) {
   function chordsTextToString_JS(chordsText) {
     return chordsText.toString();
   }
+  function getIntervalNameByDifferenceNumbers_JS(naturalsDiff, noteIdsDiff) {
+    return Interval$Companion_getInstance().possibleIntervals.get_11rb$(to(naturalsDiff, noteIdsDiff));
+  }
+  function getDifferenceNumbersByIntervalName_JS(intervalName) {
+    var pair = Interval$Companion_getInstance().possibleIntervals.reverse.get_11rb$(intervalName);
+    return [pair != null ? pair.first : null, pair != null ? pair.second : null];
+  }
+  function createNoteWithOctave_JS(noteId, natural) {
+    return new NoteWithOctave(noteId, natural);
+  }
+  function createIntervalByNoteAndDiffs_JS(startNote, naturalsDiff, noteIdsDiff) {
+    return Interval_init(startNote, naturalsDiff, noteIdsDiff);
+  }
   var package$titovtima = _.titovtima || (_.titovtima = {});
   var package$musicTheory = package$titovtima.musicTheory || (package$titovtima.musicTheory = {});
   package$musicTheory.BiMap = BiMap;
@@ -1008,6 +1136,12 @@ var MusicTheory = function (_, Kotlin) {
   package$musicTheory.NoteException = NoteException;
   package$musicTheory.ChordException = ChordException;
   package$musicTheory.KeyException = KeyException;
+  package$musicTheory.IntervalException = IntervalException;
+  Object.defineProperty(Interval, 'Companion', {
+    get: Interval$Companion_getInstance
+  });
+  package$musicTheory.Interval_init_x3k1aj$ = Interval_init;
+  package$musicTheory.Interval = Interval;
   Object.defineProperty(Key, 'Companion', {
     get: Key$Companion_getInstance
   });
@@ -1034,6 +1168,8 @@ var MusicTheory = function (_, Kotlin) {
   package$musicTheory.Note_init_4o0j9x$ = Note_init;
   package$musicTheory.Note_init_2zf50e$ = Note_init_0;
   package$musicTheory.Note = Note;
+  package$musicTheory.NoteWithOctave_init_t7qrq1$ = NoteWithOctave_init;
+  package$musicTheory.NoteWithOctave = NoteWithOctave;
   Object.defineProperty(PlainTextAPI, 'Companion', {
     get: PlainTextAPI$Companion_getInstance
   });
@@ -1051,6 +1187,10 @@ var MusicTheory = function (_, Kotlin) {
   _.chordName = chordName_JS;
   _.keyName = keyName_JS;
   _.chordsTextToString = chordsTextToString_JS;
+  _.getIntervalNameByDifferenceNumbers = getIntervalNameByDifferenceNumbers_JS;
+  _.getDifferenceNumbersByIntervalName = getDifferenceNumbersByIntervalName_JS;
+  _.createNoteWithOctave = createNoteWithOctave_JS;
+  _.createIntervalByNoteAndDiffs = createIntervalByNoteAndDiffs_JS;
   defaultNotation = NotationSystem$English_getInstance();
   Kotlin.defineModule('MusicTheory', _);
   return _;
