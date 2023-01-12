@@ -6,6 +6,14 @@
     font-size: 40px;
 }
 
-#add_song {
+#add_song_text {
+    font-size: 50px;
+}
+
+.ref_to_songs_list {
+    font-size: 50px;
+}
+
+#add_songs_list_text {
     font-size: 50px;
 }

@@ -7,7 +7,7 @@ if(isMobile) {
     addCssFiles(['Songs-mobile.css', '/general-mobile.css']);
 }
 
-updateElementMaxHeightToPageBottom(songListScroll);
+updateElementMaxHeightToPageBottom(songListScroll, 20);
 
 let loadAllSongs = fetch(SONGS_DATA_PATH + 'songs.json')
     .then(response => response.json());
@@ -116,6 +116,7 @@ function updatePersonalSongsListsPosition() {
             personalSongsLists.style.width = '100%';
             mainSongsListDisplay.style.width = '100%';
         }
+        updateElementMaxHeightToPageBottom(songListScroll, 20);
     }
 }
 
@@ -145,6 +146,7 @@ function showSongsListsInfo(data) {
         link.append(list.name);
         link.href = '/songs_list/' + listId;
         link.style.display = 'block';
+        link.className += ' ref_to_songs_list';
         personalSongsLists.append(link);
     }
 }
