@@ -12,6 +12,7 @@ let usersListContainer = document.querySelector('#users_lists_container');
 let usersReadInput = document.querySelector('#users_read_input');
 let usersWriteInput = document.querySelector('#users_write_input');
 let editButton = document.querySelector('#edit_button');
+let sendButtonLine = document.querySelector('#send_button_line');
 
 let songsListId;
 let editMode = false;
@@ -189,7 +190,7 @@ function switchToEditMode() {
     listNameHeader.addEventListener('click', handlerClickOnHeader);
 
     editButton.style.backgroundImage = 'url("/assets/edit_on.png")';
-    updateElementMaxHeightToPageBottom(songListScroll, 20);
+    updateElementMaxHeightToPageBottom(songListScroll, sendButtonLine.scrollHeight);
 }
 
 function checkEditPermission() {
@@ -237,6 +238,7 @@ function saveList() {
         'body': JSON.stringify(listData)
     }).then(response => {
         if (response.ok) {
+            songsListData = listData;
             turnOffEditMode();
         } else {
             alert('Ошибка при отправке на сервер');
@@ -285,7 +287,29 @@ addSongById.onclick = () => {
         .then(response => {
             if (response) {
                 pushSongToSongList(songId, response.name);
+                addSongReadersAndWriters(songId, response);
                 loadSongText(songId);
             }
         });
+}
+
+async function addSongReadersAndWriters(songId, songData = null) {
+    if (!songData)
+        songData = await fetch(SONGS_DATA_PATH + songId + '.json')
+            .then(response => response.json())
+    if (!songData.private)
+        return;
+    for (let user of songsListData.users_read)
+        if (!songData.users_read.includes(user))
+            songData.users_read.push(user);
+    for (let user of songsListData.users_write)
+        if (!songData.users_write.includes(user))
+            songData.users_write.push(user);
+    fetch('/song/' + songId + '?edit=true', {
+        'method': 'POST',
+        'headers': {
+            'Content-Type': 'application/json'
+        },
+        'body': JSON.stringify(songData)
+    });
 }
