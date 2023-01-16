@@ -238,10 +238,17 @@ function saveList() {
         'body': JSON.stringify(listData)
     }).then(response => {
         if (response.ok) {
+            return response.text();
+        } else {
+            alert('Ошибка при отправке на сервер');
+        }
+    }).then(response => {
+        console.log(response);
+        if (response === songsListId) {
             songsListData = listData;
             turnOffEditMode();
         } else {
-            alert('Ошибка при отправке на сервер');
+            document.location.href = '/songs_list/' + response;
         }
     })
 }

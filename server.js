@@ -3,10 +3,7 @@ const app = express();
 const fs = require('fs');
 const songs_data_path = __dirname + '/songs_data/';
 const users_data_path = __dirname + '/users/';
-
-// const host = 'titovtima.ru';
-// const http_port = 80;
-// const https_port = 443;
+const errors_log_file = __dirname + '/errors_log.txt';
 
 const host = 'localhost';
 const http_port = 3000;
@@ -48,37 +45,50 @@ app.get('/guess_interval', (req, res) => {
 });
 
 app.use('/auth/login', (req, res) => {
-    let user = req.body.user;
-    let password = req.body.password;
-    let userData = checkAuth(password, user);
-    if (userData) {
-        userData.login = user;
-        res.json(userData);
-    } else {
-        res.sendStatus(403);
+    try {
+        // throw new Error('I want to throw an error');
+        let user = req.body.user;
+        let password = req.body.password;
+        let userData = checkAuth(password, user);
+        if (userData) {
+            userData.login = user;
+            res.json(userData);
+        } else {
+            res.sendStatus(403);
+        }
+    } catch (e) {
+        let time = new Date();
+        fs.appendFile(errors_log_file, 'Date: ' + time.toString() + '\n' + e.toString() + '\n\n', err => {});
     }
 });
 
 app.use('/auth/reg', (req, res) => {
-    let user = req.body.user;
-    let password = req.body.password;
-    let fileData = JSON.parse(fs.readFileSync(users_data_path + 'users.json','utf-8'));
-    let usersList = fileData.users;
-    if (usersList.hasOwnProperty(user))
-        res.sendStatus(403);
-    else {
-        usersList[user] = {
-            'password': password
+    try {
+        let user = req.body.user;
+        let password = req.body.password;
+        let fileData = JSON.parse(fs.readFileSync(users_data_path + 'users.json', 'utf-8'));
+        let usersList = fileData.users;
+        if (usersList.hasOwnProperty(user))
+            res.sendStatus(403);
+        else {
+            usersList[user] = {
+                'password': password
+            }
+            let newFileData = {
+                'users': usersList
+            };
+            fs.writeFile(users_data_path + 'users.json', JSON.stringify(newFileData), err => {
+                if (err) {
+                    let time = new Date();
+                    fs.appendFile(errors_log_file, 'Date: ' + time.toString() + '\n' + err + '\n\n', e => {});
+                    res.sendStatus(500);
+                } else
+                    res.sendStatus(200);
+            })
         }
-        let newFileData = {
-            'users': usersList
-        };
-        fs.writeFile(users_data_path + 'users.json', JSON.stringify(newFileData), err => {
-            if (err)
-                res.sendStatus(500);
-            else
-                res.sendStatus(200);
-        })
+    } catch (e) {
+        let time = new Date();
+        fs.appendFile(errors_log_file, 'Date: ' + time.toString() + '\n' + e + '\n\n', err => {});
     }
 });
 
@@ -124,107 +134,100 @@ fs.readFile(songs_data_path + 'songs.json','utf-8', (err1, data) => {
 });
 
 app.post('/song/:songId', (req, res) => {
-    let url = new URL(req.url, 'https://' + host);
-    if (!url.searchParams.has('edit')) {
-        res.sendStatus(403);
-        return;
-    }
+    try {
+        let url = new URL(req.url, 'https://' + host);
+        if (!url.searchParams.has('edit')) {
+            res.sendStatus(403);
+            return;
+        }
 
-    let songId = req.params.songId;
-    let song_data = req.body;
+        let songId = req.params.songId;
+        let song_data = req.body;
 
-    if (songId === 'new') {
-        songId = max_song_id;
-        max_song_id++;
-    }
+        if (songId === 'new') {
+            songId = max_song_id;
+            max_song_id++;
+        }
 
-    let time = new Date();
-    fs.appendFile('songs_changes.txt', 'Get song from IP: ' + req.ip + '\n' +
-        'Date: ' + time.toString() + '\n' +
-        'Song id: ' + songId + '\n' +
-        'Song data:\n' + JSON.stringify(song_data) + '\n\n', err => {});
+        let time = new Date();
+        fs.appendFile('songs_changes.txt', 'Get song from IP: ' + req.ip + '\n' +
+            'Date: ' + time.toString() + '\n' +
+            'Song id: ' + songId + '\n' +
+            'Song data:\n' + JSON.stringify(song_data) + '\n\n', err => {
+        });
 
-    fs.writeFile(songs_data_path + songId + '.json', JSON.stringify(song_data),  err => {
-        if (err) res.sendStatus(500);
-        fs.readFile(songs_data_path + 'songs.json','utf-8', (err1, data) => {
-            let songs_list = JSON.parse(data);
-            songs_list[songId] = { "name": song_data.name };
-            fs.writeFile(songs_data_path + 'songs.json', JSON.stringify(songs_list),  err2 => {
-                if (err2)
-                    res.sendStatus(500);
-                res.end(String(songId));
+        fs.writeFile(songs_data_path + songId + '.json', JSON.stringify(song_data), err => {
+            if (err) res.sendStatus(500);
+            fs.readFile(songs_data_path + 'songs.json', 'utf-8', (err1, data) => {
+                let songs_list = JSON.parse(data);
+                songs_list[songId] = {"name": song_data.name};
+                fs.writeFile(songs_data_path + 'songs.json', JSON.stringify(songs_list), err2 => {
+                    if (err2)
+                        res.sendStatus(500);
+                    res.end(String(songId));
+                });
             });
         });
-    });
+    } catch (e) {
+        let time = new Date();
+        fs.appendFile(errors_log_file, 'Date: ' + time.toString() + '\n' + e + '\n\n', err => {});
+    }
 });
 
 let maxSongsListId = 1;
 let songsListsData;
 fs.readFile(songs_data_path + 'songs_lists.json', 'utf-8', (err, data) => {
     if (err) throw err;
-    songsListsData = data;
-    while (songsListsData[maxSongsListId]) maxSongsListId++;
+    songsListsData = JSON.parse(data);
+    console.log(songsListsData);
+    while (songsListsData[maxSongsListId.toString()]) maxSongsListId++;
 });
 
 app.post('/songs_list/:songsListId', (req, res) => {
-    let reqData = req.body;
-    console.log(reqData);
-    if (!checkAuth(reqData.password, reqData.user)) {
-        res.sendStatus(403);
-        return;
+    try {
+        let reqData = req.body;
+        console.log(reqData);
+        if (!checkAuth(reqData.password, reqData.user)) {
+            res.sendStatus(403);
+            return;
+        }
+        let fileData = JSON.parse(fs.readFileSync(songs_data_path + 'songs_lists.json', 'utf-8'));
+        let list = fileData[reqData.id];
+        if (list && !list.users_write.includes(reqData.user)) {
+            res.sendStatus(403);
+            return;
+        }
+        if (!reqData.name || !reqData.users_read || !reqData.users_write || !reqData.songs_ids) {
+            res.sendStatus(400);
+            return;
+        }
+        let songListId = reqData.id;
+        console.log(songListId)
+        if (songListId === 'new') {
+            songListId = maxSongsListId.toString();
+            maxSongsListId++;
+            while (songsListsData[maxSongsListId.toString()]) maxSongsListId++;
+        }
+        fileData[songListId] = {
+            'name': reqData.name,
+            'users_read': reqData.users_read,
+            'users_write': reqData.users_write,
+            'songs_ids': reqData.songs_ids
+        };
+        fs.writeFile(songs_data_path + 'songs_lists.json', JSON.stringify(fileData), err => {
+            if (err)
+                res.sendStatus(500);
+            else
+                res.end(songListId);
+        });
+    } catch (e) {
+        let time = new Date();
+        fs.appendFile(errors_log_file, 'Date: ' + time.toString() + '\n' + e + '\n\n', err => {});
     }
-    let fileData = JSON.parse(fs.readFileSync(songs_data_path + 'songs_lists.json', 'utf-8'));
-    let list = fileData[reqData.id];
-    if (list && !list.users_write.includes(reqData.user)) {
-        res.sendStatus(403);
-        return;
-    }
-    if (!reqData.name || !reqData.users_read || !reqData.users_write || !reqData.songs_ids) {
-        res.sendStatus(400);
-        return;
-    }
-    let songListId = reqData.id;
-    if (songListId === 'new') {
-        songListId = maxSongsListId;
-        maxSongsListId++;
-    }
-    fileData[songListId] = {
-        'name': reqData.name,
-        'users_read': reqData.users_read,
-        'users_write': reqData.users_write,
-        'songs_ids': reqData.songs_ids
-    };
-    fs.writeFile(songs_data_path + 'songs_lists.json', JSON.stringify(fileData), err => {
-        if (err)
-            res.sendStatus(500);
-        else
-            res.end(songListId);
-    });
 });
 
 app.get("/", (req, res) => {
     res.redirect(301, '/songs');
 });
-// app.get("/", (req, res) => {
-//     res.sendFile(__dirname + '/main.html');
-// });
-
-// const http_app = express();
-//
-// http_app.use("/", (req, res) => {
-//     res.redirect(301, 'https://' + host + req.path);
-// });
 
 app.listen(http_port, host);
-
-// const https = require('https');
-//
-// https
-//     .createServer(
-//         {
-//             key: fs.readFileSync('/root/ssl/titovtima.key'),
-//             cert: fs.readFileSync('/root/ssl/titovtima.crt'),
-//         },
-//         app
-//     )
-//     .listen(https_port, host);
