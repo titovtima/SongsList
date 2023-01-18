@@ -41,8 +41,9 @@ let loadSongsLists = fetch(SONGS_DATA_PATH + 'songs_lists.json')
         songsListData = response[songsListId];
     });
 
+let allSongsList;
 Promise.all([loadAllSongs, loadSongsLists, userCookiePromise]).then(response => {
-    let listToShow = response[0];
+    allSongsList = response[0];
     if (songsListId === 'new') {
         songsListData = {
             'name': 'Новый список',
@@ -61,15 +62,19 @@ Promise.all([loadAllSongs, loadSongsLists, userCookiePromise]).then(response => 
             'songs_ids': []
         };
     }
-    let songsIdToInclude = songsListData.songs_ids;
-    for (let id in listToShow)
-        if (!songsIdToInclude.includes(id))
-            delete listToShow[id];
-    loadSongsList(listToShow);
+    loadSongsWithIds();
 });
 
+function loadSongsWithIds(songsIds = songsListData.songs_ids) {
+    let listToShow = {};
+    for (let id in allSongsList)
+        if (songsIds.includes(id))
+            listToShow[id] = allSongsList[id];
+    loadSongsList(listToShow);
+}
+
 let songsList = [];
-function loadSongsList(list) {
+function loadSongsList(list = songsListData.songs_ids) {
     listNameHeader.innerHTML = songsListData.name;
     listNameInput.value = songsListData.name;
     let pageTitle = document.querySelector('title');
@@ -89,12 +94,20 @@ function loadSongsList(list) {
 }
 
 function pushSongToSongList(songId, songName) {
+    console.log('push song with id ', songId);
     htmlList.innerHTML = "";
     let ref = document.createElement('a');
     ref.append(songName);
     ref.href = '/song/' + songId;
     ref.className = 'ref_to_song_in_table';
+    let deleteCross = document.createElement('span');
+    deleteCross.className += ' delete_song_cross';
+    deleteCross.onclick = () => {
+        songsListData.songs_ids = songsListData.songs_ids.filter(value => value !== songId);
+        loadSongsWithIds();
+    }
     let div = document.createElement('div');
+    div.append(deleteCross);
     div.append(ref);
     songsList.push({name: songName, element: div, id: songId});
     songsList.sort(sortSongs);
@@ -178,18 +191,20 @@ let handlerClickOnHeader = () => {
     document.addEventListener('click', handlerClickOutOfHeader);
 };
 
+let editStyleElement = document.createElement('style');
+editStyleElement.innerHTML =
+    "#add_new_song, #add_song_by_id_container, #save_list_button, #users_lists_container " +
+    " { display: block }\n" +
+    ".delete_song_cross { display: inline-block }\n" +
+    "#edit_button { background-image: url(\"/assets/edit_on.png\") }";
 function switchToEditMode() {
     editMode = true;
-    addNewSong.style.display = 'block';
-    addSongByIdContainer.style.display = 'block';
-    saveListButton.style.display = 'block';
-    usersListContainer.style.display = 'block';
     usersReadInput.value = songsListData.users_read.toString();
     usersWriteInput.value = songsListData.users_write.toString();
+    document.body.append(editStyleElement);
 
     listNameHeader.addEventListener('click', handlerClickOnHeader);
 
-    editButton.style.backgroundImage = 'url("/assets/edit_on.png")';
     updateElementMaxHeightToPageBottom(songListScroll, sendButtonLine.scrollHeight);
 }
 
@@ -199,14 +214,10 @@ function checkEditPermission() {
 
 function turnOffEditMode() {
     editMode = false;
-    addNewSong.style.display = 'none';
-    addSongByIdContainer.style.display = 'none';
-    saveListButton.style.display = 'none';
-    usersListContainer.style.display = 'none';
+    document.body.removeChild(editStyleElement);
 
     listNameHeader.removeEventListener('click', handlerClickOnHeader);
 
-    editButton.style.backgroundImage = 'url("/assets/edit.png")';
     updateElementMaxHeightToPageBottom(songListScroll, 20);
 }
 

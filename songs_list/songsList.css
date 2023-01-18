@@ -72,3 +72,11 @@ i {
 #input_list_name {
     display: none;
 }
+
+.delete_song_cross {
+    background-image: url("/assets/close_cross.png");
+    background-size: contain;
+    height: 30px;
+    width: 30px;
+    display: none;
+}
