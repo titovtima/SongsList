@@ -17,11 +17,11 @@
   "chords": [
     {
       "name": "Куплет",
-      "chords": "C | Am | Dm C/E | F G |\nC | Am | Dm C/E | Dm G |\nG |"
+      "chords": "| C | Am | Dm C/E | F G |\n | C | Am | Dm C/E | Dm G |\n| G |"
     },
     {
       "name": "Припев",
-      "chords": "C | G | Dm Am | G |\nC | Dm | F Am | G |"
+      "chords": "| C | G | Dm Am | G |\n | C | Dm | F Am | G |"
     }
   ],
   "text_chords": [

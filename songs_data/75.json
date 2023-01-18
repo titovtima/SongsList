@@ -25,11 +25,11 @@
   "chords": [
     {
       "name": "Куплет",
-      "chords": "E B/D♯ | A/C♯ E/B | \nA E/G♯ | F♯m B |\nE B/D♯ | E7/D'' A/C♯' Am6/C' |\nE/B B7 | E A/B | (на повтор или припев)\n\nE/B B7 | E'' D♯dim7' G♯7' | (Милость Твоя...)"
+      "chords": "E B/D♯ | A/C♯ E/B | \nA E/G♯ | F♯m B |\nE B/D♯ | E7/D'' A/C♯' Am6/C' |\nE/B B7 | E A/B | (на повтор или припев)\n\nE/B B7 | E'' D♯∅' G♯7' | (Милость Твоя...)"
     },
     {
       "name": "Милость Твоя как река широка",
-      "chords": "C♯m F♯m | B E |\nA B | E'' D♯dim7' G♯7' |\nC♯m F♯m | B E | \nA/C♯ | Bsus B |"
+      "chords": "C♯m F♯m | B E |\nA B | E'' D♯∅' G♯7' |\nC♯m F♯m | B E | \nA/C♯ | Bsus B |"
     },
     {
       "name": "Припев",
@@ -47,7 +47,7 @@
     },
     {
       "name": "",
-      "text_chords": "D♯dim7 G♯7\nC♯m       F♯m       B      E\nМилость Твоя как река широка\n     A         B     E  D♯dim7 G♯7\nИсцеленье в Твоих руках\n    C♯m      F♯m      B      E\nВ объятьях Твоих нахожу я покой\nA/C♯        B\n Ты Один такой"
+      "text_chords": "D♯∅ G♯7\nC♯m       F♯m       B      E\nМилость Твоя как река широка\n     A         B     E  D♯∅ G♯7\nИсцеленье в Твоих руках\n    C♯m      F♯m      B      E\nВ объятьях Твоих нахожу я покой\nA/C♯        B\n Ты Один такой"
     },
     {
       "name": "Куплет 3",

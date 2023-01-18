@@ -1,0 +1,108 @@
+{
+  "name": "Я пою, я пою хвала Тебе, Господь",
+  "text": [
+    {
+      "name": "Куплет 1",
+      "text": "Я пою, я пою хвала Тебе, Господь\nЯ пою, я пою хвала Тебе, Господь\nЯ пою, я пою хвала Тебе, Господь\nСлава и хвала Тебе, Господь"
+    },
+    {
+      "name": "Куплет 2 (Припев)",
+      "text": "Аллилу- Аллилуйя, хвала Тебе, Господь\nАллилу- Аллилуйя, хвала Тебе, Господь\nАллилу- Аллилуйя, хвала Тебе, Господь\nСлава и хвала Тебе Господь"
+    },
+    {
+      "name": "Куплет 3",
+      "text": "На холмах и долинах хвала Тебе, Господь \nНа холмах и долинах хвала Тебе, Господь\nНа холмах и долинах хвала Тебе, Господь\nСлава и хвала Тебе, Господь "
+    },
+    {
+      "name": "Куплет 4",
+      "text": "И в морских глубинах хвала Тебе, Господь\nИ в морских глубинах хвала Тебе, Господь\nИ в морских глубинах хвала Тебе, Господь\nСлава и хвала Тебе, Господь "
+    },
+    {
+      "name": "Куплет 5",
+      "text": "И в моём сердце хвала Тебе, Господь \nИ в моём сердце хвала Тебе, Господь\nИ в моём сердце хвала Тебе, Господь\nСлава и хвала Тебе, Господь "
+    },
+    {
+      "name": "Куплет 6",
+      "text": "И во всех народах хвала Тебе, Господь \nИ во всех народах хвала Тебе, Господь\nИ во всех народах хвала Тебе, Господь\nСлава и хвала Тебе, Господь "
+    },
+    {
+      "name": "Куплет 7",
+      "text": "И во всей Вселенной хвала Тебе, Господь \nИ во всей Вселенной хвала Тебе, Господь\nИ во всей Вселенной хвала Тебе, Господь\nСлава и хвала Тебе, Господь "
+    },
+    {
+      "name": "Мост",
+      "text": "Слава Тебе\nСлава Тебе \nСлава Тебе \nСлава Тебе "
+    },
+    {
+      "name": "Куплет 1 (англ)",
+      "text": "I will sing, I will sing a song unto the Lord\nI will sing, I will sing a song unto the Lord\nI will sing, I will sing a song unto the Lord\nHallelujah, glory to the Lord"
+    },
+    {
+      "name": "Куплет 1 (фин)",
+      "text": "Minä laulan, laulan kiitos Herralle\nMinä laulan, laulan kiitos Herralle\nMinä laulan, laulan kiitos Herralle\nKunnia ja kiitos Herralle"
+    }
+  ],
+  "chords": [
+    {
+      "name": "Куплет",
+      "chords": "C Em | Am | Dm G | C |"
+    },
+    {
+      "name": "Мост",
+      "chords": "C | Am | F | G |"
+    }
+  ],
+  "text_chords": [
+    {
+      "name": "Куплет 1",
+      "text_chords": "    C     Em    Am\nЯ пою, я пою хвала Тебе, Господь\n   Dm      G     C\nЯ пою, я пою хвала Тебе, Господь\n    C     Em    Am\nЯ пою, я пою хвала Тебе, Господь\n     Dm     G           C\nСлава и хвала Тебе, Господь"
+    },
+    {
+      "name": "Куплет 2",
+      "text_chords": "     C      Em       Am\nАллилу- Аллилуйя, хвала Тебе, Господь\n    Dm       G        C\nАллилу- Аллилуйя, хвала Тебе, Господь\n     C      Em       Am\nАллилу- Аллилуйя, хвала Тебе, Господь\n     Dm     G          C\nСлава и хвала Тебе Господь"
+    },
+    {
+      "name": "Куплет 3",
+      "text_chords": "       C      Em       Am\nНа холмах и долинах хвала Тебе, Господь \n      Dm       G        C\nНа холмах и долинах хвала Тебе, Господь\n       C      Em       Am\nНа холмах и долинах хвала Тебе, Господь\n     Dm     G           C\nСлава и хвала Тебе, Господь"
+    },
+    {
+      "name": "Куплет 4",
+      "text_chords": "         C     Em       Am\nИ в морских глубинах хвала Тебе, Господь\n        Dm      G        C\nИ в морских глубинах хвала Тебе, Господь\n         C     Em       Am\nИ в морских глубинах хвала Тебе, Господь\n     Dm     G           C\nСлава и хвала Тебе, Господь"
+    },
+    {
+      "name": "Куплет 5",
+      "text_chords": "     C   Em        Am\nИ в моём сердце хвала Тебе, Господь \n    Dm    G         C\nИ в моём сердце хвала Тебе, Господь\n     C   Em        Am\nИ в моём сердце хвала Тебе, Господь\n     Dm     G           C\nСлава и хвала Тебе, Господь"
+    },
+    {
+      "name": "Куплет 6",
+      "text_chords": "       C    Em       Am\nИ во всех народах хвала Тебе, Господь \n      Dm     G        C\nИ во всех народах хвала Тебе, Господь\n       C    Em       Am\nИ во всех народах хвала Тебе, Господь\n     Dm     G           C\nСлава и хвала Тебе, Господь"
+    },
+    {
+      "name": "Куплет 7",
+      "text_chords": "       C     Em        Am\nИ во всей Вселенной хвала Тебе, Господь \n      Dm      G         C\nИ во всей Вселенной хвала Тебе, Господь\n       C     Em        Am\nИ во всей Вселенной хвала Тебе, Господь\n     Dm     G           C\nСлава и хвала Тебе, Господь"
+    },
+    {
+      "name": "Мост",
+      "text_chords": "  C     Am\nСлава Тебе\n  F      G\nСлава Тебе \n  C     Am\nСлава Тебе \n  F      G\nСлава Тебе"
+    },
+    {
+      "name": "Куплет 1 (англ)",
+      "text_chords": "        C           Em     Am\nI will sing, I will sing a song unto the Lord\n       Dm            G      C\nI will sing, I will sing a song unto the Lord\n        C           Em     Am\nI will sing, I will sing a song unto the Lord\n     Dm       G           C\nHallelujah, glory to the Lord"
+    },
+    {
+      "name": "Куплет 1 (фин)",
+      "text_chords": "      C      Em     Am\nMinä laulan, laulan kiitos Herralle\n     Dm       G      C\nMinä laulan, laulan kiitos Herralle\n      C      Em     Am\nMinä laulan, laulan kiitos Herralle\n   Dm      G         C\nKunnia ja kiitos Herralle"
+    }
+  ],
+  "key": "C",
+  "private": true,
+  "users_read": [
+    "titovtima",
+    "mavrinia",
+    "songs_for_kids"
+  ],
+  "users_write": [
+    "titovtima",
+    "Серж"
+  ]
+}

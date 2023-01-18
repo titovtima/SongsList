@@ -13,11 +13,11 @@
   "chords": [
     {
       "name": "Куплет",
-      "chords": "A | (E/G♯') A' Bm\" |\nA | D Bm |\nA/E | E' D/F♯' E/G♯\" |\nA | A\" D/F♯' E/G♯' | (на повтор)\n\nA | A\" G♯dim7' C♯7-9' | (на припев)"
+      "chords": "A | (E/G♯') A' Bm\" |\nA | D Bm |\nA/E | E' D/F♯' E/G♯\" |\nA | A\" D/F♯' E/G♯' | (на повтор)\n\nA | A\" G♯∅' C♯7-9' | (на припев)"
     },
     {
       "name": "Припев",
-      "chords": "F♯m | E D |\nA | D Bm |\nA/E | E' D/F♯' E/G♯\" |\nA | A\" G♯dim7' C♯7-9' | (на повтор)\n\nA | A\" D/F♯' E/G♯' | (на куплет)"
+      "chords": "F♯m | E D |\nA | D Bm |\nA/E | E' D/F♯' E/G♯\" |\nA | A\" G♯∅' C♯7-9' | (на повтор)\n\nA | A\" D/F♯' E/G♯' | (на куплет)"
     }
   ],
   "text_chords": [
@@ -27,7 +27,7 @@
     },
     {
       "name": "Припев",
-      "text_chords": "  G♯dim7 C♯7-9 F♯m E   D   A\nТебе    вся   сла-ва, наш Бог\n   D    Bm   A/E\nТебе поклонимся\n       E  D/F♯  E/G♯    A\nТы досто - ин  всей хвалы"
+      "text_chords": "  G♯∅ C♯7-9 F♯m E   D   A\nТебе вся   сла-ва, наш Бог\n   D    Bm   A/E\nТебе поклонимся\n       E  D/F♯  E/G♯    A\nТы досто - ин  всей хвалы"
     }
   ],
   "key": "A"
