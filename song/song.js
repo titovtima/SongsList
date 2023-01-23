@@ -572,7 +572,7 @@ function makeLinksInString(elem, string, linkStart) {
         result += string.substring(endLink, index);
         elem.append(string.substring(endLink, index));
         endLink = string.split('').findIndex((value, ind) =>
-            ind >= index + linkStart.length && [' ', ',', ';', ')', '('].some(it => it === value));
+            ind >= index + linkStart.length && [' ', ',', ';', ')', '(', '\n'].some(it => it === value));
         if (endLink === -1)
             endLink = string.length;
         let linkString = string.substring(index, endLink);
