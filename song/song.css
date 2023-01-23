@@ -226,7 +226,7 @@ textarea {
     padding: 0 20px;
 }
 
-#text_notes_view_pre {
+#text_notes_view {
     white-space: pre-wrap;
     overflow-wrap: break-word;
 }

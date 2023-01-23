@@ -24,7 +24,9 @@ let text_column = document.querySelector('#text_column');
 let chords_column = document.querySelector('#chords_column');
 let text_chords_column = document.querySelector('#text_chords_column');
 
-let song_data = undefined;
+let mainContent = document.querySelector('.main_content');
+
+let songData = undefined;
 
 const urlParams = new URLSearchParams(window.location.search);
 let songId;
@@ -42,7 +44,7 @@ function getSongIdFromUrl() {
 getSongIdFromUrl();
 
 function loadSong(data) {
-    song_data = data;
+    songData = data;
     checkEditPermission();
     let name = data.name;
     if (!name) name = '';
@@ -70,8 +72,8 @@ function loadSong(data) {
             new SongPart('text_chords', part);
         }
 
-    if (data.notes) {
-        textNotesViewPre.innerHTML = data.notes;
+    if (data.text_notes) {
+        makeLinksInString(textNotesView, data.text_notes, 'https://');
     }
 
     addKeyChooseLine();
@@ -391,7 +393,6 @@ header.style.maxWidth = window.innerWidth - 20 + 'px';
 input_song_name.style.maxWidth = window.innerWidth - 20 + 'px';
 
 function updateMainContentHeight() {
-    let main_content = document.querySelector('.main_content');
     let text_column = document.querySelector('#text_column');
     let chords_column = document.querySelector('#chords_column');
     let text_chords_column = document.querySelector('#text_chords_column');
@@ -402,7 +403,7 @@ function updateMainContentHeight() {
     main_height = Math.max(main_height, text_column.scrollHeight);
     main_height = Math.max(main_height, chords_column.scrollHeight);
     main_height = Math.max(main_height, text_chords_column.scrollHeight);
-    main_content.style.height = main_height + 'px';
+    mainContent.style.height = main_height + 'px';
     text_column.style.height = '100%';
     chords_column.style.height = '100%';
     text_chords_column.style.height = '100%';
@@ -411,7 +412,8 @@ function updateMainContentHeight() {
 function fitTextareaHeight(elem) {
     elem.style.height = '0';
     elem.style.height = elem.scrollHeight + 2 + 'px';
-    updateMainContentHeight();
+    if (mainContent.contains(elem))
+        updateMainContentHeight();
 }
 
 function checkClickCoordsNotButton(event) {
@@ -425,7 +427,6 @@ let usersListContainer = document.querySelector('#users_lists_container');
 let usersReadInput = document.querySelector('#users_read_input');
 let usersWriteInput = document.querySelector('#users_write_input');
 let textNotesView = document.querySelector('#text_notes_view');
-let textNotesViewPre = document.querySelector('#text_notes_view_pre');
 let textNotesInput = document.querySelector('#text_notes_input');
 let textNotesContainer = document.querySelector('#text_notes_container');
 
@@ -501,7 +502,7 @@ function switchToEditMode() {
     });
 
     privateSettingsLine.style.display = 'block';
-    if (song_data && song_data.private)
+    if (songData && songData.private)
         privateCheckbox.checked = true;
     updatePrivateSettingsLine();
 
@@ -520,7 +521,7 @@ function switchToEditMode() {
         if (songDataToSend.private && songDataToSend.users_write.length === 0) {
             alert('Нельзя сделать приватную песню без редакторов');
         } else {
-            if (!song_data.private || !songDataToSend.private) {
+            if (!songData.private || !songDataToSend.private) {
                 User.checkAdmin(authorized => {
                     if (authorized) {
                         sendSongToServer(songDataToSend);
@@ -534,7 +535,8 @@ function switchToEditMode() {
 
     let handlerClickOutOfTextNotes = event => {
         if (event.target !== textNotesContainer && !textNotesContainer.contains(event.target)) {
-            textNotesViewPre.innerHTML = textNotesInput.value;
+            songData.text_notes = textNotesInput.value;
+            makeLinksInString(textNotesView, songData.text_notes, 'https://');
             textNotesInput.style.display = 'none';
             textNotesView.style.display = 'block';
             document.removeEventListener('click', handlerClickOutOfTextNotes);
@@ -542,9 +544,11 @@ function switchToEditMode() {
     };
 
     textNotesView.onclick = () => {
-        textNotesInput.value = textNotesViewPre.innerHTML;
+        if (songData.text_notes)
+            textNotesInput.value = songData.text_notes;
         textNotesView.style.display = 'none';
         textNotesInput.style.display = 'block';
+        fitTextareaHeight(textNotesInput);
 
         document.addEventListener('click', handlerClickOutOfTextNotes);
     };
@@ -552,7 +556,36 @@ function switchToEditMode() {
     textNotesView.style.minHeight = '100px';
     textNotesInput.style.minHeight = '100px';
 
+    textNotesInput.oninput = () => {
+        fitTextareaHeight(textNotesInput);
+    }
+
     setEditButtonUrl();
+}
+
+function makeLinksInString(elem, string, linkStart) {
+    let index = string.indexOf(linkStart);
+    let endLink = 0;
+    let result = '';
+    elem.innerHTML = '';
+    while (index !== -1) {
+        result += string.substring(endLink, index);
+        elem.append(string.substring(endLink, index));
+        endLink = string.split('').findIndex((value, ind) =>
+            ind >= index + linkStart.length && [' ', ',', ';', ')', '('].some(it => it === value));
+        if (endLink === -1)
+            endLink = string.length;
+        let linkString = string.substring(index, endLink);
+        let link = document.createElement('a');
+        link.append(linkString);
+        link.href = linkString;
+        elem.append(link);
+        result += '<a>' + string.substring(index, endLink) + '</a>';
+        index = string.indexOf(linkStart, endLink);
+    }
+    elem.append(string.substring(endLink));
+    result += string.substring(endLink);
+    return result;
 }
 
 function fillSongData() {
@@ -590,9 +623,8 @@ function fillSongData() {
         usersWrite = usersWrite.map(value => value.split(' ')).flat().filter(value => value.length > 0);
         songDataToSend.users_write = usersWrite;
     }
-    textNotesViewPre.innerHTML = textNotesInput.value;
-    if (textNotesViewPre.innerHTML.length > 0) {
-        songDataToSend.notes = textNotesViewPre.innerHTML;
+    if (songData.text_notes && songData.text_notes.length > 0) {
+        songDataToSend.text_notes = songData.text_notes;
     }
     return songDataToSend;
 }
@@ -768,11 +800,11 @@ function updateTextareaWidth() {
 
 let current_key = null;
 function addKeyChooseLine() {
-    if (!song_data) return;
+    if (!songData) return;
 
     let origin_key = null;
-    if (song_data.key)  {
-        origin_key = MusicTheory.keyFromName(song_data.key);
+    if (songData.key)  {
+        origin_key = MusicTheory.keyFromName(songData.key);
     }
     current_key = origin_key;
     let keys = [];
@@ -922,14 +954,14 @@ privateCheckbox.addEventListener('click', () => {
 function updatePrivateSettingsLine() {
     if (privateCheckbox.checked) {
         usersListContainer.style.display = 'block';
-        if (song_data && song_data.users_read) {
-            usersReadInput.value = song_data.users_read.toString();
+        if (songData && songData.users_read) {
+            usersReadInput.value = songData.users_read.toString();
         } else {
             if (User.currentUser)
                 usersReadInput.value = User.currentUser.login;
         }
-        if (song_data && song_data.users_write) {
-            usersWriteInput.value = song_data.users_write.toString();
+        if (songData && songData.users_write) {
+            usersWriteInput.value = songData.users_write.toString();
         } else {
             if (User.currentUser)
                 usersWriteInput.value = User.currentUser.login;
@@ -947,8 +979,8 @@ function updatePrivateSettingsLine() {
 
 function checkEditPermission() {
     if (urlParams.get('edit')) {
-        if (song_data.private) {
-            if (User.currentUser && song_data.users_write && song_data.users_write.includes(User.currentUser.login)) {
+        if (songData.private) {
+            if (User.currentUser && songData.users_write && songData.users_write.includes(User.currentUser.login)) {
                 switchToEditMode();
             } else {
                 alert('Нет доступа к редактированию');
