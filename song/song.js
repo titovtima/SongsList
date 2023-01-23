@@ -70,6 +70,10 @@ function loadSong(data) {
             new SongPart('text_chords', part);
         }
 
+    if (data.notes) {
+        textNotesViewPre.innerHTML = data.notes;
+    }
+
     addKeyChooseLine();
     setView();
     fitHeaderFontSize();
@@ -420,6 +424,10 @@ let privateCheckbox = document.querySelector('#private_checkbox');
 let usersListContainer = document.querySelector('#users_lists_container');
 let usersReadInput = document.querySelector('#users_read_input');
 let usersWriteInput = document.querySelector('#users_write_input');
+let textNotesView = document.querySelector('#text_notes_view');
+let textNotesViewPre = document.querySelector('#text_notes_view_pre');
+let textNotesInput = document.querySelector('#text_notes_input');
+let textNotesContainer = document.querySelector('#text_notes_container');
 
 function switchToEditMode() {
     ym(88797016,'reachGoal','edit_song');
@@ -524,8 +532,27 @@ function switchToEditMode() {
         }
     }
 
+    let handlerClickOutOfTextNotes = event => {
+        if (event.target !== textNotesContainer && !textNotesContainer.contains(event.target)) {
+            textNotesViewPre.innerHTML = textNotesInput.value;
+            textNotesInput.style.display = 'none';
+            textNotesView.style.display = 'block';
+            document.removeEventListener('click', handlerClickOutOfTextNotes);
+        }
+    };
+
+    textNotesView.onclick = () => {
+        textNotesInput.value = textNotesViewPre.innerHTML;
+        textNotesView.style.display = 'none';
+        textNotesInput.style.display = 'block';
+
+        document.addEventListener('click', handlerClickOutOfTextNotes);
+    };
+
+    textNotesView.style.minHeight = '100px';
+    textNotesInput.style.minHeight = '100px';
+
     setEditButtonUrl();
-    // addKeyChooseLine();
 }
 
 function fillSongData() {
@@ -562,6 +589,10 @@ function fillSongData() {
         usersWrite = usersWrite.map(value => value.split(',')).flat();
         usersWrite = usersWrite.map(value => value.split(' ')).flat().filter(value => value.length > 0);
         songDataToSend.users_write = usersWrite;
+    }
+    textNotesViewPre.innerHTML = textNotesInput.value;
+    if (textNotesViewPre.innerHTML.length > 0) {
+        songDataToSend.notes = textNotesViewPre.innerHTML;
     }
     return songDataToSend;
 }

@@ -215,3 +215,18 @@ textarea {
 #users_lists_container {
     display: none;
 }
+
+#text_notes_input {
+    display: none;
+    width: 100%;
+}
+
+#text_notes_container {
+    margin: 20px 0;
+    padding: 0 20px;
+}
+
+#text_notes_view_pre {
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+}
