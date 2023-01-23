@@ -579,6 +579,7 @@ function makeLinksInString(elem, string, linkStart) {
         let link = document.createElement('a');
         link.append(linkString);
         link.href = linkString;
+        link.target = '_blank';
         elem.append(link);
         result += '<a>' + string.substring(index, endLink) + '</a>';
         index = string.indexOf(linkStart, endLink);
