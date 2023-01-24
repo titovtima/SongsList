@@ -9,9 +9,14 @@
     overflow-y: auto;
 }
 
-.song_search {
-    margin: 20px 0 10px 40px;
-    font-size: 30px;
+#song_search_container {
+    padding: 30px 0 10px;
+    background-color: #66ffdd;
+    box-sizing: content-box;
+}
+
+#song_search {
+    margin: 0 40px;
     padding: 5px;
 }
 

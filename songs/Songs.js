@@ -5,6 +5,9 @@ let searchSongInput = document.querySelector('#song_search');
 
 if(isMobile) {
     addCssFiles(['Songs-mobile.css', '/general-mobile.css']);
+    let songSearch = document.querySelector('#song_search');
+    let songSearchContainer = document.querySelector('#song_search_container');
+    songSearch.style.width = songSearchContainer.clientWidth - 65 + 'px';
 }
 
 updateElementMaxHeightToPageBottom(songListScroll, 20);
