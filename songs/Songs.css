@@ -11,7 +11,7 @@
 
 #song_search_container {
     padding: 30px 0 10px;
-    background-color: #66ffdd;
+    background-color: #ccffaa;
     box-sizing: content-box;
 }
 
@@ -42,9 +42,8 @@ a {
 }
 
 #personal_songs_lists {
-    background: linear-gradient(to top, #ccffaa, #d1ffee);
+    background: linear-gradient(to top, #aaff88, #d1ffee);
     overflow-y: auto;
     padding: 20px 0 10px 20px;
-    font-size: 30px;
     display: none;
 }
