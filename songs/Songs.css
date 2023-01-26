@@ -43,7 +43,7 @@ a {
 
 #personal_songs_lists {
     background: linear-gradient(to top, #aaff88, #d1ffee);
-    overflow-y: auto;
+    overflow: auto;
     padding: 20px 0 10px 20px;
     display: none;
 }

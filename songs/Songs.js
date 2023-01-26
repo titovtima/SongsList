@@ -62,6 +62,7 @@ function loadSongsList(list) {
         htmlList.append(song.element);
 
     searchSongInput.placeholder = 'Поиск песни';
+    updateElementMaxHeightToPageBottom(songListScroll, 20);
 }
 
 function sortSongs(a, b) {
