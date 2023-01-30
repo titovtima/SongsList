@@ -15,11 +15,12 @@
     height: 100vh;
     padding: 1px;
     box-sizing: border-box;
-    overflow-y: hidden;
+    overflow: hidden;
 }
 
 html {
     overflow: hidden;
+    background-color: #fddb92;
 }
 
 .scroll {
