@@ -15,7 +15,7 @@
     },
     {
       "name": "Мост",
-      "text": "Ла-ла-ла"
+      "text": "Ла-лай-ла"
     }
   ],
   "chords": [
@@ -25,10 +25,10 @@
     },
     {
       "name": "Припев",
-      "chords": "Am | C | G | Dm |\nAm | C | E | Am | (на повтор или куплет)\nAm | C | E | E | (на ла-ла-ла)\nAm | C | E | E | Am | Am | (кода)"
+      "chords": "Am | C | G | Dm |\nAm | C | E | Am | (на повтор или куплет)\nAm | C | E | E | (на ла-лай-ла)\nAm | C | E | E | Am | Am | (кода)"
     },
     {
-      "name": "Мост (Ла-ла-ла)",
+      "name": "Мост (Ла-лай-ла)",
       "chords": "Am | Em | Am | Em |\nDm | Em | Dm | Em |"
     }
   ],
@@ -47,8 +47,9 @@
     },
     {
       "name": "Мост",
-      "text_chords": "Am  Em  Am  Em\nЛа-ла-ла\nDm  Em  Dm  Em\nЛа-ла-ла"
+      "text_chords": "Am  Em  Am  Em\nЛа-лай-ла\nDm  Em  Dm  Em\nЛа-лай-ла"
     }
   ],
-  "key": "Am"
+  "key": "Am",
+  "text_notes": "Источник: Ури Горен - Благословение дому Давидову\nhttps://youtu.be/Oxf7nbY7R40"
 }

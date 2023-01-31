@@ -25,7 +25,7 @@
   "chords": [
     {
       "name": "Куплет и припев",
-      "chords": "D F♯m | E A/C♯ |\nD F♯m | E |"
+      "chords": "D F♯m | E A |\nD F♯m | E |"
     },
     {
       "name": "Предприпев",
@@ -39,7 +39,7 @@
   "text_chords": [
     {
       "name": "Куплет",
-      "text_chords": " D       F♯m E\nРадостью радуюсь\nA/C♯  D        F♯m     E\nЭтот день сотворил Господь для хвалы\n D       F♯m E\nРадостью радуюсь\n A/C♯   D       F♯m        E\nПрославляю всем сердцем своим"
+      "text_chords": " D       F♯m E\nРадостью радуюсь\nA     D        F♯m     E\nЭтот день сотворил Господь для хвалы\n D       F♯m E\nРадостью радуюсь\n A      D       F♯m        E\nПрославляю всем сердцем своим"
     },
     {
       "name": "Предприпев",
@@ -47,16 +47,17 @@
     },
     {
       "name": "Припев",
-      "text_chords": "      D   F♯m E\nБуду петь Тебе:\nA/C♯     D   F♯m      E\nКак Ты благ, как Ты благ\n        D   F♯m E\nПрославлять Тебя\nA/C♯    D   F♯m     E\nКаждый день, я так рад"
+      "text_chords": "      D   F♯m E\nБуду петь Тебе:\nA        D   F♯m      E\nКак Ты благ, как Ты благ\n        D   F♯m E\nПрославлять Тебя\nA       D   F♯m     E\nКаждый день, я так рад"
     },
     {
       "name": "",
-      "text_chords": "     D  F♯m E  A/C♯\nАллилу - у-йя\n     D  F♯m E\nАллилу - у-йя"
+      "text_chords": "     D  F♯m E  A\nАллилу - у-йя\n     D  F♯m E\nАллилу - у-йя"
     },
     {
       "name": "Мост",
       "text_chords": "D                                    E\n И всё, что принесёт мне этот новый день\n                                       D\nГосподь, с Тобой пройду с благодарностью"
     }
   ],
-  "key": "A"
+  "key": "A",
+  "text_notes": "Источник: Planetshakers - This is the day\nhttps://youtu.be/yci4opkbnKQ"
 }

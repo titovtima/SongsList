@@ -17,7 +17,7 @@
   "chords": [
     {
       "name": "Куплет",
-      "chords": "Ранами Его\nG Bm | A | (x4)\n\nУ греха нет силы\nEm | D/F♯ | A | A\" A/C♯' D' |\nEm | D/F♯ | A\"' Bm' | A/C♯ |"
+      "chords": "Ранами Его\nG Bm | A | (x4)\n\nУ греха нет силы\nEm | D/F♯ | A | A\" A/C♯' D' |\nEm | D/F♯ | A Bm' | A/C♯ |"
     },
     {
       "name": "Припев",
@@ -42,5 +42,6 @@
       "text_chords": "             G\nНаш Бог воскресший\n       A\nПравит Он\n       G                 A\nПобеду одержал, превознесён"
     }
   ],
-  "key": "D"
+  "key": "D",
+  "text_notes": "Источник: Planetshakers - The Anthem\nhttps://youtu.be/OfgIfy7UXm4"
 }

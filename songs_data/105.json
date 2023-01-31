@@ -20,16 +20,12 @@
   ],
   "chords": [
     {
-      "name": "Куплет (Fernando Ortega, основной вариант)",
+      "name": "Куплет",
       "chords": "G | Em | C | G |\nBm | C | G/D D | G |"
     },
     {
       "name": "Припев",
       "chords": "Bm | Em | C | G |\nC | G/B | C | G |"
-    },
-    {
-      "name": "Куплет (вариант Danny Gokey)",
-      "chords": "G | C/G | C | G |\nD | Em | C | G |"
     }
   ],
   "text_chords": [
@@ -51,12 +47,5 @@
     }
   ],
   "key": "G",
-  "private": true,
-  "users_read": [
-    "titovtima",
-    "petrov1905"
-  ],
-  "users_write": [
-    "titovtima"
-  ]
+  "text_notes": "Оригинал: Fernando Ortega - Give me Jesus\nhttps://youtu.be/9rZ8k9m2hwo"
 }

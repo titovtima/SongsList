@@ -17,7 +17,7 @@
     },
     {
       "name": "Припев",
-      "chords": "C | G | F G | C"
+      "chords": "C | G | F G | C |"
     }
   ],
   "text_chords": [
@@ -30,5 +30,6 @@
       "text_chords": "       C\nПревозносим\n       G\nПревозносим\n       F   G\nПревозносим\n          C\nТебя, Господь"
     }
   ],
-  "key": "C"
+  "key": "C",
+  "text_notes": "Источник: Jesus Culture - I exalt thee\nhttps://youtu.be/EFRt6apaGuQ\nhttps://youtu.be/9hMb8g8cOgE\n(Аккорды изменены)"
 }

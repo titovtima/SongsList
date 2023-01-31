@@ -37,7 +37,7 @@
     },
     {
       "name": "Мост",
-      "chords": "F C/E | F G/B | C G/B | C C/E |"
+      "chords": "F C/E' | F G/B' | C G/B' | C C/E' |"
     }
   ],
   "text_chords": [
@@ -62,5 +62,6 @@
       "text_chords": "C/E   F         G/B     C\n       Ты это делаешь вновь\nG/B   C         C/E     F\n       Ты это делаешь вновь"
     }
   ],
-  "key": "C"
+  "key": "C",
+  "text_notes": "Источник: Elevation Worship - Do it again\nhttps://www.worshiptogether.com/songs/do-it-again-elevation-worship/\nhttps://youtu.be/ZOBIPb-6PTc\nhttps://youtu.be/0B_lnQIITxU"
 }

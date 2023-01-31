@@ -33,7 +33,7 @@
     },
     {
       "name": "Куплет 1, 2, 3",
-      "chords": "A | F♯m |\nBm | Esus4 E |\nF♯m''' E/G♯' | A |\nBm D/A | E |"
+      "chords": "A | F♯m |\nBm | Esus4 E |\nF♯m E/G♯' | A |\nBm D/A | E |"
     },
     {
       "name": "Припев",
@@ -41,7 +41,7 @@
     },
     {
       "name": "Куплет 4",
-      "chords": "F♯m''' E/G♯' | A |\nBm D/A | D E |\nA | A |"
+      "chords": "F♯m E/G♯' | A |\nBm D/A | D E |\nA | A |"
     }
   ],
   "text_chords": [
@@ -74,5 +74,6 @@
       "text_chords": "       F♯m               E/G♯\nНа кресте всё совершилось\n      A\nНе имеет власти смерть\n          Bm            D/A\nТы на престол взошёл и принял\n     D   E    A\nПобедителя венец"
     }
   ],
-  "key": "A"
+  "key": "A",
+  "text_notes": "Источник: Darlene Zschech - Victor's Crown\nhttps://youtu.be/_2nBOGA6X2g"
 }
