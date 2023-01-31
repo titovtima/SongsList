@@ -27,6 +27,7 @@ let text_chords_column = document.querySelector('#text_chords_column');
 let mainContent = document.querySelector('.main_content');
 
 let songData = undefined;
+let songWasPrivate = false;
 
 const urlParams = new URLSearchParams(window.location.search);
 let songId;
@@ -66,15 +67,17 @@ function loadSong(data) {
 
     if (data.text_chords)
         for (let part of data.text_chords) {
-            let chords_text = MusicTheory.chordsTextFromPlainText(part.text_chords);
-            MusicTheory.changeChordsTextNotation(chords_text, settings.notation, true);
-            part.text_chords = MusicTheory.chordsTextToString(chords_text);
+            let text_chords = MusicTheory.chordsTextFromPlainText(part.text_chords);
+            MusicTheory.changeChordsTextNotation(text_chords, settings.notation, true);
+            part.text_chords = MusicTheory.chordsTextToString(text_chords);
             new SongPart('text_chords', part);
         }
 
     if (data.text_notes) {
         makeLinksInString(textNotesView, data.text_notes, 'https://');
     }
+
+    songWasPrivate = data.private;
 
     addKeyChooseLine();
     setView();
@@ -111,8 +114,10 @@ class SongPart {
     }
 
     addData(data, update_song_data = true) {
-        if (update_song_data)
+        if (update_song_data) {
             this.data = data;
+            songData[this.type][this.part_num] = data;
+        }
         let display_part = this.wrap_div.display_part;
         if (!display_part) {
             display_part = document.createElement('pre');
@@ -144,6 +149,7 @@ class SongPart {
             // this.button_clicked = true;
             this.wrap_div.remove();
             song_parts[this.type + '_parts'].splice(this.part_num, 1);
+            songData[this.type].splice(this.part_num, 1);
             for (let id = this.part_num; id < song_parts[this.type + '_parts'].length; id++) {
                 song_parts[this.type + '_parts'][id].part_num--;
             }
@@ -173,6 +179,7 @@ class SongPart {
             if (this.part_num > 0) {
                 let n = this.part_num;
                 this.part_num = n-1;
+                songData[this.type].splice(n-1, 2, songData[this.type][n], songData[this.type][n-1]);
                 if (this.type === 'text') {
                     song_parts.text_parts.splice(n - 1, 2,
                         song_parts.text_parts[n], song_parts.text_parts[n - 1]);
@@ -211,6 +218,7 @@ class SongPart {
                 song_parts[this.type + '_parts'].splice(n, 2,
                     song_parts[this.type + '_parts'][n+1], song_parts[this.type + '_parts'][n]);
                 song_parts[this.type + '_parts'][n].part_num = n;
+                songData[this.type].splice(n, 2, songData[this.type][n+1], songData[this.type][n]);
                 if (this.type === 'text') {
                     redrawSongText();
                 }
@@ -278,6 +286,7 @@ class SongPart {
             this.addData(part_data);
             this.wrap_div.display_part.style.display = 'block';
             this.edit_form.style.display = 'none';
+            songData[this.type][this.part_num] = part_data;
             this.edited = false;
             if (this.type === 'text')
                 updateTextInnerButtons();
@@ -441,38 +450,41 @@ function switchToEditMode() {
     inputElements.forEach(value => value.style.display = 'block');
     updateMainContentHeight();
 
-    let add_text = document.querySelector('#add_text');
-    let add_chords = document.querySelector('#add_chords');
-    let add_text_chords = document.querySelector('#add_text_chords');
+    let addText = document.querySelector('#add_text');
+    let addChords = document.querySelector('#add_chords');
+    let addTextChords = document.querySelector('#add_text_chords');
 
-    add_text.onclick = () => {
-        let new_part = {
+    addText.onclick = () => {
+        let newPart = {
             "name": '',
             "text": ''
         }
-        new SongPart('text', new_part);
+        new SongPart('text', newPart);
+        songData.text.push(newPart);
         song_parts.text_parts[song_parts.text_parts.length - 1].edit();
     }
 
-    add_chords.onclick = () => {
-        let new_part = {
+    addChords.onclick = () => {
+        let newPart = {
             "name": '',
             "chords": ''
         }
-        new SongPart('chords', new_part);
+        new SongPart('chords', newPart);
+        songData.chords.push(newPart);
         song_parts.chords_parts[song_parts.chords_parts.length - 1].edit();
     }
 
-    add_text_chords.onclick = () => {
-        let new_part = {
+    addTextChords.onclick = () => {
+        let newPart = {
             "name": '',
             "text_chords": ''
         }
-        new SongPart('text_chords', new_part);
+        new SongPart('text_chords', newPart);
+        songData.text_chords.push(newPart);
         song_parts.text_chords_parts[song_parts.text_chords_parts.length - 1].edit();
     }
 
-    let input_song_name_form = document.querySelector('#input_song_name_form');
+    let inputSongNameForm = document.querySelector('#input_song_name_form');
     input_song_name.value = header.innerHTML;
     header.onclick = () => {
         input_song_name.value = header.innerHTML;
@@ -481,13 +493,15 @@ function switchToEditMode() {
     }
 
     function updateSongName() {
-        header.innerHTML = input_song_name.value.trim();
+        let name = input_song_name.value.trim();
+        header.innerHTML = name;
         header.style.display = 'block';
         input_song_name.style.display = 'none';
+        songData.name = name;
         fitHeaderFontSize();
     }
 
-    input_song_name_form.onsubmit = event => {
+    inputSongNameForm.onsubmit = event => {
         if (event)
             event.preventDefault();
         updateSongName();
@@ -506,8 +520,8 @@ function switchToEditMode() {
         privateCheckbox.checked = true;
     updatePrivateSettingsLine();
 
-    let send_song_form = document.querySelector('#send_song');
-    send_song_form.onsubmit = event => {
+    let sendSongForm = document.querySelector('#send_song');
+    sendSongForm.onsubmit = event => {
         if (event)
             event.preventDefault();
 
@@ -516,19 +530,31 @@ function switchToEditMode() {
             value.onsubmit();
         });
 
-        let songDataToSend = fillSongData();
+        if (privateCheckbox.checked) {
+            songData.private = true;
+        }
+        let usersRead = usersReadInput.value.split(', ');
+        usersRead = usersRead.map(value => value.split(',')).flat();
+        usersRead = usersRead.map(value => value.split(' ')).flat().filter(value => value.length > 0);
+        songData.users_read = usersRead;
+        let usersWrite = usersWriteInput.value.split(', ');
+        usersWrite = usersWrite.map(value => value.split(',')).flat();
+        usersWrite = usersWrite.map(value => value.split(' ')).flat().filter(value => value.length > 0);
+        songData.users_write = usersWrite;
 
-        if (songDataToSend.private && songDataToSend.users_write.length === 0) {
+        // let songDataToSend = fillSongData();
+
+        if (songData.private && songData.users_write.length === 0) {
             alert('Нельзя сделать приватную песню без редакторов');
         } else {
-            if (!songData.private || !songDataToSend.private) {
+            if (!songWasPrivate || !songData.private) {
                 User.checkAdmin(authorized => {
                     if (authorized) {
-                        sendSongToServer(songDataToSend);
+                        sendSongToServer(songData);
                     }
                 });
             } else {
-                sendSongToServer(songDataToSend);
+                sendSongToServer(songData);
             }
         }
     }
@@ -587,47 +613,6 @@ function makeLinksInString(elem, string, linkStart) {
     elem.append(string.substring(endLink));
     result += string.substring(endLink);
     return result;
-}
-
-function fillSongData() {
-    let songDataToSend = {
-        "name": header.innerHTML,
-        "text": [],
-        "chords": [],
-        "text_chords": []
-    };
-    for (let part of song_parts.text_parts) {
-        songDataToSend.text.push(part.data);
-    }
-    for (let part of song_parts.chords_parts) {
-        let chords = MusicTheory.chordsTextFromPlainText(part.data.chords, settings.notation);
-        MusicTheory.changeChordsTextNotation(chords, 'English');
-        part.data.chords = MusicTheory.chordsTextToString(chords);
-        songDataToSend.chords.push(part.data);
-    }
-    for (let part of song_parts.text_chords_parts) {
-        let text_chords = MusicTheory.chordsTextFromPlainText(part.data.text_chords, settings.notation);
-        MusicTheory.changeChordsTextNotation(text_chords, 'English', true);
-        part.data.text_chords = MusicTheory.chordsTextToString(text_chords);
-        songDataToSend.text_chords.push(part.data);
-    }
-    if (current_key !== null)
-        songDataToSend.key = MusicTheory.keyName(current_key);
-    if (privateCheckbox.checked) {
-        songDataToSend.private = true;
-        let usersRead = usersReadInput.value.split(', ');
-        usersRead = usersRead.map(value => value.split(',')).flat();
-        usersRead = usersRead.map(value => value.split(' ')).flat().filter(value => value.length > 0);
-        songDataToSend.users_read = usersRead;
-        let usersWrite = usersWriteInput.value.split(', ');
-        usersWrite = usersWrite.map(value => value.split(',')).flat();
-        usersWrite = usersWrite.map(value => value.split(' ')).flat().filter(value => value.length > 0);
-        songDataToSend.users_write = usersWrite;
-    }
-    if (songData.text_notes && songData.text_notes.length > 0) {
-        songDataToSend.text_notes = songData.text_notes;
-    }
-    return songDataToSend;
 }
 
 function sendSongToServer(song_data) {
@@ -848,6 +833,7 @@ function addKeyChooseLine() {
                 current_key = key;
                 if (!origin_key) {
                     origin_key = current_key;
+                    songData.key = MusicTheory.keyName(current_key);
                     img.src = '/assets/key_background_on.png';
                 } else if (MusicTheory.keyName(origin_key) === key_name && edit_mode) {
                     origin_key = null;
@@ -878,12 +864,16 @@ function addKeyChooseLine() {
                         } catch (e) {
                         }
                     });
-                    for (let k of keys) {
-                        keys_buttons_images[k].forEach(img => img.src = '/assets/key_background.png')
-                    }
-                    keys_buttons_images[key_name].forEach(img => img.src = '/assets/key_background_on.png');
-                    if (edit_mode)
+                    if (edit_mode) {
                         origin_key = current_key;
+                        songData.key = MusicTheory.keyName(current_key);
+                    }
+                }
+                for (let k of keys) {
+                    keys_buttons_images[k].forEach(img => img.src = '/assets/key_background.png')
+                }
+                if (current_key) {
+                    keys_buttons_images[key_name].forEach(img => img.src = '/assets/key_background_on.png');
                 }
             };
 
@@ -958,8 +948,7 @@ function updatePrivateSettingsLine() {
         if (songData && songData.users_read) {
             usersReadInput.value = songData.users_read.toString();
         } else {
-            if (User.currentUser)
-                usersReadInput.value = User.currentUser.login;
+            usersReadInput.value = [];
         }
         if (songData && songData.users_write) {
             usersWriteInput.value = songData.users_write.toString();
