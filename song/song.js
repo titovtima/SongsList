@@ -82,7 +82,15 @@ function loadSong(data) {
     addKeyChooseLine();
     setView();
     fitHeaderFontSize();
-    updateMainContentHeight();
+    let interval = setInterval(() => {
+        updateMainContentHeight();
+        if (edit_mode) {
+            updateTextInnerButtons();
+            updateChordsInnerButtons();
+            updateTextChordsInnerButtons();
+        }
+    }, 1000);
+    // setTimeout(() => clearInterval(interval), 20000);
 }
 
 let song_parts = {
@@ -286,7 +294,6 @@ class SongPart {
             this.addData(part_data);
             this.wrap_div.display_part.style.display = 'block';
             this.edit_form.style.display = 'none';
-            songData[this.type][this.part_num] = part_data;
             this.edited = false;
             if (this.type === 'text')
                 updateTextInnerButtons();
@@ -372,7 +379,7 @@ function updateChordsInnerButtons() {
 }
 
 function updateTextChordsInnerButtons() {
-    song_parts.chords_parts.forEach(value => value.updateInnerButtonsPositions());
+    song_parts.text_chords_parts.forEach(value => value.updateInnerButtonsPositions());
 }
 
 if (!headerMinFontSize) {
@@ -460,7 +467,6 @@ function switchToEditMode() {
             "text": ''
         }
         new SongPart('text', newPart);
-        songData.text.push(newPart);
         song_parts.text_parts[song_parts.text_parts.length - 1].edit();
     }
 
@@ -470,7 +476,6 @@ function switchToEditMode() {
             "chords": ''
         }
         new SongPart('chords', newPart);
-        songData.chords.push(newPart);
         song_parts.chords_parts[song_parts.chords_parts.length - 1].edit();
     }
 
@@ -480,7 +485,6 @@ function switchToEditMode() {
             "text_chords": ''
         }
         new SongPart('text_chords', newPart);
-        songData.text_chords.push(newPart);
         song_parts.text_chords_parts[song_parts.text_chords_parts.length - 1].edit();
     }
 
@@ -530,9 +534,7 @@ function switchToEditMode() {
             value.onsubmit();
         });
 
-        if (privateCheckbox.checked) {
-            songData.private = true;
-        }
+        songData.private = privateCheckbox.checked;
         let usersRead = usersReadInput.value.split(', ');
         usersRead = usersRead.map(value => value.split(',')).flat();
         usersRead = usersRead.map(value => value.split(' ')).flat().filter(value => value.length > 0);
