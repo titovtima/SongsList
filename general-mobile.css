@@ -2,28 +2,28 @@
     font-size: 40px;
 }
 
-#general_buttons_line {
-    height: 110px;
+.background {
+    padding: 0;
 }
 
-#user_button {
-    height: 100px;
-    width: 100px;
+#over_sidebar {
+    flex: 1 0 auto;
 }
 
-#home_button {
-    height: 100px;
-    width: 100px;
+#sidebar {
+    background-image: linear-gradient(to top, #ccffcc 0%, #d1fdff 100%);
+    height: 170px;
+    flex: 0 0 auto;
 }
 
-#settings_button {
-    height: 100px;
-    width: 100px;
-}
-
-#edit_button {
-    height: 100px;
-    width: 100px;
+.sidebar_buttons {
+    float: right;
+    margin: 10px;
+    height: 150px;
+    width: 150px;
+    border: none;
+    background-color: rgba(0, 0, 0, 0);
+    background-size: contain;
 }
 
 .window {

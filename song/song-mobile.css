@@ -36,7 +36,7 @@ input.button {
     font-size: 40px;
 }
 
-button {
+button:not(.general_buttons) {
     min-height: 100px;
     font-size: 40px;
 }

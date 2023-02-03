@@ -1,0 +1,38 @@
+#song_search_container {
+     padding: 30px 40px 30px;
+     background-color: #ccffaa;
+     box-sizing: content-box;
+}
+
+#song_search {
+    font-size: 60px;
+    width: 100%;
+    padding: 5px;
+}
+
+.list_of_contents {
+    margin: 10px 0 0 40px;
+    overflow-y: auto;
+}
+
+a {
+    color: #06c;
+    text-decoration: none;
+    text-underline: none;
+    white-space: nowrap;
+}
+
+.ref_to_song_in_table {
+    margin-bottom: 10px;
+    font-size: 50px;
+}
+
+#add_song {
+    margin: 0 0 10px 40px;
+    display: none;
+}
+
+#add_song_text {
+    font-size: 50px;
+    color: #0aa;
+}
