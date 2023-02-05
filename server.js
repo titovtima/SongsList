@@ -23,9 +23,9 @@ app.get("/transpose", (req, res) => {
 });
 
 app.get('/songs', (req, res) => {
-    // if (isMobile(req))
-    //     res.sendFile(__dirname + '/songs/songs-mobile.html');
-    // else
+    if (isMobile(req))
+        res.sendFile(__dirname + '/songs/songs-mobile.html');
+    else
         res.sendFile(__dirname + '/songs/songs.html');
 });
 
@@ -45,7 +45,10 @@ app.get('/song', (req, res) => {
 });
 
 app.get('/song/:songId', (req, res) => {
-    res.sendFile(__dirname + '/song/song.html');
+    if (isMobile(req))
+        res.sendFile(__dirname + '/song/song-mobile.html');
+    else
+        res.sendFile(__dirname + '/song/song.html');
 });
 
 app.get('/guess_interval', (req, res) => {
