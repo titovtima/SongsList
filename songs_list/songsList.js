@@ -305,6 +305,7 @@ addSongById.onclick = () => {
         .then(response => {
             if (response) {
                 pushSongToSongList(songId, response.name);
+                songsListData.songs_ids.push(songId);
                 addSongReadersAndWriters(songId, response);
                 loadSongText(songId);
             }
