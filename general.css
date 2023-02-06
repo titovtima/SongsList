@@ -75,6 +75,10 @@ html {
     background-image: url("/assets/user.png");
 }
 
+#songs_lists_button {
+    background-image: url("/assets/songs_list_icon.png");
+}
+
 .rest_flex_part {
     flex: 1 1 auto;
     max-height: available;

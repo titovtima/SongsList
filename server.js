@@ -30,7 +30,10 @@ app.get('/songs', (req, res) => {
 });
 
 app.get('/songs_list/:songListId', (req, res) => {
-    res.sendFile(__dirname + '/songs_list/songsList.html');
+    if (isMobile(req))
+        res.sendFile(__dirname + '/songs_list/songsList-mobile.html');
+    else
+        res.sendFile(__dirname + '/songs_list/songsList.html');
 });
 
 app.get('/song', (req, res) => {

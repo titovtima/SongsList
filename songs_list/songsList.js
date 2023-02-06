@@ -1,5 +1,4 @@
 let htmlList = document.querySelector('#songs_list');
-let addNewSong = document.querySelector('#add_new_song');
 let addSongByIdContainer = document.querySelector('#add_song_by_id_container');
 let addSongById = document.querySelector('#add_song_by_id');
 let songIdToAdd = document.querySelector('#song_id_to_add');
@@ -85,8 +84,6 @@ function loadSongsList(list = songsListData.songs_ids) {
         pushSongToSongList(id, list[id].name);
     }
 
-    addNewSong.href = `/song?id=new&edit=true`;
-
     loadSongsTexts().then(() => {
         searchSongInput.placeholder = 'Поиск песни';
     });
@@ -94,7 +91,6 @@ function loadSongsList(list = songsListData.songs_ids) {
 }
 
 function pushSongToSongList(songId, songName) {
-    console.log('push song with id ', songId);
     htmlList.innerHTML = "";
     let ref = document.createElement('a');
     ref.append(songName);
@@ -107,6 +103,7 @@ function pushSongToSongList(songId, songName) {
         loadSongsWithIds();
     }
     let div = document.createElement('div');
+    div.style.whiteSpace = 'nowrap';
     div.append(deleteCross);
     div.append(ref);
     songsList.push({name: songName, element: div, id: songId});
@@ -254,7 +251,6 @@ function saveList() {
             alert('Ошибка при отправке на сервер');
         }
     }).then(response => {
-        console.log(response);
         if (response === songsListId) {
             songsListData = listData;
             turnOffEditMode();
