@@ -62,6 +62,14 @@ app.get('/settings', (req, res) => {
         // res.sendFile(__dirname + '/settings_page/settingsPage.html');
 });
 
+app.get('/user', (req, res) => {
+    if (isMobile(req))
+        res.sendFile(__dirname + '/user_page/userPage-mobile.html');
+    else
+        res.sendStatus(404);
+        // res.sendFile(__dirname + '/user_page/userPage.html');
+});
+
 app.get('/guess_interval', (req, res) => {
     res.sendFile(__dirname + '/guess_interval/index.html');
 });

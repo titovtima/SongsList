@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Пользователь</title>
+
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript" >
+        (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+            m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+        (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+        ym(88797016, "init", {
+            clickmap:true,
+            trackLinks:true,
+            accurateTrackBounce:true,
+            webvisor:true
+        });
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/88797016" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+
+    <link rel="stylesheet" type="text/css" href="/general.css">
+    <link rel="stylesheet" type="text/css" href="/general-mobile.css">
+    <link rel="stylesheet" type="text/css" href="/user_page/userPage-mobile.css">
+</head>
+<body class="background">
+
+<div class="flex_box">
+    <div id="over_sidebar">
+        <div id="log_in_section" class="section">
+            <form id="log_in_form">
+                <div>Логин: <input type="text" id="input_user_login"></div>
+                <div>Пароль: <input type="password" id="input_user_password"></div>
+                <input type="submit" id="submit_user_login" class="window_button" value="Войти">
+            </form>
+            <div class="center">
+                <button id="registration_button" class="text_button">Зарегистрироваться</button>
+            </div>
+        </div>
+        <div id="registration_section" class="section">
+            <form id="registration_form">
+                <div>Логин: <input type="text" id="input_new_user_login"></div>
+                <div>Пароль: <input type="password" id="input_new_user_password"></div>
+                <div>Повторите пароль: <input type="password" id="input_new_user_repeat_password"></div>
+                <input type="submit" id="submit_user_registration" class="window_button" value="Зарегистрироваться">
+            </form>
+            <div class="center">
+                <button id="log_in_button" class="text_button">Войти</button>
+            </div>
+        </div>
+        <div id="user_section" class="section">
+            <div>Пользователь: <span id="show_user_login"></span></div>
+            <button id="logout_button" class="window_button">Выйти</button>
+        </div>
+    </div>
+    <div id="sidebar">
+        <a href="/songs" id="home_button" class="sidebar_buttons"></a>
+        <button id="user_button" class="pointer_over sidebar_buttons"></button>
+        <button id="settings_button" class="pointer_over sidebar_buttons"></button>
+    </div>
+</div>
+
+<script src="/general.js"></script>
+<script src="/users/users.js"></script>
+<script src="/settings.js"></script>
+<script>
+    userCookiePromise.then(() => { setUserWindowView(); });
+</script>
+
+</body>
+</html>
