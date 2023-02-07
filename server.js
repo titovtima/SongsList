@@ -54,6 +54,14 @@ app.get('/song/:songId', (req, res) => {
         res.sendFile(__dirname + '/song/song.html');
 });
 
+app.get('/settings', (req, res) => {
+    if (isMobile(req))
+        res.sendFile(__dirname + '/settings_page/settingsPage-mobile.html');
+    else
+        res.sendStatus(404);
+        // res.sendFile(__dirname + '/settings_page/settingsPage.html');
+});
+
 app.get('/guess_interval', (req, res) => {
     res.sendFile(__dirname + '/guess_interval/index.html');
 });

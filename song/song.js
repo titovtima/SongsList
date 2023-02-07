@@ -889,29 +889,11 @@ function addKeyChooseLine() {
         });
     });
     updateMainContentHeight();
-    // updateChordsInnerButtons();
-    // updateTextChordsInnerButtons();
 }
 
 let settings_button = document.querySelector('#settings_button');
-settings_button.onclick = () => {
-    showSettingsWindow();
-}
-
-let settings = {};
-function setStartSettings() {
-    // document.cookie = 'settings=a; max-age=-1';
-    let cookie = findCookies().settings;
-    if (cookie) {
-        cookie.split('|').forEach(value => {
-            let setting = value.split('_');
-            settings[setting[0]] = setting[1];
-        });
-    }
-    if (!settings.notation)
-        settings.notation = 'English';
-}
-setStartSettings();
+if (!isMobile)
+    settings_button.onclick = () => { showSettingsWindow(); }
 
 function showSettingsWindow() {
     let overlay = document.querySelector('#overlay');
@@ -928,21 +910,11 @@ function showSettingsWindow() {
 
     let exit_settings_window = document.querySelector('#exit_settings_window');
     exit_settings_window.onclick = () => {
-        changeNotationSystem(notation_form.notation.value);
-
-        let settings_cookie_arr = [];
-        for (let setting in settings)
-            settings_cookie_arr.push(`${setting}_${settings[setting]}`);
-        document.cookie = `settings=${settings_cookie_arr.join('|')}`;
+        setSetting('notation', notation_form.notation.value);
         overlay.style.display = 'none';
         settings_window.style.display = 'none';
         window.location.reload();
     }
-}
-
-function changeNotationSystem(newNotation) {
-    if (newNotation === settings.notation) return;
-    settings.notation = newNotation;
 }
 
 privateCheckbox.addEventListener('click', () => {

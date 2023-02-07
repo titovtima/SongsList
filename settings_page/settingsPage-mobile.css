@@ -1,0 +1,8 @@
+.setting {
+    margin: 30px;
+}
+
+input[type=radio] {
+    width: 30px;
+    height: 30px;
+}
