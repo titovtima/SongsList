@@ -11,7 +11,7 @@
 }
 
 .background {
-    background-image: linear-gradient(to top, #fddb92 0%, #d1fdff 100%);
+    background-image: linear-gradient(to top, #fddb92 0%, #d1fdff 100%) !important;
     height: 100vh;
     padding: 1px;
     box-sizing: border-box;
@@ -20,7 +20,7 @@
 
 html {
     overflow: hidden;
-    background-color: #fddb92;
+    background-color: #fddb92 !important;
 }
 
 .scroll {
@@ -44,7 +44,7 @@ html {
 }
 
 #general_buttons_line {
-    background-image: linear-gradient(to top, #ccffcc 0%, #d1fdff 100%);
+    background-image: linear-gradient(to top, #ccffcc 0%, #d1fdff 100%) !important;
     height: 80px;
     flex: 0 1 auto;
 }
@@ -114,7 +114,7 @@ html {
     position: fixed;
     left: 50%;
     top: 0;
-    background-image: linear-gradient(to top, #fddb92 0%, #d1fdff 100%);
+    background-image: linear-gradient(to top, #fddb92 0%, #d1fdff 100%) !important;
     border-radius: 15px;
     transform: translate(-50%, 50%);
     text-align: center;
