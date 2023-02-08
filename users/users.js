@@ -221,6 +221,8 @@ function setUserWindowView() {
         let logoutButton = document.querySelector('#logout_button');
         logoutButton.onclick = () => {
             User.currentUser = null;
+            visitHistory.songs_list = null;
+            setVisitHistoryCookie();
             document.cookie = 'user=null; max-age=-1; path=/; samesite=lax';
             userButton.style.backgroundImage = 'url("/assets/user.png")';
             userSection.style.display = 'none';

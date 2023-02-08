@@ -1,0 +1,35 @@
+#header_text {
+    margin-top: 50px;
+    font-size: 70px;
+    text-align: center;
+}
+
+.ref_to_song_in_table {
+    text-decoration: none;
+    margin-bottom: 10px;
+    font-size: 60px;
+}
+
+.list_of_contents {
+    margin: 20px 0 0 40px;
+    overflow-y: auto;
+}
+
+a {
+    color: #06c;
+    text-decoration: none;
+    text-underline: none;
+    white-space: nowrap;
+}
+
+#add_songs_list {
+    display: none;
+    margin-left: 40px;
+    color: #0aa;
+}
+
+#ref_to_user_page {
+    display: none;
+    margin-left: 40px;
+    color: #0aa;
+}

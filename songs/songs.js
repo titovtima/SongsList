@@ -117,7 +117,7 @@ userCookiePromise.then(() => {
     }
 });
 
-function showSongsListsInfo(data) {
+function showSongsListsInfo(data, container) {
     let user = User.currentUser;
     for (let listId in data) {
         let list = data[listId];
@@ -130,7 +130,7 @@ function showSongsListsInfo(data) {
         link.href = '/songs_list/' + listId;
         link.style.display = 'block';
         link.className += ' ref_to_songs_list';
-        personalSongsLists.append(link);
+        container.append(link);
     }
 }
 
@@ -141,14 +141,15 @@ if (isMobile) {
 
     let loadSongsLists = fetch(SONGS_DATA_PATH + 'songs_lists.json')
         .then(response => response.json())
-    Promise.all([loadSongsLists, userCookiePromise]).then(response => showSongsListsInfo(response[0]));
+    Promise.all([loadSongsLists, userCookiePromise])
+        .then(response => { showSongsListsInfo(response[0], personalSongsLists); });
 
     userCookiePromise.then(() => {
         if (User.currentUser) {
             updatePersonalSongsListsPosition();
             personalSongsLists.style.display = 'block';
         }
-    })
+    });
 
     window.addEventListener('resize', () => {
         updatePersonalSongsListsPosition();

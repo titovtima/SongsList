@@ -27,6 +27,9 @@ function getSongListIdFromURL() {
 }
 getSongListIdFromURL();
 
+visitHistory.songs_list = songsListId;
+setVisitHistoryCookie();
+
 if(isMobile) {
     addCssFiles(['/general-mobile.css']);
 }

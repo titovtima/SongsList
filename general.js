@@ -28,3 +28,30 @@ function addCssFiles(linksList) {
         head.append(linkElement);
     }
 }
+
+let visitHistory = {
+    songs_list: null
+};
+
+function setVisitHistoryCookie() {
+    document.cookie = 'visitHistory=' + JSON.stringify(visitHistory) + '; path=/';
+}
+
+function getVisitHistoryFromCookie() {
+    let cookie = findCookies().visitHistory;
+    console.log(cookie);
+    try {
+        visitHistory = JSON.parse(cookie);
+    } catch (e) {
+    }
+    console.log(visitHistory);
+}
+getVisitHistoryFromCookie();
+
+let songsListsButton = document.querySelector('#songs_lists_button');
+if (visitHistory.songs_list && !window.location.href.includes('songs_list/')) {
+    songsListsButton.onclick = () => { window.location.href = '/songs_list/' + visitHistory.songs_list; };
+} else {
+    songsListsButton.onclick = () => { window.location.href = '/songs_lists_list'; };
+}
+
