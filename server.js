@@ -13,16 +13,27 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/", express.static(__dirname));
 
+function isMobile(req) {
+    let userAgent = req.headers["user-agent"];
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
+}
+
 app.get("/transpose", (req, res) => {
     res.sendFile(__dirname + '/transpose/main.html');
 });
 
 app.get('/songs', (req, res) => {
-    res.sendFile(__dirname + '/songs/Songs.html');
+    if (isMobile(req))
+        res.sendFile(__dirname + '/songs/songs-mobile.html');
+    else
+        res.sendFile(__dirname + '/songs/songs.html');
 });
 
 app.get('/songs_list/:songListId', (req, res) => {
-    res.sendFile(__dirname + '/songs_list/songsList.html');
+    if (isMobile(req))
+        res.sendFile(__dirname + '/songs_list/songsList-mobile.html');
+    else
+        res.sendFile(__dirname + '/songs_list/songsList.html');
 });
 
 app.get('/song', (req, res) => {
@@ -37,7 +48,34 @@ app.get('/song', (req, res) => {
 });
 
 app.get('/song/:songId', (req, res) => {
-    res.sendFile(__dirname + '/song/Song.html');
+    if (isMobile(req))
+        res.sendFile(__dirname + '/song/song-mobile.html');
+    else
+        res.sendFile(__dirname + '/song/song.html');
+});
+
+app.get('/settings', (req, res) => {
+    if (isMobile(req))
+        res.sendFile(__dirname + '/settings_page/settingsPage-mobile.html');
+    else
+        res.sendStatus(404);
+        // res.sendFile(__dirname + '/settings_page/settingsPage.html');
+});
+
+app.get('/user', (req, res) => {
+    if (isMobile(req))
+        res.sendFile(__dirname + '/user_page/userPage-mobile.html');
+    else
+        res.sendStatus(404);
+        // res.sendFile(__dirname + '/user_page/userPage.html');
+});
+
+app.get('/songs_lists_list', (req, res) => {
+    if (isMobile(req))
+        res.sendFile(__dirname + '/songs_lists_list/songsListsList-mobile.html');
+    else
+        res.sendStatus(404);
+        // res.sendFile(__dirname + '/songs_lists_list/songsListsList.html');
 });
 
 app.get('/guess_interval', (req, res) => {
