@@ -1,0 +1,16 @@
+.section {
+    position: absolute;
+    top: 40%;
+    width: 90%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
+}
+
+input {
+    width: 100%;
+}
+
+#over_sidebar {
+    position: relative;
+}

@@ -1,0 +1,18 @@
+.list_name {
+    overflow-x: auto;
+    font-size: 80px;
+}
+
+#song_search {
+    font-size: 60px;
+    padding: 5px;
+}
+
+.ref_to_song_in_table {
+    font-size: 50px;
+}
+
+.delete_song_cross {
+    height: 45px;
+    width: 45px;
+}

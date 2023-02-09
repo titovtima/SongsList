@@ -3,15 +3,6 @@ let addSong = document.querySelector('#add_song');
 let songListScroll = document.querySelector('#song_list_scroll');
 let searchSongInput = document.querySelector('#song_search');
 
-if(isMobile) {
-    addCssFiles(['Songs-mobile.css', '/general-mobile.css']);
-    let songSearch = document.querySelector('#song_search');
-    let songSearchContainer = document.querySelector('#song_search_container');
-    songSearch.style.width = songSearchContainer.clientWidth - 65 + 'px';
-}
-
-updateElementMaxHeightToPageBottom(songListScroll, 20);
-
 let loadAllSongs = fetch(SONGS_DATA_PATH + 'songs.json')
     .then(response => response.json());
 Promise.all([loadAllSongs, userCookiePromise]).then(response => {
@@ -40,10 +31,6 @@ Promise.all([loadAllSongs, userCookiePromise]).then(response => {
         });
     });
 
-let loadSongsLists = fetch(SONGS_DATA_PATH + 'songs_lists.json')
-    .then(response => response.json())
-Promise.all([loadSongsLists, userCookiePromise]).then(response => showSongsListsInfo(response[0]));
-
 let songsList = [];
 function loadSongsList(list) {
     songsList = [];
@@ -62,7 +49,7 @@ function loadSongsList(list) {
         htmlList.append(song.element);
 
     searchSongInput.placeholder = 'Поиск песни';
-    updateElementMaxHeightToPageBottom(songListScroll, 20);
+    // updateElementMaxHeightToPageBottom(songListScroll, 20);
 }
 
 function sortSongs(a, b) {
@@ -120,7 +107,7 @@ function updatePersonalSongsListsPosition() {
             personalSongsLists.style.width = '100%';
             mainSongsListDisplay.style.width = '100%';
         }
-        updateElementMaxHeightToPageBottom(songListScroll, 20);
+        // updateElementMaxHeightToPageBottom(songListScroll, 20);
     }
 }
 
@@ -128,17 +115,9 @@ userCookiePromise.then(() => {
     if (User.isAdmin || User.currentUser) {
         addSong.style.display = 'inline';
     }
-    if (User.currentUser) {
-        updatePersonalSongsListsPosition();
-        personalSongsLists.style.display = 'block';
-    }
 });
 
-window.addEventListener('resize', () => {
-    updatePersonalSongsListsPosition();
-});
-
-function showSongsListsInfo(data) {
+function showSongsListsInfo(data, container) {
     let user = User.currentUser;
     for (let listId in data) {
         let list = data[listId];
@@ -151,6 +130,28 @@ function showSongsListsInfo(data) {
         link.href = '/songs_list/' + listId;
         link.style.display = 'block';
         link.className += ' ref_to_songs_list';
-        personalSongsLists.append(link);
+        container.append(link);
     }
+}
+
+if (isMobile) {
+    updateElementMaxHeightToPageBottom(songListScroll, 180);
+} else {
+    updateElementMaxHeightToPageBottom(songListScroll, 20);
+
+    let loadSongsLists = fetch(SONGS_DATA_PATH + 'songs_lists.json')
+        .then(response => response.json())
+    Promise.all([loadSongsLists, userCookiePromise])
+        .then(response => { showSongsListsInfo(response[0], personalSongsLists); });
+
+    userCookiePromise.then(() => {
+        if (User.currentUser) {
+            updatePersonalSongsListsPosition();
+            personalSongsLists.style.display = 'block';
+        }
+    });
+
+    window.addEventListener('resize', () => {
+        updatePersonalSongsListsPosition();
+    });
 }

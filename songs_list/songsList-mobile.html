@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="icon" href="/assets/angel.jpg">
+
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript" >
+        (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+            m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+        (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+        ym(88797016, "init", {
+            clickmap:true,
+            trackLinks:true,
+            accurateTrackBounce:true,
+            webvisor:true
+        });
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/88797016" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+
+    <link rel="stylesheet" type="text/css" href="/general.css">
+    <link rel="stylesheet" type="text/css" href="/general-mobile.css">
+    <link rel="stylesheet" type="text/css" href="songsList.css">
+    <link rel="stylesheet" type="text/css" href="songsList-mobile.css">
+</head>
+<body class="background">
+
+<div id="over_sidebar">
+    <header>
+        <h1 id="list_name" class="list_name"></h1>
+        <input type="text" id="input_list_name" class="list_name">
+    </header>
+    <div id="users_lists_container">
+        <div><label for="users_read_input">Читатели:</label> <input type="text" id="users_read_input"></div>
+        <div><label for="users_write_input">Редакторы:</label> <input type="text" id="users_write_input"></div>
+    </div>
+    <div id="songs_list_display">
+        <input type="text" id="song_search" class="song_search" placeholder="Тексты загружаются">
+        <div class="scroll" id="song_list_scroll">
+            <div class="list_of_contents" id="songs_list">
+            </div>
+
+            <div id="add_song_by_id_container">
+                <i class="pointer_over" id="add_song_by_id">+ добавить песню с id </i>
+                <input type="text" id="song_id_to_add">
+            </div>
+        </div>
+    </div>
+    <div id="send_button_line" class="center">
+        <button id="save_list_button">Сохранить список</button>
+    </div>
+</div>
+<div id="sidebar">
+    <a href="/songs" id="home_button" class="sidebar_buttons"></a>
+    <button id="user_button" class="pointer_over sidebar_buttons"></button>
+    <button id="settings_button" class="pointer_over sidebar_buttons"></button>
+    <button id="songs_lists_button" class="pointer_over sidebar_buttons"></button>
+    <a id="edit_button" class="sidebar_buttons"></a>
+</div>
+
+<script src="/music_theory/kotlin.js"></script>
+<script src="/music_theory/MusicTheory.js"></script>
+<script src="/general.js"></script>
+<script src="/users/users.js"></script>
+<script src="/settings.js"></script>
+<script src="/songs_list/songsList.js"></script>
+
+</body>
+</html>

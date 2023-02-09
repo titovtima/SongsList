@@ -1,31 +1,43 @@
 * {
-    font-size: 40px;
+    font-size: 50px;
 }
 
-#general_buttons_line {
-    height: 110px;
+.background {
+    padding: 0;
+    overflow: hidden;
 }
 
-#user_button {
-    height: 100px;
-    width: 100px;
+html {
+    background-color: #ccffcc;
 }
 
-#home_button {
-    height: 100px;
-    width: 100px;
+#over_sidebar {
+    height: 100%;
+    padding-bottom: 180px;
 }
 
-#settings_button {
-    height: 100px;
-    width: 100px;
+#sidebar {
+    position: absolute;
+    background-image: linear-gradient(to top, #ccffcc 0%, #d1fdff 100%);
+    height: 170px;
+    width: 100%;
+    bottom: 0;
 }
 
-#edit_button {
-    height: 100px;
-    width: 100px;
+.sidebar_buttons {
+    float: right;
+    margin: 10px 5px;
+    height: 150px;
+    width: 150px;
+    border: none;
+    background-color: rgba(0, 0, 0, 0);
+    background-size: contain;
 }
 
 .window {
     font-size: 40px;
+}
+
+.text_button {
+    font-size:50px;
 }

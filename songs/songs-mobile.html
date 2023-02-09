@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="/assets/angel.jpg">
+    <title>Песни</title>
+    <meta name="description" content="Христианские песни. Слова и аккорды">
+
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript">
+        (function (m, e, t, r, i, k, a) {
+            m[i] = m[i] || function () {
+                (m[i].a = m[i].a || []).push(arguments)
+            };
+            m[i].l = 1 * new Date();
+            k = e.createElement(t), a = e.getElementsByTagName(t)[0], k.async = 1, k.src = r, a.parentNode.insertBefore(k, a)
+        })
+        (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+        ym(88797016, "init", {
+            clickmap: true,
+            trackLinks: true,
+            accurateTrackBounce: true,
+            webvisor: true
+        });
+    </script>
+    <noscript>
+        <div><img src="https://mc.yandex.ru/watch/88797016" style="position:absolute; left:-9999px;" alt=""/></div>
+    </noscript>
+    <!-- /Yandex.Metrika counter -->
+
+    <link rel="stylesheet" type="text/css" href="/general.css">
+    <link rel="stylesheet" type="text/css" href="/general-mobile.css">
+    <link rel="stylesheet" type="text/css" href="/songs/songs-mobile.css">
+</head>
+<body class="background">
+
+<div id="over_sidebar">
+    <div id="song_search_container">
+        <input type="text" id="song_search" class="song_search" placeholder="Песни загружаются">
+    </div>
+    <div class="scroll" id="song_list_scroll">
+        <div class="list_of_contents" id="songs_list">
+        </div>
+
+        <a id="add_song" class="pointer_over" href="/song/new?edit=true">
+            <i id="add_song_text">+ добавить песню</i>
+        </a>
+    </div>
+</div>
+<div id="sidebar">
+    <a href="/songs" id="home_button" class="sidebar_buttons"></a>
+    <button id="user_button" class="pointer_over sidebar_buttons"></button>
+    <button id="settings_button" class="pointer_over sidebar_buttons"></button>
+    <button id="songs_lists_button" class="pointer_over sidebar_buttons"></button>
+</div>
+
+<script src="/general.js"></script>
+<script src="/users/users.js"></script>
+<script src="/settings.js"></script>
+<script src="/songs/songs.js"></script>
+</body>
+</html>

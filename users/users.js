@@ -77,7 +77,7 @@ class User {
                 'password': encodedPassword
             };
             this.currentUser = userData;
-            document.cookie = `user=${JSON.stringify(userData)}; max-age=2500000; path=/; samesite=lax`;
+            setUserCookie();
             return this.currentUser;
         } else {
             alert('Пользователь с таким логином уже существует');
@@ -99,10 +99,10 @@ class User {
         let response = await p;
         if (response.ok) {
             let userData = await response.json();
-            if (updateCookie) {
-                document.cookie = `user=${JSON.stringify(userData)}; max-age=2500000; path=/; samesite=lax`;
-            }
             this.currentUser = userData;
+            // if (updateCookie) {
+                setUserCookie();
+            // }
             return true;
         }
         return false;
@@ -193,9 +193,27 @@ let userSection = document.querySelector('#user_section');
 let logInSection = document.querySelector('#log_in_section');
 let registrationSection = document.querySelector('#registration_section');
 
-userButton.onclick = () => {
-    overlay.style.display = 'block';
-    userWindow.style.display = 'block';
+if (isMobile) {
+    userButton.onclick = () => {
+        window.location.href = '/user';
+    }
+} else {
+    userButton.onclick = () => {
+        setUserWindowView();
+    }
+}
+
+function setUserWindowView() {
+    if (userWindow) {
+        overlay.style.display = 'block';
+        userWindow.style.display = 'block';
+        setTimeout(() => {
+            document.addEventListener('click', handlerCloseUserWindowClick);
+        }, 100);
+    }
+    userSection.style.display = 'none';
+    logInSection.style.display = 'none';
+    registrationSection.style.display = 'none';
     if (User.currentUser) {
         let showUserLogin = document.querySelector('#show_user_login');
         showUserLogin.innerHTML = User.currentUser.login;
@@ -203,6 +221,8 @@ userButton.onclick = () => {
         let logoutButton = document.querySelector('#logout_button');
         logoutButton.onclick = () => {
             User.currentUser = null;
+            visitHistory.songs_list = null;
+            setVisitHistoryCookie();
             document.cookie = 'user=null; max-age=-1; path=/; samesite=lax';
             userButton.style.backgroundImage = 'url("/assets/user.png")';
             userSection.style.display = 'none';
@@ -212,8 +232,6 @@ userButton.onclick = () => {
         userSection.style.display = 'none';
         showLogInWindow();
     }
-
-    setTimeout(() => { document.addEventListener('click', handlerCloseUserWindowClick); }, 100);
 }
 
 let handlerCloseUserWindowClick = event => {
@@ -223,11 +241,14 @@ let handlerCloseUserWindowClick = event => {
 }
 
 function exitUserWindow() {
-    userWindow.style.display = 'none';
-    overlay.style.display = 'none';
-    userSection.style.display = 'none';
-    logInSection.style.display = 'none';
-    registrationSection.style.display = 'none';
+    if (userWindow) {
+        userWindow.style.display = 'none';
+        overlay.style.display = 'none';
+        userSection.style.display = 'none';
+        logInSection.style.display = 'none';
+        registrationSection.style.display = 'none';
+        document.removeEventListener('click', handlerCloseUserWindowClick);
+    }
 
     if (User.currentUser) {
         userButton.style.backgroundImage = 'url("/assets/user_green.png")';
@@ -235,13 +256,18 @@ function exitUserWindow() {
         userButton.style.backgroundImage = 'url("/assets/user.png")';
     }
 
-    document.removeEventListener('click', handlerCloseUserWindowClick);
-    window.location.reload();
+    if (userWindow) {
+        window.location.reload();
+    } else {
+        setUserWindowView();
+    }
 }
 
 function showLogInWindow() {
-    overlay.style.display = 'block';
-    userWindow.style.display = 'block';
+    if (userWindow) {
+        overlay.style.display = 'block';
+        userWindow.style.display = 'block';
+    }
 
     userSection.style.display = 'none';
     registrationSection.style.display = 'none';
@@ -261,6 +287,7 @@ function showLogInWindow() {
     }
 
     let registrationButton = document.querySelector('#registration_button');
+    let logInButton = document.querySelector('#log_in_button');
     registrationButton.onclick = () => {
         logInSection.style.display = 'none';
         registrationSection.style.display = 'block';
@@ -277,6 +304,9 @@ function showLogInWindow() {
             });
         };
     }
+    logInButton.onclick = () => {
+        showLogInWindow();
+    }
 }
 
 let handlerClosePasswordWindowClick = event => {
@@ -287,10 +317,13 @@ let handlerClosePasswordWindowClick = event => {
 
 let passwordWindow = document.querySelector('#password_window');
 function showAdminConfirm(callback) {
-    let overlay = document.querySelector('#overlay');
     let passwordWindow = document.querySelector('#password_window');
     let passwordInput = document.querySelector('#password_input');
     let sendPassword = document.querySelector('#send_password');
+    if (!passwordWindow) {
+        callback(false);
+        return;
+    }
     overlay.style.display = 'block';
     passwordWindow.style.display = 'block';
     sendPassword.onsubmit = event => {
@@ -330,6 +363,10 @@ function exitPasswordWindow() {
     document.removeEventListener('click', handlerClosePasswordWindowClick);
     overlay.style.display = 'none';
     passwordWindow.style.display = 'none';
+}
+
+function setUserCookie() {
+    document.cookie = `user=${JSON.stringify(User.currentUser)}; path=/; samesite=lax`;
 }
 
 let userCookiePromise = User.setUserFromCookie()

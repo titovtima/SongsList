@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Настройки</title>
+    <link rel="icon" href="/assets/angel.jpg">
+
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript" >
+        (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+            m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+        (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+        ym(88797016, "init", {
+            clickmap:true,
+            trackLinks:true,
+            accurateTrackBounce:true,
+            webvisor:true
+        });
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/88797016" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+
+    <link rel="stylesheet" type="text/css" href="/general.css">
+    <link rel="stylesheet" type="text/css" href="/general-mobile.css">
+    <link rel="stylesheet" type="text/css" href="/settings_page/settingsPage-mobile.css">
+</head>
+<body class="background">
+
+<div id="over_sidebar">
+    <div class="scroll">
+        <div class="setting">
+            <form id="notation_form">
+                <h1>Система обозначений</h1>
+                <div><input type="radio" name="notation" value="English">
+                    <span id="English_notation_text"> английская (B - си, B♭ - си бемоль)</span>
+                </div>
+                <div><input type="radio" name="notation" value="German">
+                    <span id="German_notation_text"> немецкая (H - си, B - си бемоль)</span>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div id="sidebar">
+    <a href="/songs" id="home_button" class="sidebar_buttons"></a>
+    <button id="user_button" class="pointer_over sidebar_buttons"></button>
+    <button id="settings_button" class="pointer_over sidebar_buttons"></button>
+    <button id="songs_lists_button" class="pointer_over sidebar_buttons"></button>
+</div>
+
+<script src="/general.js"></script>
+<script src="/users/users.js"></script>
+<script src="/settings.js"></script>
+<script src="/settings_page/settingsPage.js"></script>
+
+</body>
+</html>

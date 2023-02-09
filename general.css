@@ -25,6 +25,7 @@ html {
 
 .scroll {
     height: 100%;
+    max-height: 100%;
     overflow: auto;
 }
 
@@ -37,7 +38,7 @@ html {
     cursor: pointer;
 }
 
-#flex_box {
+.flex_box {
     display: flex;
     flex-flow: column;
     height: 100%;
@@ -49,45 +50,34 @@ html {
     flex: 0 1 auto;
 }
 
-#home_button {
-    background-image: url("/assets/home.png");
+.general_buttons {
     float: right;
     width: 70px;
     height: 70px;
     background-size: contain;
     margin: 5px;
+    border: none;
+    background-color: rgba(0, 0, 0, 0);
+}
+
+#home_button {
+    background-image: url("/assets/home.png");
 }
 
 #settings_button {
-    border: none;
-    background-color: rgba(0, 0, 0, 0);
     background-image: url("/assets/settings.png");
-    float: right;
-    width: 70px;
-    height: 70px;
-    min-height: 70px;
-    background-size: contain;
-    margin: 5px;
 }
 
 #edit_button {
     background-image: url("/assets/edit.png");
-    float: right;
-    width: 70px;
-    height: 70px;
-    background-size: contain;
-    margin: 5px;
 }
 
 #user_button {
-    border: none;
-    background-color: rgba(0, 0, 0, 0);
     background-image: url("/assets/user.png");
-    float: right;
-    width: 70px;
-    height: 70px;
-    background-size: contain;
-    margin: 5px;
+}
+
+#songs_lists_button {
+    background-image: url("/assets/songs_list_icon.png");
 }
 
 .rest_flex_part {
