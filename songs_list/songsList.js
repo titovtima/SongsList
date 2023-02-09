@@ -90,7 +90,6 @@ function loadSongsList(list = songsListData.songs_ids) {
     loadSongsTexts().then(() => {
         searchSongInput.placeholder = 'Поиск песни';
     });
-    updateElementMaxHeightToPageBottom(songListScroll, 20);
 }
 
 function pushSongToSongList(songId, songName) {

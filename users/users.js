@@ -204,7 +204,7 @@ if (isMobile) {
 }
 
 function setUserWindowView() {
-    if (overlay) {
+    if (userWindow) {
         overlay.style.display = 'block';
         userWindow.style.display = 'block';
         setTimeout(() => {
@@ -241,7 +241,7 @@ let handlerCloseUserWindowClick = event => {
 }
 
 function exitUserWindow() {
-    if (overlay) {
+    if (userWindow) {
         userWindow.style.display = 'none';
         overlay.style.display = 'none';
         userSection.style.display = 'none';
@@ -256,7 +256,7 @@ function exitUserWindow() {
         userButton.style.backgroundImage = 'url("/assets/user.png")';
     }
 
-    if (overlay) {
+    if (userWindow) {
         window.location.reload();
     } else {
         setUserWindowView();
@@ -264,7 +264,7 @@ function exitUserWindow() {
 }
 
 function showLogInWindow() {
-    if (overlay) {
+    if (userWindow) {
         overlay.style.display = 'block';
         userWindow.style.display = 'block';
     }
@@ -317,10 +317,13 @@ let handlerClosePasswordWindowClick = event => {
 
 let passwordWindow = document.querySelector('#password_window');
 function showAdminConfirm(callback) {
-    let overlay = document.querySelector('#overlay');
     let passwordWindow = document.querySelector('#password_window');
     let passwordInput = document.querySelector('#password_input');
     let sendPassword = document.querySelector('#send_password');
+    if (!passwordWindow) {
+        callback(false);
+        return;
+    }
     overlay.style.display = 'block';
     passwordWindow.style.display = 'block';
     sendPassword.onsubmit = event => {

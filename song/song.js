@@ -1,14 +1,12 @@
-let headerStartFontSize, headerMinFontSize, mainScrollMarginBottom = 0;
+let headerStartFontSize, headerMinFontSize;
 
 if(isMobile) {
-    addCssFiles(['song-mobile.css', '/general-mobile.css']);
     headerMinFontSize = 40;
     headerStartFontSize = 75;
-    mainScrollMarginBottom = 200;
 }
 
 let mainScroll = document.querySelector('#main_scroll');
-updateElementMaxHeightToPageBottom(mainScroll, mainScrollMarginBottom);
+updateElementMaxHeightToPageBottom(mainScroll, mainScrollMarginToBottom);
 
 let edit_mode = false;
 
@@ -451,8 +449,8 @@ function switchToEditMode() {
     ym(88797016,'reachGoal','edit_song');
     edit_mode = true;
     if (isMobile) {
-        mainScrollMarginBottom += 130;
-        updateElementMaxHeightToPageBottom(mainScroll, mainScrollMarginBottom);
+        mainScrollMarginToBottom += 130;
+        updateElementMaxHeightToPageBottom(mainScroll, mainScrollMarginToBottom);
     }
 
     let edit_button = document.querySelector('#edit_button');

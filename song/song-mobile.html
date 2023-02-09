@@ -22,94 +22,101 @@
     <!-- /Yandex.Metrika counter -->
 
     <link rel="stylesheet" type="text/css" href="/general.css">
+    <link rel="stylesheet" type="text/css" href="/song/song.css">
     <link rel="stylesheet" type="text/css" href="/general-mobile.css">
-    <link rel="stylesheet" type="text/css" href="song.css">
-    <link rel="stylesheet" type="text/css" href="song-mobile.css">
+    <link rel="stylesheet" type="text/css" href="/song/song-mobile.css">
 </head>
 <body class="background">
-<div class="flex_box">
-    <div id="over_sidebar">
-        <header>
-            <h1 id="song_name" class="text song_name"></h1>
-            <form id="input_song_name_form">
-                <input type="text" id="input_song_name" class="text song_name input">
-            </form>
-        </header>
-        <div id="main_scroll" class="scroll">
-            <div id="private_settings_line">
-                <input type="checkbox" id="private_checkbox"> сделать приватной
-                <div id="users_lists_container">
-                    <div><label for="users_read_input">Читатели:</label> <input type="text" id="users_read_input"></div>
-                    <div><label for="users_write_input">Редакторы:</label> <input type="text" id="users_write_input">
-                    </div>
+
+<div id="over_sidebar">
+    <header>
+        <h1 id="song_name" class="text song_name"></h1>
+        <form id="input_song_name_form">
+            <input type="text" id="input_song_name" class="text song_name input">
+        </form>
+    </header>
+    <div id="main_scroll" class="scroll">
+        <div id="private_settings_line">
+            <input type="checkbox" id="private_checkbox"> сделать приватной
+            <div id="users_lists_container">
+                <div><label for="users_read_input">Читатели:</label> <input type="text" id="users_read_input"></div>
+                <div><label for="users_write_input">Редакторы:</label> <input type="text" id="users_write_input">
                 </div>
-            </div>
-            <div id="view_buttons_line">
-                <button id="text_view_button" class="view_button">Текст</button>
-                <button id="chords_view_button" class="view_button">Аккорды</button>
-                <button id="text_chords_view_button" class="view_button">Аккорды в тексте</button>
-            </div>
-            <div class="main_content">
-                <div class="page_split" id="text_page_split">
-                    <div class="column_background" id="text_column">
-                        <h3 class="column_header" id="text_column_header">Текст</h3>
-                        <div id="no_header_text_column" class="no_header_column">
-                            <div class="above_scroll_display_column">
-                                <div class="scroll_display_column">
-                                    <div id="song_text_display" class="display_column"></div>
-                                </div>
-                            </div>
-                            <button id="add_text" class="input add_song_part">Добавить новую часть</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="page_split" id="chords_page_split">
-                    <div class="column_background" id="chords_column">
-                        <h3 class="column_header" id="chords_column_header">Аккорды</h3>
-                        <div id="no_header_chords_column" class="no_header_column">
-                            <div class="key_choose_container"></div>
-                            <div class="above_scroll_display_column">
-                                <div class="scroll_display_column">
-                                    <div id="song_chords_display" class="display_column"></div>
-                                </div>
-                            </div>
-                            <button id="add_chords" class="input add_song_part">Добавить новую часть</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="page_split" id="text_chords_page_split">
-                    <div class="column_background" id="text_chords_column">
-                        <h3 class="column_header" id="text_chords_column_header">Аккорды в тексте</h3>
-                        <div id="no_header_text_chords_column" class="no_header_column">
-                            <div class="key_choose_container"></div>
-                            <div class="above_scroll_display_column">
-                                <div class="scroll_display_column">
-                                    <div id="song_text_chords_display" class="display_column"></div>
-                                </div>
-                            </div>
-                            <button id="add_text_chords" class="input add_song_part">Добавить новую часть</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div id="text_notes_container">
-                <pre id="text_notes_view"></pre>
-                <textarea id="text_notes_input"></textarea>
             </div>
         </div>
-        <form id="send_song">
-            <div class="center">
-                <button type="submit" class="input" id="send_song_button">Сохранить песню</button>
+        <div id="view_buttons_line">
+            <button id="text_view_button" class="view_button">Текст</button>
+            <button id="chords_view_button" class="view_button">Аккорды</button>
+            <button id="text_chords_view_button" class="view_button">Аккорды в тексте</button>
+        </div>
+        <div class="main_content">
+            <div class="page_split" id="text_page_split">
+                <div class="column_background" id="text_column">
+                    <h3 class="column_header" id="text_column_header">Текст</h3>
+                    <div id="no_header_text_column" class="no_header_column">
+                        <div class="above_scroll_display_column">
+                            <div class="scroll_display_column">
+                                <div id="song_text_display" class="display_column"></div>
+                            </div>
+                        </div>
+                        <button id="add_text" class="input add_song_part">Добавить новую часть</button>
+                    </div>
+                </div>
             </div>
-        </form>
+            <div class="page_split" id="chords_page_split">
+                <div class="column_background" id="chords_column">
+                    <h3 class="column_header" id="chords_column_header">Аккорды</h3>
+                    <div id="no_header_chords_column" class="no_header_column">
+                        <div class="key_choose_container"></div>
+                        <div class="above_scroll_display_column">
+                            <div class="scroll_display_column">
+                                <div id="song_chords_display" class="display_column"></div>
+                            </div>
+                        </div>
+                        <button id="add_chords" class="input add_song_part">Добавить новую часть</button>
+                    </div>
+                </div>
+            </div>
+            <div class="page_split" id="text_chords_page_split">
+                <div class="column_background" id="text_chords_column">
+                    <h3 class="column_header" id="text_chords_column_header">Аккорды в тексте</h3>
+                    <div id="no_header_text_chords_column" class="no_header_column">
+                        <div class="key_choose_container"></div>
+                        <div class="above_scroll_display_column">
+                            <div class="scroll_display_column">
+                                <div id="song_text_chords_display" class="display_column"></div>
+                            </div>
+                        </div>
+                        <button id="add_text_chords" class="input add_song_part">Добавить новую часть</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="text_notes_container">
+            <pre id="text_notes_view"></pre>
+            <textarea id="text_notes_input"></textarea>
+        </div>
     </div>
-    <div id="sidebar">
-        <a href="/songs" id="home_button" class="sidebar_buttons"></a>
-        <button id="user_button" class="pointer_over sidebar_buttons"></button>
-        <button id="settings_button" class="pointer_over sidebar_buttons"></button>
-        <button id="songs_lists_button" class="pointer_over sidebar_buttons"></button>
-        <a id="edit_button" class="sidebar_buttons"></a>
-    </div>
+    <form id="send_song">
+        <div class="center">
+            <button type="submit" class="input" id="send_song_button">Сохранить песню</button>
+        </div>
+    </form>
+</div>
+<div id="sidebar">
+    <a href="/songs" id="home_button" class="sidebar_buttons"></a>
+    <button id="user_button" class="pointer_over sidebar_buttons"></button>
+    <button id="settings_button" class="pointer_over sidebar_buttons"></button>
+    <button id="songs_lists_button" class="pointer_over sidebar_buttons"></button>
+    <a id="edit_button" class="sidebar_buttons"></a>
+</div>
+
+<div id="overlay"></div>
+<div id="password_window" class="window">
+    <form id="send_password">
+        <label for="password_input" class="block">Введите пароль администратора</label>
+        <input type="password" id="password_input">
+    </form>
 </div>
 
 <script src="/music_theory/kotlin.js"></script>
