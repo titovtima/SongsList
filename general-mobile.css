@@ -24,6 +24,13 @@ html {
     bottom: 0;
 }
 
+@media (prefers-color-scheme: dark) {
+    #sidebar {
+        /*background-image: linear-gradient(to top, #005d53, #000d81);*/
+        background: #202023;
+    }
+}
+
 .sidebar_buttons {
     float: right;
     margin: 10px 5px;

@@ -789,6 +789,14 @@ function updateTextareaWidth() {
     });
 }
 
+let keyBackground = '/assets/key_background.png';
+let keyBackgroundOn = '/assets/key_background_on.png';
+
+if (colorTheme === 'dark') {
+    keyBackground = '/assets/key_background_dark.png';
+    keyBackgroundOn = '/assets/key_background_on_dark.png';
+}
+
 let current_key = null;
 function addKeyChooseLine() {
     if (!songData) return;
@@ -824,7 +832,7 @@ function addKeyChooseLine() {
             let button = document.createElement('div');
             button.className += ' key_choose_button';
             let img = document.createElement('img');
-            img.src = '/assets/key_background.png';
+            img.src = keyBackground;
             img.className += ' key_choose_image';
             keys_buttons_images[key_name].push(img);
             button.append(img);
@@ -839,11 +847,11 @@ function addKeyChooseLine() {
                 if (!origin_key) {
                     origin_key = current_key;
                     songData.key = MusicTheory.keyName(current_key);
-                    img.src = '/assets/key_background_on.png';
+                    img.src = keyBackgroundOn;
                 } else if (MusicTheory.keyName(origin_key) === key_name && edit_mode) {
                     origin_key = null;
                     current_key = null;
-                    img.src = '/assets/key_background.png';
+                    img.src = keyBackground;
                 } else {
                     song_parts.chords_parts.forEach(part => {
                         let chords_text = MusicTheory.chordsTextFromPlainText(part.data.chords, settings.notation);
@@ -875,15 +883,15 @@ function addKeyChooseLine() {
                     }
                 }
                 for (let k of keys) {
-                    keys_buttons_images[k].forEach(img => img.src = '/assets/key_background.png')
+                    keys_buttons_images[k].forEach(img => img.src = keyBackground)
                 }
                 if (current_key) {
-                    keys_buttons_images[key_name].forEach(img => img.src = '/assets/key_background_on.png');
+                    keys_buttons_images[key_name].forEach(img => img.src = keyBackgroundOn);
                 }
             };
 
             if (origin_key && MusicTheory.keyName(origin_key) === key_name)
-                img.src = '/assets/key_background_on.png';
+                img.src = keyBackgroundOn;
         });
     });
     updateMainContentHeight();

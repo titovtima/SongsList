@@ -15,17 +15,9 @@
     padding: 5px;
 }
 
-a {
-    color: #06c;
-    text-decoration: none;
-    text-underline: none;
-    white-space: nowrap;
-}
-
 #add_new_song, #add_song_by_id_container {
     font-size: 40px;
     margin: 0 40px 0;
-    color: #0aa;
     display: none;
 }
 

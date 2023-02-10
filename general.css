@@ -11,16 +11,31 @@
 }
 
 .background {
-    background-image: linear-gradient(to top, #fddb92 0%, #d1fdff 100%) !important;
+    background-image: linear-gradient(to top, #fddb92 0%, #d1fdff 100%);
     height: 100vh;
     padding: 1px;
     box-sizing: border-box;
     overflow: hidden;
 }
 
+@media (prefers-color-scheme: dark) {
+    .background {
+        content: 'dark';
+        /*background-image: linear-gradient(to top, #635538, #000d81);*/
+        background: #3c3f41;
+    }
+}
+
 html {
     overflow: hidden;
-    background-color: #fddb92 !important;
+    background-color: #ccffcc;
+}
+
+@media (prefers-color-scheme: dark) {
+    html {
+        /*background-color: #005d53;*/
+        background-color: #3c3f41;
+    }
 }
 
 .scroll {
@@ -45,9 +60,16 @@ html {
 }
 
 #general_buttons_line {
-    background-image: linear-gradient(to top, #ccffcc 0%, #d1fdff 100%) !important;
+    background-image: linear-gradient(to top, #ccffcc 0%, #d1fdff 100%);
     height: 80px;
     flex: 0 1 auto;
+}
+
+@media (prefers-color-scheme: dark) {
+    #general_buttons_line {
+        /*background-image: linear-gradient(to top, #005d53, #000d81);*/
+        background: #202023;
+    }
 }
 
 .general_buttons {
@@ -82,8 +104,6 @@ html {
 
 .rest_flex_part {
     flex: 1 1 auto;
-    max-height: available;
-    height: 100%;
 }
 
 #overlay {
@@ -104,7 +124,7 @@ html {
     position: fixed;
     left: 50%;
     top: 0;
-    background-image: linear-gradient(to top, #fddb92 0%, #d1fdff 100%) !important;
+    background-image: linear-gradient(to top, #fddb92 0%, #d1fdff 100%);
     border-radius: 15px;
     transform: translate(-50%, 50%);
     text-align: center;
@@ -113,6 +133,13 @@ html {
     white-space: nowrap;
     max-width: 100vw;
     overflow-x: auto;
+}
+
+@media (prefers-color-scheme: dark) {
+    .window {
+        /*background-image: linear-gradient(to top, #635538, #000d81);*/
+        background: #3c3f41;
+    }
 }
 
 #password_input {
@@ -153,4 +180,37 @@ input {
 
 .block {
     display: block;
+}
+
+.dark_cyan {
+    color: #00aaaa;
+}
+
+a {
+    color: #06c;
+    text-decoration: none;
+    text-underline: none;
+    white-space: nowrap;
+}
+
+@media (prefers-color-scheme: dark) {
+    * {
+        color: #dff;
+    }
+
+    a {
+        color: #55dddd;
+    }
+
+    .dark_cyan {
+        color: #eeeeee;
+    }
+
+    input, textarea, button {
+        background-color: #3c3f41;
+    }
+
+    html {
+        background-color: #202023;
+    }
 }

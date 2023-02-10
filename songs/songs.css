@@ -15,16 +15,16 @@
     box-sizing: content-box;
 }
 
+@media (prefers-color-scheme: dark) {
+    #song_search_container {
+        /*background-color: #006000;*/
+        background-color: #202023;
+    }
+}
+
 #song_search {
     margin: 0 40px;
     padding: 5px;
-}
-
-a {
-    color: #06c;
-    text-decoration: none;
-    text-underline: none;
-    white-space: nowrap;
 }
 
 #add_song {
@@ -34,11 +34,6 @@ a {
 
 #add_song_text {
     font-size: 40px;
-    color: #0aa;
-}
-
-#add_songs_list {
-    color: #0aa;
 }
 
 #personal_songs_lists {
@@ -46,4 +41,11 @@ a {
     overflow: auto;
     padding: 20px 0 10px 20px;
     display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+    #personal_songs_lists {
+        /*background: linear-gradient(to top, #004000, #000d81);*/
+        background: #505050;
+    }
 }

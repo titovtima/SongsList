@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <link rel="icon" href="/assets/angel.jpg">
     <title>Список песен</title>
-    <meta name="color-scheme" content="light">
+    <meta name="color-scheme" content="light dark">
 
     <!-- Yandex.Metrika counter -->
     <script type="text/javascript">
@@ -33,7 +33,7 @@
     <link rel="stylesheet" type="text/css" href="/songs_list/songsList.css">
 </head>
 <body class="background">
-<div id="flex_box">
+<div class="flex_box">
     <div id="general_buttons_line">
         <a href="/songs" id="home_button" class="general_buttons"></a>
         <a id="edit_button" class="general_buttons"></a>
@@ -55,7 +55,7 @@
                 </div>
 
                 <div id="add_song_by_id_container">
-                    <i class="pointer_over" id="add_song_by_id">+ добавить песню с id </i>
+                    <i class="pointer_over dark_cyan" id="add_song_by_id">+ добавить песню с id </i>
                     <input type="text" id="song_id_to_add">
                 </div>
             </div>
@@ -91,6 +91,9 @@
             <div>Повторите пароль: <input type="password" id="input_new_user_repeat_password"></div>
             <input type="submit" id="submit_user_registration" class="window_button" value="Зарегистрироваться">
         </form>
+        <div class="center">
+            <button id="log_in_button" class="text_button">Войти</button>
+        </div>
     </div>
     <div id="user_section" class="window_section">
         <div>Пользователь: <span id="show_user_login"></span></div>

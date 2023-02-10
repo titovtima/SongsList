@@ -15,13 +15,6 @@
     overflow-y: auto;
 }
 
-a {
-    color: #06c;
-    text-decoration: none;
-    text-underline: none;
-    white-space: nowrap;
-}
-
 #add_songs_list {
     display: none;
     margin-left: 40px;

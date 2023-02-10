@@ -5,7 +5,7 @@
     <link rel="icon" href="/assets/angel.jpg">
     <title>Песни</title>
     <meta name="description" content="Христианские песни. Слова и аккорды">
-    <meta name="color-scheme" content="light">
+    <meta name="color-scheme" content="light dark">
 
     <!-- Yandex.Metrika counter -->
     <script type="text/javascript">
@@ -41,7 +41,7 @@
     <div class="rest_flex_part">
         <div id="personal_songs_lists">
             <a id="add_songs_list" class="pointer_over" href="/songs_list/new">
-                <i id="add_songs_list_text">+ добавить список</i>
+                <i id="add_songs_list_text" class="dark_cyan">+ добавить список</i>
             </a>
         </div>
         <div id="main_songs_list_display">
@@ -53,7 +53,7 @@
                 </div>
 
                 <a id="add_song" class="pointer_over" href="/song/new?edit=true">
-                    <i id="add_song_text">+ добавить песню</i>
+                    <i id="add_song_text" class="dark_cyan">+ добавить песню</i>
                 </a>
             </div>
         </div>
@@ -85,6 +85,9 @@
             <div>Повторите пароль: <input type="password" id="input_new_user_repeat_password"></div>
             <input type="submit" id="submit_user_registration" class="window_button" value="Зарегистрироваться">
         </form>
+        <div class="center">
+            <button id="log_in_button" class="text_button">Войти</button>
+        </div>
     </div>
     <div id="user_section" class="window_section">
         <div>Пользователь: <span id="show_user_login"></span></div>

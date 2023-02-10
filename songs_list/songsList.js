@@ -90,6 +90,8 @@ function loadSongsList(list = songsListData.songs_ids) {
     loadSongsTexts().then(() => {
         searchSongInput.placeholder = 'Поиск песни';
     });
+
+    updateElementMaxHeightToPageBottom(songListScroll, mainScrollMarginToBottom);
 }
 
 function pushSongToSongList(songId, songName) {
@@ -204,7 +206,7 @@ function switchToEditMode() {
 
     listNameHeader.addEventListener('click', handlerClickOnHeader);
 
-    updateElementMaxHeightToPageBottom(songListScroll, sendButtonLine.scrollHeight);
+    updateElementMaxHeightToPageBottom(songListScroll, mainScrollMarginToBottom + sendButtonLine.scrollHeight);
 }
 
 function checkEditPermission() {
@@ -217,7 +219,7 @@ function turnOffEditMode() {
 
     listNameHeader.removeEventListener('click', handlerClickOnHeader);
 
-    updateElementMaxHeightToPageBottom(songListScroll, 20);
+    updateElementMaxHeightToPageBottom(songListScroll, mainScrollMarginToBottom);
 }
 
 function saveList() {
