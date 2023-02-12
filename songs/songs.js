@@ -49,7 +49,6 @@ function loadSongsList(list) {
         htmlList.append(song.element);
 
     searchSongInput.placeholder = 'Поиск песни';
-    // updateElementMaxHeightToPageBottom(songListScroll, 20);
 }
 
 function sortSongs(a, b) {
@@ -107,7 +106,6 @@ function updatePersonalSongsListsPosition() {
             personalSongsLists.style.width = '100%';
             mainSongsListDisplay.style.width = '100%';
         }
-        // updateElementMaxHeightToPageBottom(songListScroll, 20);
     }
 }
 
@@ -134,11 +132,13 @@ function showSongsListsInfo(data, container) {
     }
 }
 
-if (isMobile) {
-    updateElementMaxHeightToPageBottom(songListScroll, 180);
-} else {
-    updateElementMaxHeightToPageBottom(songListScroll, 20);
+updateElementMaxHeightToPageBottom(songListScroll, mainScrollMarginToBottom);
+window.addEventListener('resize', () => {
+    updateElementMaxHeightToPageBottom(songListScroll, mainScrollMarginToBottom);
+});
 
+if (isMobile) {
+} else {
     let loadSongsLists = fetch(SONGS_DATA_PATH + 'songs_lists.json')
         .then(response => response.json())
     Promise.all([loadSongsLists, userCookiePromise])

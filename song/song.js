@@ -444,6 +444,7 @@ let usersWriteInput = document.querySelector('#users_write_input');
 let textNotesView = document.querySelector('#text_notes_view');
 let textNotesInput = document.querySelector('#text_notes_input');
 let textNotesContainer = document.querySelector('#text_notes_container');
+let sendSongForm = document.querySelector('#send_song');
 
 function switchToEditMode() {
     ym(88797016,'reachGoal','edit_song');
@@ -527,7 +528,6 @@ function switchToEditMode() {
         privateCheckbox.checked = true;
     updatePrivateSettingsLine();
 
-    let sendSongForm = document.querySelector('#send_song');
     sendSongForm.onsubmit = event => {
         if (event)
             event.preventDefault();
@@ -1017,7 +1017,6 @@ Promise.all([loadSongDataPromise, userCookiePromise])
         }
     });
 
-// window.addEventListener('resize', () => {
-    // updateChordsInnerButtons();
-    // updateTextInnerButtons();
-// })
+window.addEventListener('resize', () => {
+    updateElementMaxHeightToPageBottom(mainScroll, mainScrollMarginToBottom);
+});

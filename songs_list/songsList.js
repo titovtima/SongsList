@@ -94,6 +94,10 @@ function loadSongsList(list = songsListData.songs_ids) {
     updateElementMaxHeightToPageBottom(songListScroll, mainScrollMarginToBottom);
 }
 
+window.addEventListener('resize', () => {
+    updateElementMaxHeightToPageBottom(songListScroll, mainScrollMarginToBottom);
+});
+
 function pushSongToSongList(songId, songName) {
     htmlList.innerHTML = "";
     let ref = document.createElement('a');
@@ -198,6 +202,7 @@ editStyleElement.innerHTML =
     " { display: block }\n" +
     ".delete_song_cross { display: inline-block }\n" +
     "#edit_button { background-image: url(\"/assets/edit_on.png\") }";
+let noEditMarginToBottom = mainScrollMarginToBottom;
 function switchToEditMode() {
     editMode = true;
     usersReadInput.value = songsListData.users_read.toString();
@@ -206,7 +211,8 @@ function switchToEditMode() {
 
     listNameHeader.addEventListener('click', handlerClickOnHeader);
 
-    updateElementMaxHeightToPageBottom(songListScroll, mainScrollMarginToBottom + sendButtonLine.scrollHeight);
+    mainScrollMarginToBottom += sendButtonLine.scrollHeight;
+    updateElementMaxHeightToPageBottom(songListScroll, mainScrollMarginToBottom);
 }
 
 function checkEditPermission() {
@@ -219,6 +225,7 @@ function turnOffEditMode() {
 
     listNameHeader.removeEventListener('click', handlerClickOnHeader);
 
+    mainScrollMarginToBottom = noEditMarginToBottom;
     updateElementMaxHeightToPageBottom(songListScroll, mainScrollMarginToBottom);
 }
 
