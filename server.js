@@ -85,20 +85,45 @@ app.get('/guess_interval', (req, res) => {
 app.use('/auth/login', (req, res) => {
     try {
         // throw new Error('I want to throw an error');
-        let user = req.body.user;
+        let login = req.body.login;
         let password = req.body.password;
-        let userData = checkAuth(password, user);
+        let userData = checkAuth(password, login);
         if (userData) {
-            userData.login = user;
+            userData.login = login;
             res.json(userData);
         } else {
-            res.sendStatus(403);
+            let oldEncodedPassword = req.body.oldEncodedPassword;
+            userData = checkAuth(oldEncodedPassword, login);
+            if (userData) {
+                changeUserPassword(login, encoder.encode(password));
+                userData.login = login;
+                res.json(userData);
+            } else {
+                res.sendStatus(403);
+            }
         }
     } catch (e) {
         let time = new Date();
         fs.appendFile(errors_log_file, 'Date: ' + time.toString() + '\n' + e.toString() + '\n\n', err => {});
+        res.sendStatus(500);
     }
 });
+
+function changeUserPassword(login, newPassword) {
+    let fileData = JSON.parse(fs.readFileSync(users_data_path + 'users.json','utf-8'));
+    let usersList = fileData.users;
+    if (!usersList[login])
+        return;
+    usersList[login].password = newPassword;
+    delete usersList[login].passwordWasntChanged;
+    let newFileData = { 'users': usersList };
+    fs.writeFile(users_data_path + 'users.json', JSON.stringify(newFileData), err => {
+        if (err) {
+            let time = new Date();
+            fs.appendFile(errors_log_file, 'Date: ' + time.toString() + '\n' + err + '\n\n', e => {});
+        }
+    })
+}
 
 app.use('/auth/reg', (req, res) => {
     try {
@@ -130,21 +155,29 @@ app.use('/auth/reg', (req, res) => {
     }
 });
 
-function checkAuth(password, user) {
-    const n = 2472942968189431706898462913067925658209124041544162680908145890301107704237n;
-    const e = 5281668766765633818307894358032591567n;
-
+function checkAuth(password, login) {
     let fileData = JSON.parse(fs.readFileSync(users_data_path + 'users.json','utf-8'));
     let usersList = fileData.users;
-    if (usersList[user] && usersList[user].password === password)
-        return usersList[user];
+    let encodedPassword = encoder.encode(password)
+    if (usersList[login] && usersList[login].password === encodedPassword) {
+        let user = usersList[login];
+        user.password = password;
+        return user;
+    }
     return false;
+}
 
-    function quickPow(a, p, mod) {
+class RSAEncoder {
+    constructor() {
+        this.n = 2472942968189431706898462913067925658209124041544162680908145890301107704237n;
+        this.e = 5281668766765633818307894358032591567n;
+    }
+
+    quickPow(a, p, mod) {
         if (p === 0n) return 1n;
         if (p === 1n) return a % mod;
 
-        let a2 = quickPow(a % mod, p/2n, mod);
+        let a2 = this.quickPow(a % mod, p/2n, mod);
         if (p % 2n === 0n) {
             return a2*a2 % mod;
         } else {
@@ -152,16 +185,19 @@ function checkAuth(password, user) {
         }
     }
 
-    function encodeRSA(string) {
+    encode(string) {
         let num = 0n;
-        string.split('').forEach((value, index) => {
-            num += BigInt(value.charCodeAt(0) + index * 256);
-            num %= n;
+        string.split('').forEach(char => {
+            num *= BigInt(256);
+            num += BigInt(char.charCodeAt(0));
+            num %= this.n;
         });
 
-        return quickPow(num, e, n);
+        return this.quickPow(num, this.e, this.n).toString();
     }
 }
+
+let encoder = new RSAEncoder();
 
 let songs_list;
 let max_song_id = 1;
@@ -217,14 +253,12 @@ let songsListsData;
 fs.readFile(songs_data_path + 'songs_lists.json', 'utf-8', (err, data) => {
     if (err) throw err;
     songsListsData = JSON.parse(data);
-    console.log(songsListsData);
     while (songsListsData[maxSongsListId.toString()]) maxSongsListId++;
 });
 
 app.post('/songs_list/:songsListId', (req, res) => {
     try {
         let reqData = req.body;
-        console.log(reqData);
         if (!checkAuth(reqData.password, reqData.user)) {
             res.sendStatus(403);
             return;

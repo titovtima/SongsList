@@ -13,7 +13,7 @@ class User {
             userData = null;
         }
         if (userData) {
-            await this.checkUserPassword(userData.password, userData.login, false)
+            await this.checkUserPassword(userData.login, userData.password, false)
                 .then(result => {
                     if (result) {
                         userButton.style.backgroundImage = 'url("/assets/user_green.png")';
@@ -31,9 +31,8 @@ class User {
         let passwordInput = document.querySelector('#input_user_password');
         let login = loginInput.value;
         let password = passwordInput.value;
-        let encodedPassword = encoder.encode(password);
-        if (await User.checkUserPassword(encodedPassword, login, true)) {
-            this.currentUser = new User({ 'login': login, 'password': encodedPassword });
+        if (await User.checkUserPassword(login, password, true)) {
+            this.currentUser = new User({ 'login': login, 'password': password });
             return this.currentUser;
         } else {
             alert('Неверный логин или пароль');
@@ -85,20 +84,23 @@ class User {
         }
     }
 
-    static async checkUserPassword(password, login, updateCookie = false) {
+    static async checkUserPassword(login, password, updateCookie = false) {
+        let encodedPassword = encoder.encode(password);
         let p = fetch('/auth/login', {
             "method": "POST",
             "headers": {
                 "Content-Type": "application/json"
             },
             "body": JSON.stringify({
+                "login": login,
                 "password": password,
-                "user": login
+                "oldEncodedPassword": encodedPassword
             })
         });
         let response = await p;
         if (response.ok) {
             let userData = await response.json();
+            userData.password = password;
             this.currentUser = userData;
             // if (updateCookie) {
                 setUserCookie();
