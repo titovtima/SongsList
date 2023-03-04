@@ -58,24 +58,22 @@ class User {
             repeatPasswordInput.value = '';
             return false;
         }
-        let encodedPassword = encoder.encode(password);
         let p = fetch('/auth/reg', {
             "method": "POST",
             "headers": {
                 "Content-Type": "application/json"
             },
             "body": JSON.stringify({
-                "password": encodedPassword,
+                "password": password,
                 "user": login
             })
         });
         let response = await p;
         if (response.ok) {
-            let userData = {
+            this.currentUser = {
                 'login': login,
-                'password': encodedPassword
+                'password': password
             };
-            this.currentUser = userData;
             setUserCookie();
             return this.currentUser;
         } else {

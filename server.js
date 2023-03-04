@@ -84,7 +84,6 @@ app.get('/guess_interval', (req, res) => {
 
 app.use('/auth/login', (req, res) => {
     try {
-        // throw new Error('I want to throw an error');
         let login = req.body.login;
         let password = req.body.password;
         let userData = checkAuth(password, login);
@@ -129,13 +128,14 @@ app.use('/auth/reg', (req, res) => {
     try {
         let user = req.body.user;
         let password = req.body.password;
+        let encodedPassword = encoder.encode(password)
         let fileData = JSON.parse(fs.readFileSync(users_data_path + 'users.json', 'utf-8'));
         let usersList = fileData.users;
         if (usersList.hasOwnProperty(user))
             res.sendStatus(403);
         else {
             usersList[user] = {
-                'password': password
+                'password': encodedPassword
             }
             let newFileData = {
                 'users': usersList
