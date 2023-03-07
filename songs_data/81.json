@@ -18,6 +18,10 @@
       "text": "Твоё иго так благо\nА бремя легко\nМоя жизнь и хвала\nДля Тебя Одного\nМой щит, моя сила\nМоя безопасность\nВ Тебе, Иисус Христос"
     },
     {
+      "name": "Припев - 2",
+      "text": "Твоё имя так славно\nИ так велико \n…"
+    },
+    {
       "name": "",
       "text": "В любое время Ты со мною\n(Танцую я перед Тобою)\n(Танцую я в любое время)\n(Я радуюсь ...)"
     },
@@ -70,6 +74,10 @@
       "text_chords": "    Bm         G\nТвоё иго так благо\n    D       A\nА бремя легко\n    Bm          G\nМоя жизнь и хвала\n       D      A\nДля Тебя Одного\n    Bm        G\nМой щит, моя сила\n  D      A\nМоя безопасность\n     G            F♯\nВ Тебе, Иисус Христос"
     },
     {
+      "name": "Припев - 2",
+      "text_chords": "    Bm         G\nТвоё имя так славно\n   D       A\nИ так велико \n..."
+    },
+    {
       "name": "",
       "text_chords": "                     Bm  G  D\nВ любое время Ты со мною\n     A               Bm  G  D  A\nВ любое время Ты со мною"
     },
@@ -91,5 +99,8 @@
     }
   ],
   "key": "Bm",
-  "text_notes": "Источник: Gateway Worship Español - Danzando\nhttps://youtu.be/_1MfaKz_eCQ\nhttps://youtu.be/opK3_BKVJE4"
+  "text_notes": "Источник: Gateway Worship Español - Danzando\nhttps://youtu.be/_1MfaKz_eCQ\nhttps://youtu.be/opK3_BKVJE4",
+  "private": false,
+  "users_read": [],
+  "users_write": []
 }

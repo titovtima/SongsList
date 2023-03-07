@@ -21,39 +21,42 @@
   "chords": [
     {
       "name": "Куплет",
-      "chords": "Em | Em | Bm | Bm |\nC | C | Em | Em |"
+      "chords": "Dm | Dm | Am | Am |\nB♭ | B♭ | Dm | Dm |"
     },
     {
       "name": "Предприпев",
-      "chords": "C | C | D | D |"
+      "chords": "B♭ | B♭ | C | C |"
     },
     {
       "name": "Припев",
-      "chords": "C | D | G | G |"
+      "chords": "B♭ | C | F | F |"
     },
     {
       "name": "Мост",
-      "chords": "C | D | G D/F♯ | Em |\nC | D | G | G |"
+      "chords": "B♭ | C | F C/E | Dm |\nB♭ | C | F | F |"
     }
   ],
   "text_chords": [
     {
       "name": "Куплет",
-      "text_chords": "Em               Bm\nВерно Твоё Слово, истинно\n  C            Em\nДля меня, Иисус\nEm               Bm\nВерно Твоё Слово, истинно\n  C            Em\nДля меня, Иисус"
+      "text_chords": "Dm               Am\nВерно Твоё Слово, истинно\n  B♭           Dm\nДля меня, Иисус\nDm               Am\nВерно Твоё Слово, истинно\n  B♭           Dm\nДля меня, Иисус"
     },
     {
       "name": "Предприпев",
-      "text_chords": "   C          D\nТвои слова исполнятся\n     C             D\nВсё то, что Ты сказал\n   C          D\nТвои слова исполнятся\n     C          D\nВсё то, что обещал"
+      "text_chords": "   B♭         C\nТвои слова исполнятся\n     B♭            C\nВсё то, что Ты сказал\n   B♭         C\nТвои слова исполнятся\n     B♭         C\nВсё то, что обещал"
     },
     {
       "name": "Припев",
-      "text_chords": "         C    D         G\nТы есть путь, истина и жизнь"
+      "text_chords": "         B♭   C         F\nТы есть путь, истина и жизнь"
     },
     {
       "name": "Мост",
-      "text_chords": "         C     D\nТобой искуплен\n        G   D/F♯  Em\nТобой усыновлён\n           C      D\nПосажен в небесах  \n           G\nНавек с Тобой\n\n      C  D\nОбогащён \n          G   D/F♯  Em\nТвоею полно - той \n        C        D\nТобой прославлен \n        G\nТвоё дитя"
+      "text_chords": "         B♭    C\nТобой искуплен\n        F   C/E   Dm\nТобой усыновлён\n           B♭     C\nПосажен в небесах  \n           F\nНавек с Тобой\n\n      B♭ C\nОбогащён \n          F   C/E   Dm\nТвоею полно - той \n        B♭       C\nТобой прославлен \n        F\nТвоё дитя"
     }
   ],
-  "key": "Em",
-  "text_notes": "Оригинал: Источник Жизни СПБ"
+  "key": "Dm",
+  "text_notes": "Оригинал: Источник Жизни СПБ",
+  "private": false,
+  "users_read": [],
+  "users_write": []
 }

@@ -1,0 +1,19 @@
+{
+  "name": "Новая песня",
+  "text": [
+    {
+      "name": "Test",
+      "text": ""
+    }
+  ],
+  "chords": [],
+  "text_chords": [],
+  "private": true,
+  "users_read": [
+    "Benjamin"
+  ],
+  "users_write": [
+    "Benjamin"
+  ],
+  "key": "B"
+}

@@ -13,20 +13,33 @@
   "chords": [
     {
       "name": "Наш Бог - Он великий Бог",
-      "chords": "D D/F♯ | G\"' A' |\nD D/F♯ | E\"' A' |\nD D/F♯ | G |\nE A | D\" G' A' |"
+      "chords": "D D/F♯ | G A' |\nD D/F♯ | E A' |\nD D/F♯ | G |\nE A | D (A) |"
     },
     {
       "name": "Он превыше",
-      "chords": "A | A | G | D |\nA | A | G | D |\n\nBm | F♯m | G | D |\nG | D/F♯ | G | A | A | "
+      "chords": "A | A | G | D |\nA | A | G | D |\n\nBm | F♯m | G | D |\nG | D/F♯ | Em | A | A | "
     }
   ],
-  "text_chords": [],
+  "text_chords": [
+    {
+      "name": "",
+      "text_chords": "D    D/F♯        G        A\n Наш Бог - Он великий Бог\nD    D/F♯        E        A\n Наш Бог - Он великий Бог\nD    D/F♯        G\n Наш Бог - Он великий Бог\n        E       A     D\nДержит нас в Своих руках"
+    },
+    {
+      "name": "",
+      "text_chords": "       A\nОн превыше самых дальних звёзд\n      G                  D\nИ намного глубже, чем моря\n      A\nДаже больше, чем Вселенная \n     G          D\nНо Ему известен я\n\n     Bm           F♯m\nВозлюбил меня Он прежде\n         G            D\nЧем весь этот мир создал\n      G          D/F♯\nКак здорово, что ты и я\n       Em         A\nЧасть плана Божьего"
+    }
+  ],
   "key": "D",
   "private": true,
   "users_read": [
-    "titovtima"
+    "titovtima",
+    "mavrinia",
+    "songs_for_kids"
   ],
   "users_write": [
-    "titovtima"
+    "titovtima",
+    "Серж",
+    "lilkatit"
   ]
 }

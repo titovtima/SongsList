@@ -20,16 +20,25 @@
       "chords": "G | D | A | D |\nG | D | A | A |\n\nG | D | A | D |\nG | D A | D | D |"
     }
   ],
-  "text_chords": [],
+  "text_chords": [
+    {
+      "name": "Куплет",
+      "text_chords": "     D          G\nБескрайняя как море\n D              A\nБольше, чем Земля\n    D         Bm\nПревыше самых дальних звёзд\n   G     A      D\nК нам любовь Твоя\n\n  D       G\nГлубже океана\n D           A\nШире, чем поля\n  D            Bm\nОтец, о как безмерна\n   G     A      D\nК нам любовь Твоя "
+    },
+    {
+      "name": "Припев",
+      "text_chords": "                G     D\nМы Тебе поём: благодарим\n  A     D\nБлагодарим\n  G     D            A\nБлагодарим Тебя, Господь\n\n                G     D\nМы Тебе поём: благодарим\n  A     D\nБлагодарим\n  G     D     A      D\nБлагодарим Тебя, Господь"
+    }
+  ],
   "key": "D",
   "private": true,
   "users_read": [
-    "titovtima",
     "mavrinia",
     "songs_for_kids"
   ],
   "users_write": [
     "titovtima",
-    "Серж"
+    "Серж",
+    "lilkatit"
   ]
 }

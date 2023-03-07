@@ -21,11 +21,11 @@
   "chords": [
     {
       "name": "Наш Искупитель",
-      "chords": "B♭' | A B♭' | A B♭' |\nA B♭' | A |"
+      "chords": "B♭' | A B♭' | A B♭' |\nA | A |"
     },
     {
       "name": "Большая радость",
-      "chords": "Dm | Gm | Gm A | Dm Dm/C |\nB♭ | A | Gm A | A |\n\nDm | Gm | Gm A | Dm Dm/C |\nB♭ | A | Gm A | Dm |"
+      "chords": "Dm | Gm | Gm A | Dm Dm/C |\nB♭ | A | Gm A | Dm |\n\nDm | Gm | Gm A | Dm Dm/C |\nB♭ | A | Gm A | Dm |"
     },
     {
       "name": "Господь царствует",
@@ -33,17 +33,17 @@
     },
     {
       "name": "Ла-ла-ла",
-      "chords": "A | A Dm | Gm C | F Dm |\nGm | Gm Dm | B♭ | A |"
+      "chords": "A | A Dm | Gm C | F |\nGm | Gm Dm | B♭ | A |"
     }
   ],
   "text_chords": [
     {
       "name": "",
-      "text_chords": "B♭ A            B♭    \n     Наш Искупитель -\n A               B♭\nБог, Владыка вечный\n A                  B♭ A        (B♭)\nЦарь Вселенной, Всемо-гущий, верный"
+      "text_chords": "B♭ A            B♭    \n     Наш Искупитель -\n A               B♭\nБог, Владыка вечный\n A                    A        (B♭)\nЦарь Вселенной, Всемогущий, верный"
     },
     {
       "name": "",
-      "text_chords": "Dm                Gm\n Большая радость пред лицом Его\n                  A       Dm  Dm/C\nМы будем славить Бога своего\nB♭                A\n Он заключил со мною Свой завет\n Gm         A\nВсемогущий Бог, Он наш Отец \n\nDm                Gm\n Большая радость пред лицом Его\n                  A       Dm  Dm/C\nМы будем славить Бога своего\nB♭                A\n Он заключил со мною Свой завет\n Gm         A           Dm\nВсемогущий Бог, Он наш Отец"
+      "text_chords": "Dm                Gm\n Большая радость пред лицом Его\n                  A       Dm  Dm/C\nМы будем славить Бога своего\nB♭                A\n Он заключил со мною Свой завет\n Gm         A           Dm\nВсемогущий Бог, Он наш Отец \n\nDm                Gm\n Большая радость пред лицом Его\n                  A       Dm  Dm/C\nМы будем славить Бога своего\nB♭                A\n Он заключил со мною Свой завет\n Gm         A           Dm\nВсемогущий Бог, Он наш Отец"
     },
     {
       "name": "",
@@ -51,8 +51,11 @@
     },
     {
       "name": "",
-      "text_chords": "A  | A  Dm  | Gm  C | F Dm |\nЛа-ла-ла\nGm  | Gm  Dm  | B♭ | A |\nЛа-ла-ла "
+      "text_chords": "A  | A  Dm  | Gm  C | F |\nЛа-ла-ла\nGm  | Gm  Dm  | B♭ | A |\nЛа-ла-ла "
     }
   ],
-  "key": "Dm"
+  "key": "Dm",
+  "private": false,
+  "users_read": [],
+  "users_write": []
 }
