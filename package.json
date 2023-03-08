@@ -10,7 +10,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.20.2",
     "express": "^4.17.1",
-    "fs-extra": "^10.1.0"
+    "fs-extra": "^10.1.0",
+    "node": "^10.19.0",
+    "pg": "^8.10.0"
   }
 }

@@ -8,15 +8,123 @@ const errors_log_file = __dirname + '/errors_log.txt';
 const host = 'localhost';
 const http_port = 3000;
 
-const bodyParser = require('body-parser');
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use("/", express.static(__dirname));
+const { Pool } = require('pg');
+
+const dbPool = new Pool({
+    host: 'localhost',
+    user: 'songsserver',
+    password: 'Praise_the_Lord',
+    database: 'songs',
+    port: '5432',
+});
+
+class RSAEncoder {
+    constructor() {
+        this.n = 2472942968189431706898462913067925658209124041544162680908145890301107704237n;
+        this.e = 5281668766765633818307894358032591567n;
+    }
+
+    quickPow(a, p, mod) {
+        if (p === 0n) return 1n;
+        if (p === 1n) return a % mod;
+
+        let a2 = this.quickPow(a % mod, p/2n, mod);
+        if (p % 2n === 0n) {
+            return a2*a2 % mod;
+        } else {
+            return (a2*a2 % mod) * a % mod;
+        }
+    }
+
+    encode(string) {
+        let num = 0n;
+        string.split('').forEach(char => {
+            num *= BigInt(256);
+            num += BigInt(char.charCodeAt(0));
+            num %= this.n;
+        });
+
+        return this.quickPow(num, this.e, this.n).toString();
+    }
+}
+
+let encoder = new RSAEncoder();
+
+let usersList = {};
+
+dbPool.query('select login, password from users;')
+    .then(res => {
+        for (let i = 0; i < res.rows.length; i++) {
+            usersList[res.rows[i].login] = {
+                login: res.rows[i].login,
+                password: res.rows[i].password
+            }
+        }
+        console.log('Connected to db');
+    })
+    .catch(err => {
+        console.log('Connection to db failed', err);
+        stop();
+    });
+
+async function checkAuth(password, login) {
+    let encodedPassword = encoder.encode(password)
+    return usersList[login] && usersList[login].password === encodedPassword;
+}
+
+async function changeUserPassword(login, newPassword) {
+    let encodedPassword = encoder.encode(newPassword);
+    if (!usersList || !usersList[login]) return false;
+    try {
+        await dbPool.query('update users set password=$1 where login=$2;', [encodedPassword, login]);
+    } catch (err) {
+        return false;
+    }
+    usersList[login].password = encodedPassword;
+    delete usersList[login].passwordWasntChanged;
+    let newFileData = { 'users': usersList };
+    fs.writeFile(users_data_path + 'users.json', JSON.stringify(newFileData), err => {
+        if (err) {
+            let time = new Date();
+            fs.appendFile(errors_log_file, 'Date: ' + time.toString() + '\n' + err + '\n\n', _ => {});
+        }
+    });
+}
+
+async function createNewUser(login, password) {
+    if (usersList.hasOwnProperty(login))
+        return 400;
+    let encodedPassword = encoder.encode(password);
+    // try {
+        await dbPool.query('insert into users (login, password) values ($1, $2);', [login, password]);
+    // } catch (err) {
+    //     return 400;
+    // }
+    usersList[login] = {
+        login: login,
+        password: encodedPassword
+    }
+    let newFileData = {
+        'users': usersList
+    };
+    fs.writeFile(users_data_path + 'users.json', JSON.stringify(newFileData), err => {
+        if (err) {
+            let time = new Date();
+            fs.appendFile(errors_log_file, 'Date: ' + time.toString() + '\n' + err + '\n\n', _ => {});
+        }
+    });
+    return 200;
+}
 
 function isMobile(req) {
     let userAgent = req.headers["user-agent"];
     return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
 }
+
+const bodyParser = require('body-parser');
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use("/", express.static(__dirname));
 
 app.get("/transpose", (req, res) => {
     res.sendFile(__dirname + '/transpose/main.html');
@@ -82,122 +190,38 @@ app.get('/guess_interval', (req, res) => {
     res.sendFile(__dirname + '/guess_interval/index.html');
 });
 
-app.use('/auth/login', (req, res) => {
+app.use('/auth/login', async (req, res) => {
     try {
         let login = req.body.login;
         let password = req.body.password;
-        let userData = checkAuth(password, login);
-        if (userData) {
-            userData.login = login;
-            res.json(userData);
+        if (await checkAuth(password, login)) {
+            res.sendStatus(200);
         } else {
             let oldEncodedPassword = req.body.oldEncodedPassword;
-            userData = checkAuth(oldEncodedPassword, login);
-            if (userData) {
-                changeUserPassword(login, encoder.encode(password));
-                userData.login = login;
-                res.json(userData);
+            if (await checkAuth(oldEncodedPassword, login)) {
+                await changeUserPassword(login, password);
+                res.sendStatus(200);
             } else {
                 res.sendStatus(403);
             }
         }
     } catch (e) {
         let time = new Date();
-        fs.appendFile(errors_log_file, 'Date: ' + time.toString() + '\n' + e.toString() + '\n\n', err => {});
+        fs.appendFile(errors_log_file, 'Date: ' + time.toString() + '\n' + e.toString() + '\n\n', _ => {});
         res.sendStatus(500);
     }
 });
 
-function changeUserPassword(login, newPassword) {
-    let fileData = JSON.parse(fs.readFileSync(users_data_path + 'users.json','utf-8'));
-    let usersList = fileData.users;
-    if (!usersList[login])
-        return;
-    usersList[login].password = newPassword;
-    delete usersList[login].passwordWasntChanged;
-    let newFileData = { 'users': usersList };
-    fs.writeFile(users_data_path + 'users.json', JSON.stringify(newFileData), err => {
-        if (err) {
-            let time = new Date();
-            fs.appendFile(errors_log_file, 'Date: ' + time.toString() + '\n' + err + '\n\n', e => {});
-        }
-    })
-}
-
-app.use('/auth/reg', (req, res) => {
+app.use('/auth/reg', async (req, res) => {
     try {
-        let user = req.body.user;
+        let login = req.body.login;
         let password = req.body.password;
-        let encodedPassword = encoder.encode(password)
-        let fileData = JSON.parse(fs.readFileSync(users_data_path + 'users.json', 'utf-8'));
-        let usersList = fileData.users;
-        if (usersList.hasOwnProperty(user))
-            res.sendStatus(403);
-        else {
-            usersList[user] = {
-                'password': encodedPassword
-            }
-            let newFileData = {
-                'users': usersList
-            };
-            fs.writeFile(users_data_path + 'users.json', JSON.stringify(newFileData), err => {
-                if (err) {
-                    let time = new Date();
-                    fs.appendFile(errors_log_file, 'Date: ' + time.toString() + '\n' + err + '\n\n', e => {});
-                    res.sendStatus(500);
-                } else
-                    res.sendStatus(200);
-            })
-        }
+        res.sendStatus(await createNewUser(login, password));
     } catch (e) {
         let time = new Date();
-        fs.appendFile(errors_log_file, 'Date: ' + time.toString() + '\n' + e + '\n\n', err => {});
+        fs.appendFile(errors_log_file, 'Date: ' + time.toString() + '\n' + e + '\n\n', _ => {});
     }
 });
-
-function checkAuth(password, login) {
-    let fileData = JSON.parse(fs.readFileSync(users_data_path + 'users.json','utf-8'));
-    let usersList = fileData.users;
-    let encodedPassword = encoder.encode(password)
-    if (usersList[login] && usersList[login].password === encodedPassword) {
-        let user = usersList[login];
-        user.password = password;
-        return user;
-    }
-    return false;
-}
-
-class RSAEncoder {
-    constructor() {
-        this.n = 2472942968189431706898462913067925658209124041544162680908145890301107704237n;
-        this.e = 5281668766765633818307894358032591567n;
-    }
-
-    quickPow(a, p, mod) {
-        if (p === 0n) return 1n;
-        if (p === 1n) return a % mod;
-
-        let a2 = this.quickPow(a % mod, p/2n, mod);
-        if (p % 2n === 0n) {
-            return a2*a2 % mod;
-        } else {
-            return (a2*a2 % mod) * a % mod;
-        }
-    }
-
-    encode(string) {
-        let num = 0n;
-        string.split('').forEach(char => {
-            num *= BigInt(256);
-            num += BigInt(char.charCodeAt(0));
-            num %= this.n;
-        });
-
-        return this.quickPow(num, this.e, this.n).toString();
-    }
-}
-
-let encoder = new RSAEncoder();
 
 let songs_list;
 let max_song_id = 1;
@@ -227,7 +251,7 @@ app.post('/song/:songId', (req, res) => {
         fs.appendFile('songs_changes.txt', 'Get song from IP: ' + req.ip + '\n' +
             'Date: ' + time.toString() + '\n' +
             'Song id: ' + songId + '\n' +
-            'Song data:\n' + JSON.stringify(song_data) + '\n\n', err => {
+            'Song data:\n' + JSON.stringify(song_data) + '\n\n', _ => {
         });
 
         fs.writeFile(songs_data_path + songId + '.json', JSON.stringify(song_data), err => {
@@ -244,7 +268,7 @@ app.post('/song/:songId', (req, res) => {
         });
     } catch (e) {
         let time = new Date();
-        fs.appendFile(errors_log_file, 'Date: ' + time.toString() + '\n' + e + '\n\n', err => {});
+        fs.appendFile(errors_log_file, 'Date: ' + time.toString() + '\n' + e + '\n\n', _ => {});
     }
 });
 
@@ -294,7 +318,7 @@ app.post('/songs_list/:songsListId', (req, res) => {
         });
     } catch (e) {
         let time = new Date();
-        fs.appendFile(errors_log_file, 'Date: ' + time.toString() + '\n' + e + '\n\n', err => {});
+        fs.appendFile(errors_log_file, 'Date: ' + time.toString() + '\n' + e + '\n\n', _ => {});
     }
 });
 

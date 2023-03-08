@@ -64,8 +64,8 @@ class User {
                 "Content-Type": "application/json"
             },
             "body": JSON.stringify({
-                "password": password,
-                "user": login
+                "login": login,
+                "password": password
             })
         });
         let response = await p;
@@ -97,9 +97,10 @@ class User {
         });
         let response = await p;
         if (response.ok) {
-            let userData = await response.json();
-            userData.password = password;
-            this.currentUser = userData;
+            this.currentUser = {
+                login: login,
+                password: password
+            };
             // if (updateCookie) {
                 setUserCookie();
             // }
