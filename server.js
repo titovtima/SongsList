@@ -13,7 +13,7 @@ const { Pool } = require('pg');
 const dbPool = new Pool({
     host: 'localhost',
     user: 'songsserver',
-    password: 'Praise_the_Lord',
+    password: 'secret_password',
     database: 'songs',
     port: '5432',
 });
