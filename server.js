@@ -64,7 +64,7 @@ dbPool.query('select login, password from users;')
     })
     .catch(err => {
         console.log('Connection to db failed', err);
-        stop();
+        process.exit(1);
     });
 
 async function checkAuth(password, login) {
@@ -95,11 +95,11 @@ async function createNewUser(login, password) {
     if (usersList.hasOwnProperty(login))
         return 400;
     let encodedPassword = encoder.encode(password);
-    // try {
+    try {
         await dbPool.query('insert into users (login, password) values ($1, $2);', [login, password]);
-    // } catch (err) {
-    //     return 400;
-    // }
+    } catch (err) {
+        return 400;
+    }
     usersList[login] = {
         login: login,
         password: encodedPassword
