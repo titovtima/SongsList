@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const fs = require('fs');
 const songs_data_path = __dirname + '/songs_data/';
-const users_data_path = __dirname + '/users/';
+const users_data_file = __dirname + '/users.json';
 const errors_log_file = __dirname + '/errors_log.txt';
 
 const host = 'localhost';
@@ -83,7 +83,7 @@ async function changeUserPassword(login, newPassword) {
     usersList[login].password = encodedPassword;
     delete usersList[login].passwordWasntChanged;
     let newFileData = { 'users': usersList };
-    fs.writeFile(users_data_path + 'users.json', JSON.stringify(newFileData), err => {
+    fs.writeFile(users_data_file, JSON.stringify(newFileData), err => {
         if (err) {
             let time = new Date();
             fs.appendFile(errors_log_file, 'Date: ' + time.toString() + '\n' + err + '\n\n', _ => {});
@@ -96,7 +96,7 @@ async function createNewUser(login, password) {
         return 400;
     let encodedPassword = encoder.encode(password);
     try {
-        await dbPool.query('insert into users (login, password) values ($1, $2);', [login, password]);
+        await dbPool.query('insert into users (login, password) values ($1, $2);', [login, encodedPassword]);
     } catch (err) {
         return 400;
     }
@@ -107,7 +107,7 @@ async function createNewUser(login, password) {
     let newFileData = {
         'users': usersList
     };
-    fs.writeFile(users_data_path + 'users.json', JSON.stringify(newFileData), err => {
+    fs.writeFile(users_data_file, JSON.stringify(newFileData), err => {
         if (err) {
             let time = new Date();
             fs.appendFile(errors_log_file, 'Date: ' + time.toString() + '\n' + err + '\n\n', _ => {});
@@ -124,24 +124,25 @@ function isMobile(req) {
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use("/", express.static(__dirname));
+app.use(express.static(__dirname + '/static'));
+app.use("/songs_data/", express.static(songs_data_path));
 
 app.get("/transpose", (req, res) => {
-    res.sendFile(__dirname + '/transpose/main.html');
+    res.sendFile(__dirname + '/static/transpose/main.html');
 });
 
 app.get('/songs', (req, res) => {
     if (isMobile(req))
-        res.sendFile(__dirname + '/songs/songs-mobile.html');
+        res.sendFile(__dirname + '/static/songs/songs-mobile.html');
     else
-        res.sendFile(__dirname + '/songs/songs.html');
+        res.sendFile(__dirname + '/static/songs/songs.html');
 });
 
 app.get('/songs_list/:songListId', (req, res) => {
     if (isMobile(req))
-        res.sendFile(__dirname + '/songs_list/songsList-mobile.html');
+        res.sendFile(__dirname + '/static/songs_list/songsList-mobile.html');
     else
-        res.sendFile(__dirname + '/songs_list/songsList.html');
+        res.sendFile(__dirname + '/static/songs_list/songsList.html');
 });
 
 app.get('/song', (req, res) => {
@@ -157,14 +158,14 @@ app.get('/song', (req, res) => {
 
 app.get('/song/:songId', (req, res) => {
     if (isMobile(req))
-        res.sendFile(__dirname + '/song/song-mobile.html');
+        res.sendFile(__dirname + '/static/song/song-mobile.html');
     else
-        res.sendFile(__dirname + '/song/song.html');
+        res.sendFile(__dirname + '/static/song/song.html');
 });
 
 app.get('/settings', (req, res) => {
     if (isMobile(req))
-        res.sendFile(__dirname + '/settings_page/settingsPage-mobile.html');
+        res.sendFile(__dirname + '/static/settings_page/settingsPage-mobile.html');
     else
         res.sendStatus(404);
         // res.sendFile(__dirname + '/settings_page/settingsPage.html');
@@ -172,7 +173,7 @@ app.get('/settings', (req, res) => {
 
 app.get('/user', (req, res) => {
     if (isMobile(req))
-        res.sendFile(__dirname + '/user_page/userPage-mobile.html');
+        res.sendFile(__dirname + '/static/user_page/userPage-mobile.html');
     else
         res.sendStatus(404);
         // res.sendFile(__dirname + '/user_page/userPage.html');
@@ -180,14 +181,14 @@ app.get('/user', (req, res) => {
 
 app.get('/songs_lists_list', (req, res) => {
     if (isMobile(req))
-        res.sendFile(__dirname + '/songs_lists_list/songsListsList-mobile.html');
+        res.sendFile(__dirname + '/static/songs_lists_list/songsListsList-mobile.html');
     else
         res.sendStatus(404);
         // res.sendFile(__dirname + '/songs_lists_list/songsListsList.html');
 });
 
 app.get('/guess_interval', (req, res) => {
-    res.sendFile(__dirname + '/guess_interval/index.html');
+    res.sendFile(__dirname + '/static/guess_interval/index.html');
 });
 
 app.use('/auth/login', async (req, res) => {
