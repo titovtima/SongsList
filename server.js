@@ -67,7 +67,7 @@ dbPool.query('select login, password from users;')
         process.exit(1);
     });
 
-async function checkAuth(password, login) {
+async function checkAuth(login, password) {
     let encodedPassword = encoder.encode(password)
     return usersList[login] && usersList[login].password === encodedPassword;
 }
@@ -191,29 +191,39 @@ app.get('/guess_interval', (req, res) => {
     res.sendFile(__dirname + '/static/guess_interval/index.html');
 });
 
-app.use('/auth/login', async (req, res) => {
+app.get('/auth/login', async (req, res) => {
     try {
-        let login = req.body.login;
-        let password = req.body.password;
-        if (await checkAuth(password, login)) {
+        let authString = req.headers.authorization.slice(6);
+        let decodedAuthString = atob(authString).split(':');
+        let login = decodedAuthString[0];
+        let password = decodedAuthString[1];
+        if (await checkAuth(login, password)) {
             res.sendStatus(200);
         } else {
-            let oldEncodedPassword = req.body.oldEncodedPassword;
-            if (await checkAuth(oldEncodedPassword, login)) {
-                await changeUserPassword(login, password);
-                res.sendStatus(200);
-            } else {
-                res.sendStatus(403);
-            }
+            res.sendStatus(401);
         }
     } catch (e) {
         let time = new Date();
         fs.appendFile(errors_log_file, 'Date: ' + time.toString() + '\n' + e.toString() + '\n\n', _ => {});
-        res.sendStatus(500);
+        res.sendStatus(401);
     }
 });
 
-app.use('/auth/reg', async (req, res) => {
+app.post('/auth/changePassword', async (req, res) => {
+    let authString = req.headers.authorization.slice(6);
+    let decodedAuthString = atob(authString).split(':');
+    let login = decodedAuthString[0];
+    let password = decodedAuthString[1];
+    if (await checkAuth(login, password)) {
+        if (req.body.newPassword)
+            await changeUserPassword(login, password);
+        res.sendStatus(200);
+    } else {
+        res.sendStatus(401);
+    }
+});
+
+app.post('/auth/reg', async (req, res) => {
     try {
         let login = req.body.login;
         let password = req.body.password;
@@ -284,7 +294,7 @@ fs.readFile(songs_data_path + 'songs_lists.json', 'utf-8', (err, data) => {
 app.post('/songs_list/:songsListId', (req, res) => {
     try {
         let reqData = req.body;
-        if (!checkAuth(reqData.password, reqData.user)) {
+        if (!checkAuth(reqData.user, reqData.password)) {
             res.sendStatus(403);
             return;
         }

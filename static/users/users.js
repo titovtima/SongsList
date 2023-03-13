@@ -1,10 +1,21 @@
 // document.cookie = "admin_password=qq; max-age=-1; path=/; samesite=lax";
+// document.cookie = "authString=qq; max-age=-1; path=/; samesite=lax";
+// document.cookie = 'user={"login":"titovtima","password":"titovtima"}; path=/; samesite=lax'
+console.log(findCookies());
+
+const loginRegex = /^[0-9a-zа-я_.@-]+$/i;
+const passwordRegex = /^[0-9a-zа-я_.-]{6,}$/i;
 
 class User {
     static currentUser = null;
     static isAdmin = false;
 
     static async setUserFromCookie() {
+        let authStringCookie = findCookies().authString;
+        if (authStringCookie && await this.checkAuthString(authStringCookie)) {
+            userButton.style.backgroundImage = 'url("/assets/user_green.png")';
+            return;
+        }
         let userCookie = findCookies().user;
         let userData;
         try {
@@ -46,12 +57,16 @@ class User {
         let passwordInput = document.querySelector('#input_new_user_password');
         let repeatPasswordInput = document.querySelector('#input_new_user_repeat_password');
         let login = loginInput.value;
-        if (login.includes(' ') || login.includes(',')) {
-            alert('Логин не должен содержать пробелов и запятых');
+        if (!login.match(loginRegex)) {
+            alert('Логин может содержать только символы 0-9a-zа-я_.@-');
             return false;
         }
         let password = passwordInput.value;
         let repeatPassword = repeatPasswordInput.value;
+        if (!password.match(passwordRegex)) {
+            alert('Пароль должен содержать только символы 0-9a-zа-я_.- и быть длиннее 5 символов');
+            return false;
+        }
         if (password !== repeatPassword) {
             alert('Пароли не совпадают');
             passwordInput.value = '';
@@ -71,8 +86,9 @@ class User {
         let response = await p;
         if (response.ok) {
             this.currentUser = {
-                'login': login,
-                'password': password
+                login: login,
+                password: password,
+                authString: btoa(login + ':' + password)
             };
             setUserCookie();
             return this.currentUser;
@@ -83,23 +99,27 @@ class User {
     }
 
     static async checkUserPassword(login, password, updateCookie = false) {
+        let authString = btoa(login + ':' + password);
+        if (await User.checkAuthString(authString)) {
+            return true;
+        }
         let encodedPassword = encoder.encode(password);
-        let p = fetch('/auth/login', {
+        let oldPwdAuthString = btoa(login + ':' + encodedPassword);
+        let p = fetch('/auth/changePassword', {
             "method": "POST",
             "headers": {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Authorization": "Basic " + oldPwdAuthString
             },
             "body": JSON.stringify({
-                "login": login,
-                "password": password,
-                "oldEncodedPassword": encodedPassword
+                "newPassword": password
             })
         });
         let response = await p;
         if (response.ok) {
             this.currentUser = {
                 login: login,
-                password: password
+                authString: authString
             };
             // if (updateCookie) {
                 setUserCookie();
@@ -107,6 +127,31 @@ class User {
             return true;
         }
         return false;
+    }
+
+    static async checkAuthString(authString, updateCookie = true) {
+        let p = fetch('/auth/login', {
+            "method": "GET",
+            "headers": {
+                "Content-Type": "application/json",
+                "Authorization": "Basic " + authString
+            }
+        });
+        let response = await p;
+        if (response.ok) {
+            let decodedString = atob(authString).split(':');
+            let login = decodedString[0];
+            this.currentUser = {
+                login: login,
+                authString: authString
+            }
+            if (updateCookie) {
+                setUserCookie();
+            }
+            return true;
+        } else {
+            return false;
+        }
     }
 
     static setAdmin() {
@@ -225,6 +270,7 @@ function setUserWindowView() {
             visitHistory.songs_list = null;
             setVisitHistoryCookie();
             document.cookie = 'user=null; max-age=-1; path=/; samesite=lax';
+            document.cookie = 'authString=null; max-age=-1; path=/; samesite=lax';
             userButton.style.backgroundImage = 'url("/assets/user.png")';
             userSection.style.display = 'none';
             showLogInWindow();
@@ -367,7 +413,8 @@ function exitPasswordWindow() {
 }
 
 function setUserCookie() {
-    document.cookie = `user=${JSON.stringify(User.currentUser)}; path=/; samesite=lax`;
+    document.cookie = `authString=${User.currentUser.authString}; path=/; samesite=lax`;
+    document.cookie = 'user=Me; path=/; samesite=lax; max-age=-1';
 }
 
 let userCookiePromise = User.setUserFromCookie()
