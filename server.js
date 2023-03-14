@@ -126,6 +126,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/static'));
 app.use("/songs_data/", express.static(songs_data_path));
+app.use("/songs_data/", express.static(songs_data_path + 'song/'));
 
 app.get("/transpose", (req, res) => {
     res.sendFile(__dirname + '/static/transpose/main.html');
