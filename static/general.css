@@ -193,6 +193,10 @@ a {
     white-space: nowrap;
 }
 
+.input_password {
+    -webkit-text-security: disc;
+}
+
 @media (prefers-color-scheme: dark) {
     * {
         color: #dff;
