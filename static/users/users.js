@@ -88,7 +88,7 @@ class User {
             this.currentUser = {
                 login: login,
                 password: password,
-                authString: btoa(login + ':' + password)
+                authString: btoa(encodeURI(login + ':' + password))
             };
             setUserCookie();
             return this.currentUser;
@@ -99,12 +99,12 @@ class User {
     }
 
     static async checkUserPassword(login, password, updateCookie = false) {
-        let authString = btoa(login + ':' + password);
+        let authString = btoa(encodeURI(login + ':' + password));
         if (await User.checkAuthString(authString)) {
             return true;
         }
         let encodedPassword = encoder.encode(password);
-        let oldPwdAuthString = btoa(login + ':' + encodedPassword);
+        let oldPwdAuthString = btoa(encodeURI(login + ':' + encodedPassword));
         let p = fetch('/auth/changePassword', {
             "method": "POST",
             "headers": {
@@ -139,7 +139,7 @@ class User {
         });
         let response = await p;
         if (response.ok) {
-            let decodedString = atob(authString).split(':');
+            let decodedString = decodeURI(atob(authString)).split(':');
             let login = decodedString[0];
             this.currentUser = {
                 login: login,

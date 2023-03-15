@@ -195,7 +195,7 @@ app.get('/guess_interval', (req, res) => {
 app.get('/auth/login', async (req, res) => {
     try {
         let authString = req.headers.authorization.slice(6);
-        let decodedAuthString = atob(authString).split(':');
+        let decodedAuthString = decodeURI(atob(authString)).split(':');
         let login = decodedAuthString[0];
         let password = decodedAuthString[1];
         if (await checkAuth(login, password)) {
@@ -212,7 +212,7 @@ app.get('/auth/login', async (req, res) => {
 
 app.post('/auth/changePassword', async (req, res) => {
     let authString = req.headers.authorization.slice(6);
-    let decodedAuthString = atob(authString).split(':');
+    let decodedAuthString = decodeURI(atob(authString)).split(':');
     let login = decodedAuthString[0];
     let password = decodedAuthString[1];
     if (await checkAuth(login, password)) {
