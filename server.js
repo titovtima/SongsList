@@ -127,7 +127,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/static'));
 app.use("/songs_data/", express.static(songs_data_path));
-app.use("/songs_data/", express.static(songs_data_path + 'song/'));
 
 app.get("/transpose", (req, res) => {
     res.sendFile(__dirname + '/static/transpose/main.html');
@@ -267,7 +266,7 @@ app.post('/song/:songId', (req, res) => {
             'Song data:\n' + JSON.stringify(song_data) + '\n\n', _ => {
         });
 
-        fs.writeFile(songs_data_path + songId + '.json', JSON.stringify(song_data), err => {
+        fs.writeFile(songs_data_path + 'song/' + songId + '.json', JSON.stringify(song_data), err => {
             if (err) res.sendStatus(500);
             fs.readFile(songs_data_path + 'songs.json', 'utf-8', (err1, data) => {
                 let songs_list = JSON.parse(data);

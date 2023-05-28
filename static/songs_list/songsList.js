@@ -141,7 +141,7 @@ async function loadSongsTexts() {
 }
 
 async function loadSongText(songId) {
-    fetch(SONGS_DATA_PATH + songId + '.json')
+    fetch(SONGS_DATA_PATH + 'song/' + songId + '.json')
         .then(response => response.json())
         .then(result => {
             let text_parts = result.text;
@@ -300,7 +300,7 @@ addSongById.onclick = () => {
         alert('Песня уже есть в списке');
         return;
     }
-    fetch(SONGS_DATA_PATH + songId + '.json')
+    fetch(SONGS_DATA_PATH + 'song/' + songId + '.json')
         .then(response => {
             if (response.ok) {
                 return response.json();
@@ -321,7 +321,7 @@ addSongById.onclick = () => {
 
 async function addSongReadersAndWriters(songId, songData = null) {
     if (!songData)
-        songData = await fetch(SONGS_DATA_PATH + songId + '.json')
+        songData = await fetch(SONGS_DATA_PATH + 'song/' + songId + '.json')
             .then(response => response.json())
     if (!songData.private)
         return;

@@ -977,7 +977,7 @@ function checkEditPermission() {
     }
 }
 
-let loadSongDataPromise = fetch(SONGS_DATA_PATH + songId + '.json')
+let loadSongDataPromise = fetch(SONGS_DATA_PATH + 'song/' + songId + '.json')
 Promise.all([loadSongDataPromise, userCookiePromise])
     .then(response => {
         if (response[0].ok) return response[0].json()

@@ -9,7 +9,7 @@ Promise.all([loadAllSongs, userCookiePromise]).then(response => {
         let listToShow = response[0];
         let loadSongsPromises = [];
         for (let id in listToShow) {
-            let promise = fetch(SONGS_DATA_PATH + id + '.json')
+            let promise = fetch(SONGS_DATA_PATH + 'song/' + id + '.json')
                 .then(response => response.json())
                 .then(result => {
                     if (result.private
