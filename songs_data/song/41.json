@@ -13,7 +13,7 @@
   "chords": [
     {
       "name": "Куплет",
-      "chords": "Dm | Dm | Gm | Gm A |\nDm | Dm | Gm | Gm A |\n\nGm | C | Gm | A | A |"
+      "chords": "Dm | Dm | Gm | Gm A |\nDm | Dm | Gm | Gm A |\n\nGm | C | Gm | A | A |"
     },
     {
       "name": "Припев",
@@ -31,5 +31,8 @@
     }
   ],
   "key": "Dm",
-  "text_notes": "Источник: Hillsong Worship - Faith (Album - For This Cause, 2000)\nhttps://youtu.be/GOr46CLT2-Q"
+  "text_notes": "Источник: Hillsong Worship - Faith (Album - For This Cause, 2000)\nhttps://youtu.be/GOr46CLT2-Q",
+  "private": false,
+  "users_read": [],
+  "users_write": []
 }

@@ -1,0 +1,36 @@
+{
+  "name": "Радуюсь в Боге я",
+  "text": [
+    {
+      "name": "",
+      "text": "Радуюсь в Боге\nРадуюсь в Боге я\nОн - моя песня\nРадуюсь я всегда \nИ небу я улыбнусь\nИ пусть не приходит грусть\nЯ знаю, в сердце моём\nЖивёт Иисус"
+    },
+    {
+      "name": "",
+      "text": "Свет Твой озаряет путь\nСвет Твой прогоняет тьму\nЗнаю, Ты меня ведёшь \nК жизни вечной, к водам тихим"
+    }
+  ],
+  "chords": [
+    {
+      "name": "Радуюсь в Боге",
+      "chords": "Dm | Dm | Dm | Dm |\nGm | Gm | Dm | Dm |\nB♭ | A | Dm | Dm |\nB♭ | A | Dm | Dm |"
+    },
+    {
+      "name": "Свет Твой озаряет путь",
+      "chords": "F | F | A/E | A/E |\nDm | Dm | B♭ | B♭ |\nF | F | E7 | E7 |\nDm | Dm | Asus4 | A |"
+    }
+  ],
+  "text_chords": [],
+  "key": "Dm",
+  "private": true,
+  "users_read": [
+    "mavrinia",
+    "songs_for_kids"
+  ],
+  "users_write": [
+    "titovtima",
+    "Серж",
+    "lilkatit"
+  ],
+  "text_notes": "Источник: https://vk.com/video-53167233_456240037"
+}

@@ -1,0 +1,38 @@
+{
+  "name": "Вся честь, вся слава",
+  "text": [
+    {
+      "name": "",
+      "text": "Вся честь, вся слава\nВся сила - Тебе"
+    },
+    {
+      "name": "",
+      "text": "Отче Святой, Тебе хвала\nИисус - наш Спаситель\nДух Святой, сойди на нас\nДух Святой, сойди на нас\nДух Святой, сойди на нас\nОгнём, огнём"
+    }
+  ],
+  "chords": [
+    {
+      "name": "Вся честь",
+      "chords": "Dm | B♭ |\nGm Am' | Dm Am' |"
+    },
+    {
+      "name": "Отче Святой",
+      "chords": "C | Dm |\nC C/E | F A |\nB♭ | C/B♭ |\nB♭ | C/B♭ |\nGm Gm/F | C/E C |\nDm | C/D |\nDm | C/D |"
+    }
+  ],
+  "text_chords": [
+    {
+      "name": "",
+      "text_chords": "Am  Dm          B♭\nВся честь, вся слава\n    Gm     Am  Dm\nВся сила - Те-бе"
+    },
+    {
+      "name": "",
+      "text_chords": "       C       Dm\nОтче Святой, Тебе хвала\n   C            F  A\nИисус - наш Спаси-тель\n        Bb     C/Bb\nДух Святой, сойди на нас\n        Bb     C/Bb\nДух Святой, сойди на нас\n       Gm  Gm/F   C/E    C\nДух Святой,    сойди на нас\n  Dm  C/D   Dm  C/D\nОгнём,    огнём"
+    }
+  ],
+  "key": "Dm",
+  "text_notes": "Источник:  Ron Kenoly - All honor\nhttps://youtu.be/aE_bMzMH_1w",
+  "private": false,
+  "users_read": [],
+  "users_write": []
+}

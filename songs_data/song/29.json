@@ -21,7 +21,7 @@
     },
     {
       "name": "Припев и мост",
-      "chords": "B♭ F/A | B♭ C | Dm | Am |"
+      "chords": "B♭ F/A' | B♭ C' | Dm | Am |"
     }
   ],
   "text_chords": [
@@ -39,5 +39,8 @@
     }
   ],
   "key": "Dm",
-  "text_notes": "Источник: Jesus Image - Yeshua\nhttps://youtu.be/ivUb1K0B0zE"
+  "text_notes": "Источник: Jesus Image - Yeshua\nhttps://youtu.be/ivUb1K0B0zE\n\nТемп: 137",
+  "private": false,
+  "users_read": [],
+  "users_write": []
 }
