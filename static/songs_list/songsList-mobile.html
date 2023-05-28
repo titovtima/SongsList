@@ -32,21 +32,21 @@
 <div id="over_sidebar">
     <header>
         <h1 id="list_name" class="list_name"></h1>
-        <input type="text" id="input_list_name" class="list_name">
+        <form><input type="text" id="input_list_name" class="list_name"></form>
     </header>
     <div id="users_lists_container">
         <div><label for="users_read_input">Читатели:</label> <input type="text" id="users_read_input"></div>
         <div><label for="users_write_input">Редакторы:</label> <input type="text" id="users_write_input"></div>
     </div>
     <div id="songs_list_display">
-        <input type="text" id="song_search" class="song_search" placeholder="Тексты загружаются">
+        <form><input type="text" id="song_search" class="song_search" placeholder="Тексты загружаются"></form>
         <div class="scroll" id="song_list_scroll">
             <div class="list_of_contents" id="songs_list">
             </div>
 
             <div id="add_song_by_id_container">
                 <i class="pointer_over dark_cyan" id="add_song_by_id">+ добавить песню с id </i>
-                <input type="text" id="song_id_to_add">
+                <form><input type="text" id="song_id_to_add"></form>
             </div>
         </div>
     </div>
