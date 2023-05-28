@@ -52,12 +52,13 @@ let encoder = new RSAEncoder();
 
 let usersList = {};
 
-dbPool.query('select login, password from users;')
+dbPool.query('select id, login, password from users;')
     .then(res => {
-        for (let i = 0; i < res.rows.length; i++) {
-            usersList[res.rows[i].login] = {
-                login: res.rows[i].login,
-                password: res.rows[i].password
+        for (let row of res.rows) {
+            usersList[row.login] = {
+                id: row.id,
+                login: row.login,
+                password: row.password
             }
         }
         console.log('Connected to db');
@@ -217,7 +218,7 @@ app.post('/auth/changePassword', async (req, res) => {
     let password = decodedAuthString[1];
     if (await checkAuth(login, password)) {
         if (req.body.newPassword)
-            await changeUserPassword(login, password);
+            await changeUserPassword(login, req.body.newPassword);
         res.sendStatus(200);
     } else {
         res.sendStatus(401);

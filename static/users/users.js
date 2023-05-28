@@ -37,17 +37,11 @@ class User {
         }
     }
 
-    static async logIn() {
-        let loginInput = document.querySelector('#input_user_login');
-        let passwordInput = document.querySelector('#input_user_password');
-        let login = loginInput.value;
-        let password = passwordInput.value;
+    static async logIn(login, password) {
         if (await User.checkUserPassword(login, password, true)) {
             this.currentUser = new User({ 'login': login, 'password': password });
             return this.currentUser;
         } else {
-            alert('Неверный логин или пароль');
-            passwordInput.value = '';
             return false;
         }
     }
@@ -196,6 +190,32 @@ class User {
             return null;
         for (let key in user)
             this[key] = user[key];
+        if (!this.authString) {
+            this.authString = btoa(encodeURI(this.login + ':' + this.password))
+        }
+    }
+
+    async changePassword(oldPassword, newPassword) {
+        let authString = btoa(encodeURI(this.login + ':' + oldPassword));
+        let p = fetch('/auth/changePassword', {
+            "method": "POST",
+            "headers": {
+                "Content-Type": "application/json",
+                "Authorization": "Basic " + authString
+            },
+            "body": JSON.stringify({
+                "newPassword": newPassword
+            })
+        });
+        let response = await p;
+        if (response.ok) {
+            User.currentUser = new User({login: this.login, newPassword});
+            console.log(User.currentUser.authString);
+            setUserCookie();
+            exitUserWindow();
+        } else {
+            alert('Ошибка');
+        }
     }
 }
 
@@ -238,6 +258,7 @@ let userWindow = document.querySelector('#user_window');
 let userSection = document.querySelector('#user_section');
 let logInSection = document.querySelector('#log_in_section');
 let registrationSection = document.querySelector('#registration_section');
+let changePasswordSection = document.querySelector('#change_password_section');
 
 if (isMobile) {
     userButton.onclick = () => {
@@ -261,8 +282,8 @@ function setUserWindowView() {
     logInSection.style.display = 'none';
     registrationSection.style.display = 'none';
     if (User.currentUser) {
-        let showUserLogin = document.querySelector('#show_user_login');
-        showUserLogin.innerHTML = User.currentUser.login;
+        let showUserLogin = document.querySelectorAll('.show_user_login');
+        showUserLogin.forEach(value => { value.innerHTML = User.currentUser.login; });
         userSection.style.display = 'block';
         let logoutButton = document.querySelector('#logout_button');
         logoutButton.onclick = () => {
@@ -327,9 +348,17 @@ function showLogInWindow() {
         if (event)
             event.preventDefault();
 
-        User.logIn().then(result => {
+        let loginInput = document.querySelector('#input_user_login');
+        let passwordInput = document.querySelector('#input_user_password');
+        let login = loginInput.value;
+        let password = passwordInput.value;
+        User.logIn(login, password).then(result => {
             if (result)
                 exitUserWindow();
+            else {
+                passwordInput.value = '';
+                alert('Неверный логин или пароль')
+            }
         });
     }
 
@@ -353,6 +382,34 @@ function showLogInWindow() {
     }
     logInButton.onclick = () => {
         showLogInWindow();
+    }
+}
+
+let changePasswordButton = document.querySelector('#change_password_button');
+if (changePasswordButton) changePasswordButton.onclick = () => {
+    userSection.style.display = 'none';
+    changePasswordSection.style.display = 'block';
+}
+
+let newPasswordInput = document.querySelector('#input_new_password');
+let repeatNewPasswordInput = document.querySelector('#input_repeat_new_password');
+let oldPasswordInput = document.querySelector('#input_old_password');
+let changePasswordSubmit = document.querySelector('#change_password_submit');
+if (changePasswordSubmit) changePasswordSubmit.onclick = async () => {
+    let oldPassword = oldPasswordInput.value;
+    if (await User.logIn(User.currentUser.login, oldPassword)) {
+        let newPassword = newPasswordInput.value;
+        let repeatNewPassword = repeatNewPasswordInput.value;
+        if (newPassword !== repeatNewPassword) {
+            alert('Пароли не совпадают');
+            newPasswordInput.value = '';
+            repeatNewPasswordInput.value = '';
+            return;
+        }
+        User.currentUser.changePassword(oldPassword, newPassword);
+    } else {
+        alert('Введён неверный пароль');
+        oldPasswordInput.value = '';
     }
 }
 

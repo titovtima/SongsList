@@ -70,6 +70,10 @@ if (songsListsButton) {
     }
 }
 
+document.querySelectorAll('.input_password').forEach(function (value) {
+    value.inputmode = 'text';
+});
+
 let mainScrollMarginToBottom = 20;
 if (isMobile) {
     let sidebar = document.querySelector('#sidebar');
