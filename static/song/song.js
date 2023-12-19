@@ -668,7 +668,7 @@ function setView() {
     }
 
     if (cookie.length === 0)
-        cookie = ['text', 'chords'];
+        cookie = ['text'];
 
     if (!edit_mode && song_parts) {
         if (!song_parts.text_parts || song_parts.text_parts.length === 0) {
@@ -741,39 +741,42 @@ function setView() {
     }
 
     text_view_button.onclick = () => {
-        if (cookie.includes('text')) {
-            cookie = cookie.filter(value => value !== 'text');
-        } else {
-            cookie = cookie.filter(value => value !== 'text_chords');
-            cookie.push('text');
-        }
-
-        console.log('change view cookie to', cookie.join('|'));
+        cookie = ['text'];
+        // if (cookie.includes('text')) {
+        //     cookie = cookie.filter(value => value !== 'text');
+        // } else {
+        //     cookie = cookie.filter(value => value !== 'text_chords');
+        //     cookie.push('text');
+        // }
+        //
+        // console.log('change view cookie to', cookie.join('|'));
         document.cookie = `songs_view=${cookie.join('|')}`;
         changePageSplit();
     }
 
     chords_view_button.onclick = () => {
-        if (cookie.includes('chords')) {
-            cookie = cookie.filter(value => value !== 'chords');
-        } else {
-            cookie = cookie.filter(value => value !== 'text_chords');
-            cookie.push('chords');
-        }
-
-        console.log('change view cookie to', cookie.join('|'));
+        cookie = ['chords'];
+        // if (cookie.includes('chords')) {
+        //     cookie = cookie.filter(value => value !== 'chords');
+        // } else {
+        //     cookie = cookie.filter(value => value !== 'text_chords');
+        //     cookie.push('chords');
+        // }
+        //
+        // console.log('change view cookie to', cookie.join('|'));
         document.cookie = `songs_view=${cookie.join('|')}`;
         changePageSplit();
     }
 
     text_chords_view_button.onclick = () => {
-        if (cookie.includes('text_chords')) {
-            cookie = cookie.filter(value => value !== 'text_chords');
-        } else {
-            cookie = ['text_chords'];
-        }
-
-        console.log('change view cookie to', cookie.join('|'));
+        cookie = ['text_chords'];
+        // if (cookie.includes('text_chords')) {
+        //     cookie = cookie.filter(value => value !== 'text_chords');
+        // } else {
+        //     cookie = ['text_chords'];
+        // }
+        //
+        // console.log('change view cookie to', cookie.join('|'));
         document.cookie = `songs_view=${cookie.join('|')}`;
         changePageSplit();
     }
